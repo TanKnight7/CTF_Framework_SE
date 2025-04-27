@@ -21,8 +21,6 @@ services:
       - DB_NAME=mydb
       - DB_USER=myuser
       - DB_PASSWORD=mypassword
-    volumes:
-      - ./backend:/app
     depends_on:
       - db
 
@@ -45,8 +43,6 @@ services:
       POSTGRES_DB: mydb
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
 
 volumes:
   postgres_data:
