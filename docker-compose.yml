@@ -22,8 +22,8 @@ services:
       - DB_USER=myuser
       - DB_PASSWORD=mypassword
     depends_on:
-      - db
-    restart: always
+      db:
+        condition: service_healthy
 
   nginx:
     image: nginx:latest
@@ -33,7 +33,6 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
-      # - frontend
       - backend
 
   db:
@@ -46,6 +45,8 @@ services:
       POSTGRES_PASSWORD: mypassword
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
 
 volumes:
   postgres_data:
