@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy Challs' docker if exist
+      - name: Build docker
         uses: appleboy/ssh-action@master
         env:
           ENV: "development"
