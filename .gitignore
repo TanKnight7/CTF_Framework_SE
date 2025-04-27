@@ -1,6 +1,5 @@
 # Ignore all Python cache files and folders
 __pycache__/
-*.py[cod]
 
 # Ignore all Django migration folders
 **/migrations/
