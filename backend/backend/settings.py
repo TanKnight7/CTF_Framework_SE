@@ -43,6 +43,10 @@ INSTALLED_APPS = [
     
     'example',
     'user',
+    'team',
+    'challenge',
+    'ticket',
+    'log',
 ]
 
 MIDDLEWARE = [

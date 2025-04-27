@@ -23,6 +23,15 @@ class RegisterTest(TestSetUp):
         user_data['username'] = 'anotherusername'
         res = self.client.post(self.register_url, user_data, format="json")
         self.assertEqual(res.status_code, 400)
+    
+    def test_user_cannot_register_with_role_other_than_player(self):
+        user_data = self.user_data
+        user_data['role'] = 'admin'
+        res = self.client.post(self.register_url, self.user_data, format="json")
+        role_registered = res.json().get('user').get('role')
+        self.assertEqual(role_registered, 'player')
+        
+        
 
 class LoginTest(TestSetUp):
     def test_login_and_token_creation(self):

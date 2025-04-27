@@ -9,6 +9,7 @@ class TestSetUp(APITestCase):
         self.register_url = reverse('register')
         self.login_url = reverse('login')
         
+        # fields = ['username', 'password', 'email', 'roles', 'bio', 'country', 'team']
         self.user_data = {
             'username': 'test',
             'email': 'test@test.com',
