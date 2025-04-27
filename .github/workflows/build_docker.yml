@@ -1,4 +1,4 @@
-name: On Pull Request Opened
+name: On Push
 
 on:
   push:
@@ -16,10 +16,10 @@ jobs:
           ENV: "development"
         with:
           envs: ENV
-          host: ${{ secrets.SSH_HOST_SOAL }}
-          username: ${{ secrets.SSH_USERNAME_SOAL }}
-          port: ${{ secrets.SSH_PORT_SOAL }}
-          password: ${{ secrets.SSH_PASSPHRASE_SOAL }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          port: ${{ secrets.SSH_PORT }}
+          password: ${{ secrets.SSH_PASSPHRASE }}
           script: |
             cd ~/CTF_Framework_SE
             git stash
