@@ -16,10 +16,15 @@ services:
   backend:
     build: ./backend
     container_name: softeng_backend
+    environment:
+      - DB_HOST=db
+      - DB_NAME=mydb
+      - DB_USER=myuser
+      - DB_PASSWORD=mypassword
     volumes:
       - ./backend:/app
-    # depends_on:
-    #   - db
+    depends_on:
+      - db
 
   nginx:
     image: nginx:latest
@@ -32,12 +37,15 @@ services:
       # - frontend
       - backend
 
-  # db:
-  #   image: postgres:13
-  #   container_name: postgres_db
-  #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data/
-  #   environment:
-  #     - POSTGRES_DB=app_db
-  #     - POSTGRES_USER=app_user
-  #     - POSTGRES_PASSWORD=app_pass
+  db:
+    image: postgres:14
+    container_name: softeng_db
+    restart: always
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432" # optional if you want to access DB locally
