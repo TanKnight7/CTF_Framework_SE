@@ -1,0 +1,28 @@
+name: On Pull Request Opened
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy Challs' docker if exist
+        uses: appleboy/ssh-action@master
+        env:
+          ENV: "development"
+        with:
+          envs: ENV
+          host: ${{ secrets.SSH_HOST_SOAL }}
+          username: ${{ secrets.SSH_USERNAME_SOAL }}
+          port: ${{ secrets.SSH_PORT_SOAL }}
+          password: ${{ secrets.SSH_PASSPHRASE_SOAL }}
+          script: |
+            cd ~/CTF_Framework_SE
+            git stash
+            gh pr checkout ${{ github.event.number }}
+            chmod +x .script/build_docker.sh
+            .script/build_docker.sh
