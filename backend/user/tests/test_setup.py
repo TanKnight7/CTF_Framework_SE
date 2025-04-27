@@ -3,6 +3,7 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from knox.models import AuthToken
 
+# https://www.youtube.com/watch?v=17KdirMbmHY
 class TestSetUp(APITestCase):
     def setUp(self):
         self.register_url = reverse('register')

@@ -44,16 +44,18 @@ def user_detail(request, pk):
 
 @api_view(['POST'])
 def login(request):
-    user = get_object_or_404(User, username=request.data['username'])
-    if not user.check_password(request.data['password']):
-        return Response({"detail":"Not found."}, status=status.HTTP_404_NOT_FOUND)
+    if request.data.get('username') == None or request.data.get('password') == None:
+        return Response({"error":"Please provide username and password."}, status=status.HTTP_400_BAD_REQUEST)
+    user = get_object_or_404(User, username=request.data.get('username'))
+    if not user.check_password(request.data.get('password')):
+        return Response({"error":"Username not found or password is invalid."}, status=status.HTTP_404_NOT_FOUND)
     
     # Deleting all existing tokens..
     AuthToken.objects.filter(user=user).delete()
     
     token_instance, token = AuthToken.objects.create(user)
     serializer = UserSerializer(user)
-    return Response({"token": token, "user": serializer.data})
+    return Response({"token": token, "user": serializer.data}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def register(request):

@@ -21,3 +21,8 @@ docker exec -it softeng_backend python3 manage.py test
 ## Quit
 
 \q
+
+## debugging tips (interactive terminal for testing)
+
+import pdb
+pdb.set_trace()
