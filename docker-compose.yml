@@ -23,6 +23,7 @@ services:
       - DB_PASSWORD=mypassword
     depends_on:
       - db
+    restart: always
 
   nginx:
     image: nginx:latest
@@ -43,6 +44,8 @@ services:
       POSTGRES_DB: mydb
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
 
 volumes:
   postgres_data:

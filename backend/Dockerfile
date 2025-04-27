@@ -7,10 +7,9 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-ENTRYPOINT ["docker-entrypoint.sh"]
 
 RUN useradd -m ctf
 RUN chown -R ctf:ctf /app
 USER ctf
 
-CMD ["python3", "manage.py", "runserver", "0.0.0.0:80"]
+ENTRYPOINT ["docker-entrypoint.sh"]
