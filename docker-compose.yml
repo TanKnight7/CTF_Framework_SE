@@ -45,7 +45,3 @@ services:
       POSTGRES_DB: mydb
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
-    volumes:
-      - ./db:/var/lib/postgresql/data
-    ports:
-      - "5432:5432" # optional if you want to access DB locally
