@@ -25,5 +25,7 @@ jobs:
             git stash
             git checkout main
             git pull
+            chmod +x .script/delete_docker.sh
             chmod +x .script/build_docker.sh
+            .script/delete_docker.sh
             .script/build_docker.sh
