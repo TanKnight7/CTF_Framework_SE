@@ -4,6 +4,10 @@ WORKDIR /app
 
 COPY . .
 RUN chmod +x run.sh
+
+RUN apt-get update && apt-get install -y openssl ca-certificates
+RUN apt-get install -y python3-dev libssl-dev
+
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
 RUN useradd -m ctf
