@@ -1,4 +1,4 @@
-Django>=4.2,<5.0
+Django
 psycopg2-binary
 djangorestframework
 django-rest-knox
