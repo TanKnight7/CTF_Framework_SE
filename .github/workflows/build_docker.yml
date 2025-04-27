@@ -23,6 +23,7 @@ jobs:
           script: |
             cd ~/CTF_Framework_SE
             git stash
-            gh pr checkout ${{ github.event.number }}
+            git checkout main
+            git pull
             chmod +x .script/build_docker.sh
             .script/build_docker.sh
