@@ -38,9 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    'example',
     'rest_framework',
-    'rest_framework.authtoken',
+    'knox',
+    
+    'example',
+    'user',
 ]
 
 MIDDLEWARE = [
@@ -136,3 +138,15 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'user.User' # replace default user model, syntax: folder/user_model
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+}
+
+from datetime import timedelta
+REST_KNOX = {
+    'USER_SERIALIZER': 'user.serializers.UserSerializer',
+    "TOKEN_TTL": timedelta(hours=48),
+}
