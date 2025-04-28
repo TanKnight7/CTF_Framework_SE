@@ -74,6 +74,9 @@ def create_team(request):
     if not serializer.is_valid():
         return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
     
+    if Team.objects.filter(name__iexact=data['name']).exists():
+        return Response({"error": "team with this name already exists."}, status=status.HTTP_400_BAD_REQUEST)
+        
     team = serializer.save()
     request.user.team = team
     request.user.save()
