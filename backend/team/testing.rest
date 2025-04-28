@@ -1,0 +1,55 @@
+
+### Create a new team
+POST http://127.0.0.1:8000/teams/create/
+Content-Type: application/json
+Authorization: Token 13e34f001b85530bba5c9939c44215160af1dc4478dc47b6d0017fc753955fe8
+
+{
+  "name": "Team Falcos",
+  "institute": "OpenAI Academy"
+}
+
+### Get current user's team
+GET http://127.0.0.1:8000/teams/me/
+Content-Type: application/json
+Authorization: Token f615517b9dd9583cb42def4b3c98a4912dda94836ed6d518ed4af83299866112
+
+
+
+
+### Get team by id
+GET http://127.0.0.1:8000/teams/2/
+Content-Type: application/json
+Authorization: Token f615517b9dd9583cb42def4b3c98a4912dda94836ed6d518ed4af83299866112
+
+
+
+### update team by id
+GET http://127.0.0.1:8000/teams/2/
+Content-Type: application/json
+Authorization: Token f615517b9dd9583cb42def4b3c98a4912dda94836ed6d518ed4af83299866112
+
+
+
+
+### Get team by id
+GET http://127.0.0.1:8000/teams/2/
+Content-Type: application/json
+Authorization: Token f615517b9dd9583cb42def4b3c98a4912dda94836ed6d518ed4af83299866112
+
+
+
+### List all teams (if you have a view for this)
+GET http://127.0.0.1:8000/teams/
+Content-Type: application/json
+Authorization: Token 33b0d0ef448d230e45ae98253f10e8e081b568cd83b0cce72079946b0aed8042
+
+### Join a team (if you have a view for this)
+GET http://127.0.0.1:8000/teams/join/2/b8c08c1c-ec97-4bce-b9e2-7cddcd65fc4c/
+Content-Type: application/json
+Authorization: Token 33b0d0ef448d230e45ae98253f10e8e081b568cd83b0cce72079946b0aed8042
+
+### leave a team (if you have a view for this)
+GET http://127.0.0.1:8000/teams/leave/
+Content-Type: application/json
+Authorization: Token 13e34f001b85530bba5c9939c44215160af1dc4478dc47b6d0017fc753955fe8 

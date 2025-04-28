@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from knox.models import AuthToken
 from rest_framework.decorators import api_view
 from .models import User
-from .serializers import UserSerializer
+from .serializers import UserSerializer, PublicUserSerializer
 
 
 @api_view(['POST'])
@@ -19,7 +19,7 @@ def login(request):
     AuthToken.objects.filter(user=user).delete()
     
     token_instance, token = AuthToken.objects.create(user)
-    serializer = UserSerializer(user)
+    serializer = PublicUserSerializer(user)
     return Response({"token": token, "user": serializer.data}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
@@ -52,7 +52,7 @@ def test_token(request):
 @permission_classes([IsAuthenticated])
 def get_all_users(request):
     users = User.objects.all()
-    serializer = UserSerializer(users, many=True)
+    serializer = PublicUserSerializer(users, many=True)
     return Response(serializer.data)
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -65,7 +65,11 @@ def get_update_delete_user(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
     
     if request.method == 'GET':
-        serializer = UserSerializer(user)
+        if user == request.user: 
+            serializer = UserSerializer(user)
+        else:
+            serializer = PublicUserSerializer(user)
+            
         return Response(serializer.data)
     
     if user != request.user:

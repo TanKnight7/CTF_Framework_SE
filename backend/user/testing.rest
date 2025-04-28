@@ -1,0 +1,35 @@
+
+### list all users
+GET http://127.0.0.1:8000/users/
+Content-Type: application/json
+Authorization: Token f76cf926772472ce2fe8689e7de272392d495bd41c08265e02d4025d5253fa9a
+
+
+### Get current user data
+GET http://127.0.0.1:8000/users/me
+Content-Type: application/json
+Authorization: Token f76cf926772472ce2fe8689e7de272392d495bd41c08265e02d4025d5253fa9a
+
+
+### Register an account
+POST http://127.0.0.1:8000/users/register/
+Content-Type: application/json
+
+{
+  "username": "attacker",
+  "password": "attacker",
+  "email": "attacker@gmail.com"
+}
+
+### Login
+POST http://127.0.0.1:8000/users/login/
+Content-Type: application/json
+
+{
+  "username": "attacker",
+  "password": "attacker"
+}
+
+### view user data by id
+GET http://127.0.0.1:8000/users/2/
+Authorization: Token 5b3ff696160c128322395fb63a56393809119497f68a481e01a312d57c5cf0a6
