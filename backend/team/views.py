@@ -14,7 +14,10 @@ from rest_framework.permissions import IsAuthenticated
 
 @api_view(['GET'])
 def get_all_teams(request):
-    team = Team.objects.all()
+    try:
+        team = Team.objects.all()
+    except Team.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
     serializer = PublicTeamSerializer(team, many=True)
     return Response(serializer.data)
 
@@ -52,6 +55,9 @@ def get_update_team(request, pk):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def me(request):
+    if request.user.team is None:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+        
     return Response({"me": TeamSerializer(request.user.team).data}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
