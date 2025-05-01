@@ -1,15 +1,15 @@
 from rest_framework import serializers
-from .models import Category, Challenges
+from .models import Category, Challenge
 
 # Basic Challenge Serializer - for listing challenges without nesting
 class ChallengeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Challenges
+        model = Challenge
         exclude = ['flag']
 
 class CreateChallengeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Challenges
+        model = Challenge
         fields = '__all__'
 
 # Basic Category Serializer - for simple category listings

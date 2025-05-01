@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework.response import Response
-from .models import Category, Challenges
+from .models import Category, Challenge
 from .serializers import  ChallengeSerializer, CategorySerializer, CategoryDetailSerializer, CreateChallengeSerializer
 
 # =================================================
