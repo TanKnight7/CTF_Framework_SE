@@ -7,7 +7,7 @@ class User(AbstractUser):
     username = models.CharField(max_length=100, unique=True)
     password = models.CharField(max_length=100)
     email = models.EmailField(max_length=100, unique=True)
-    role = models.CharField(max_length=25, null=False, default='player', choices=[('player', 'Player'), ('admin', 'Admin'), ('probset','Probset')],)
+    role = models.CharField(max_length=25, null=False, default='player', choices=[('player', 'Player'), ('admin', 'Admin')],)
     bio = models.CharField(max_length=250, null=True)
     country = models.CharField(max_length=50, null=True)
     

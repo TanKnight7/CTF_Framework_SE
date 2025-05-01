@@ -8,7 +8,7 @@ class Category(models.Model):
         return self.name
 
 # Create your models here.
-class Challenges(models.Model):
+class Challenge(models.Model):
     title = models.CharField(max_length=150)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="challenge")
     flag = models.CharField(max_length=500)
