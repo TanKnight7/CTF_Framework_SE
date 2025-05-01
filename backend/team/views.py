@@ -16,10 +16,10 @@ from rest_framework.permissions import IsAuthenticated
 def get_all_teams(request):
     try:
         team = Team.objects.all()
+        serializer = PublicTeamSerializer(team, many=True)
+        return Response(serializer.data)
     except Team.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    serializer = PublicTeamSerializer(team, many=True)
-    return Response(serializer.data)
 
 
 @api_view(['GET', 'PUT'])

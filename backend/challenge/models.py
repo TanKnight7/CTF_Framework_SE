@@ -1,5 +1,5 @@
 from django.db import models
-from user.models import User
+
 
 class Category(models.Model):
     name = models.CharField(max_length=30)
@@ -16,8 +16,8 @@ class Challenges(models.Model):
     description = models.CharField(max_length=2000)
     solve_count = models.IntegerField(default=0)
     attachment = models.FileField() # file path
-    point = models.IntegerField(default=500)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="challenge")
+    point = models.IntegerField(default=501)
+    author = models.ForeignKey('user.User', on_delete=models.CASCADE, related_name="challenge")
     rating = models.FloatField(default=0.0)
 
     def update_average_rating(self):

@@ -4,6 +4,9 @@ from knox.models import AuthToken
 from rest_framework.decorators import api_view
 from .models import User
 from .serializers import UserSerializer, PublicUserSerializer
+from rest_framework.decorators import authentication_classes, permission_classes
+from knox.auth import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 
 @api_view(['POST'])
@@ -36,10 +39,6 @@ def register(request):
     user.save()
     
     return Response({"message": "User successfully registered.", "user": UserSerializer(user).data}, status=status.HTTP_201_CREATED)
-
-from rest_framework.decorators import authentication_classes, permission_classes
-from knox.auth import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
