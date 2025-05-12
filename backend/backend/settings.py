@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'challenge',
     'ticket',
     'log',
+    'writeup',
 ]
 
 MIDDLEWARE = [
