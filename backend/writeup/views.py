@@ -8,24 +8,35 @@ from .models import Writeup
 from .serializers import WriteupSerializer
 from django.shortcuts import get_object_or_404
 
+def get_user_team(user):
+    from team.models import Team
+    try:
+        return Team.objects.get(members=user)
+    except Team.DoesNotExist:
+        return None
+
 # 1. Submit a writeup (auto assign team)
 @api_view(['POST'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
+# @authentication_classes([TokenAuthentication])
+# @permission_classes([IsAuthenticated])
 def submit_writeup(request):
-    from team.models import Team
     serializer = WriteupSerializer(data=request.data)
     if not serializer.is_valid():
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    team = get_object_or_404(Team, members=request.user)
-    serializer.save(team=team)
+
+    team = get_user_team(request.user)
+
+    if team:
+        serializer.save(team=team)
+    else:
+        serializer.save(user=request.user)
+
     return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 # 2. Get all writeups
 @api_view(['GET'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
+# @authentication_classes([TokenAuthentication])
+# @permission_classes([IsAuthenticated])
 def get_all_writeups(request):
     writeups = Writeup.objects.all()
     serializer = WriteupSerializer(writeups, many=True)
@@ -34,8 +45,8 @@ def get_all_writeups(request):
 
 # 3. Get, update, or delete a writeup by ID
 @api_view(['GET', 'PUT', 'DELETE'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
+# @authentication_classes([TokenAuthentication])
+# @permission_classes([IsAuthenticated])
 def get_update_delete_writeup(request, pk):
     writeup = get_object_or_404(Writeup, pk=pk)
 

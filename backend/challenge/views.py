@@ -82,7 +82,7 @@ def get_challenge_detail(request, challenge_id):
     try:
         challenge = Challenge.objects.get(pk=challenge_id)
         serializer = ChallengeSerializer(challenge, many=True)
-        return Response(serailizer.data)
+        return Response(serializer.data)
     except Challenge.DoesNotExist:
         return Response({'error': 'Challenge not found'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -96,6 +96,6 @@ def create(request):
     data['attachment'] = '' # need to be updated
     data['rating'] = 0.0
     serializer = CreateChallengeSerializer(data=data)
-    if not serailizer.is_valid():
+    if not serializer.is_valid():
         return Response({"error" : serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
     return Response({"success" : serializers.data}, status=status.HTTP_201_CREATED)
