@@ -24,4 +24,4 @@ class CategoryDetailSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Challenge
-        fields = ['title', 'difficutly', 'point']
+        fields = ['id', 'title', 'difficutly', 'point']
