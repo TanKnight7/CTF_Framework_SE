@@ -1,8 +1,8 @@
 
 ### Create a new team
-POST http://127.0.0.1:8000/teams/create/
+POST http://127.0.0.1:9999/teams/create/
 Content-Type: application/json
-Authorization: Token 277a9d3979524a3413a94d34d987f0b8ad0a99756330d3175256f4359ce16edb
+Authorization: Token 451c7781271cd1a68bbac5f8d900953872cb32fb9c3a433bcfd0936e318e2b3f
 
 {
   "name": "Team Falcos",
@@ -10,7 +10,7 @@ Authorization: Token 277a9d3979524a3413a94d34d987f0b8ad0a99756330d3175256f4359ce
 }
 
 ### Get current user's team
-GET http://127.0.0.1:8000/teams/me/
+GET http://127.0.0.1:9999/teams/me/
 Content-Type: application/json
 Authorization: Token 277a9d3979524a3413a94d34d987f0b8ad0a99756330d3175256f4359ce16edb
 
@@ -18,14 +18,14 @@ Authorization: Token 277a9d3979524a3413a94d34d987f0b8ad0a99756330d3175256f4359ce
 
 
 ### Get team by id
-GET http://127.0.0.1:8000/teams/2/
+GET http://127.0.0.1:9999/teams/2/
 Content-Type: application/json
 Authorization: Token f615517b9dd9583cb42def4b3c98a4912dda94836ed6d518ed4af83299866112
 
 
 
 ### update team by id
-GET http://127.0.0.1:8000/teams/2/
+GET http://127.0.0.1:9999/teams/2/
 Content-Type: application/json
 Authorization: Token f615517b9dd9583cb42def4b3c98a4912dda94836ed6d518ed4af83299866112
 
@@ -33,23 +33,23 @@ Authorization: Token f615517b9dd9583cb42def4b3c98a4912dda94836ed6d518ed4af832998
 
 
 ### Get team by id
-GET http://127.0.0.1:8000/teams/2/
+GET http://127.0.0.1:9999/teams/2/
 Content-Type: application/json
 Authorization: Token f615517b9dd9583cb42def4b3c98a4912dda94836ed6d518ed4af83299866112
 
 
 
 ### List all teams (if you have a view for this)
-GET http://127.0.0.1:8000/teams/
+GET http://127.0.0.1:9999/teams/
 Content-Type: application/json
 Authorization: Token 277a9d3979524a3413a94d34d987f0b8ad0a99756330d3175256f4359ce16edb
 
 ### Join a team (if you have a view for this)
-GET http://127.0.0.1:8000/teams/join/2/b8c08c1c-ec97-4bce-b9e2-7cddcd65fc4c/
+GET http://127.0.0.1:9999/teams/join/2/b8c08c1c-ec97-4bce-b9e2-7cddcd65fc4c/
 Content-Type: application/json
 Authorization: Token 33b0d0ef448d230e45ae98253f10e8e081b568cd83b0cce72079946b0aed8042
 
 ### leave a team (if you have a view for this)
-GET http://127.0.0.1:8000/teams/leave/
+GET http://127.0.0.1:9999/teams/leave/
 Content-Type: application/json
 Authorization: Token 277a9d3979524a3413a94d34d987f0b8ad0a99756330d3175256f4359ce16edb 

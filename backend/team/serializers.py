@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from .models import Team
-from user.models import User
 from user.serializers import PublicTeamUserSerializer
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -14,3 +13,8 @@ class PublicTeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
         exclude = ['token']
+
+class PublicTeamLeaderboardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Team
+        fields = ['total_point', 'name']

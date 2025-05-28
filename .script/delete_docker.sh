@@ -1,3 +1,4 @@
 #!/bin/bash
-echo "delete_docker.sh changed temporarily for keamanan server chall csc binus wkwk"
-docker rmi -f ctf_framework_se-backend
+docker stop softeng_nginx softeng_backend softeng_db
+docker rm softeng_nginx softeng_backend softeng_db
+docker volume rm ctf_framework_se_postgres_data
