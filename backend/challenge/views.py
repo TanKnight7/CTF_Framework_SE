@@ -1,7 +1,15 @@
-from rest_framework import serializers
+from rest_framework import status
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated # Consider IsAdminUser for admin-specific actions
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
+# from django.shortcuts import get_object_or_404 # Useful alternative
+
 from .models import Category, Challenge
 from .serializers import ChallengeSerializer, CategorySerializer, CategoryDetailSerializer, CreateChallengeSerializer
+# It's good practice to import your User model if you need to interact with it directly,
+# e.g., from django.contrib.auth import get_user_model
+# User = get_user_model()
 
 # =================================================
 # CRUD Category
@@ -11,91 +19,219 @@ from .serializers import ChallengeSerializer, CategorySerializer, CategoryDetail
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def get_categories(request):
+    """
+    Retrieve all categories.
+    """
     try:
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
-        return Response(serializer.data)
-    except Category.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({"error": f"An unexpected error occurred: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated]) # Consider [IsAdminUser] or custom permission
 def create_category(request):
+    """
+    Create a new category.
+    Requires admin privileges (conceptual - actual permission class not enforced here yet).
+    """
+    # Example admin check (if not using IsAdminUser permission class):
+    # if not request.user.is_staff:
+    #     return Response({"error": "You do not have permission to perform this action."}, status=status.HTTP_403_FORBIDDEN)
+    
     serializer = CategorySerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-        return Response({"success" : "Successfully created category"}, status=status.HTTP_201_CREATED)
+        return Response({"success": "Successfully created category", "category_data": serializer.data}, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT'])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated]) # Consider [IsAdminUser] or custom permission
 def edit_categories(request, category_name):
+    """
+    Edit an existing category by its name.
+    Requires admin privileges (conceptual).
+    """
+    # if not request.user.is_staff:
+    #     return Response({"error": "You do not have permission to perform this action."}, status=status.HTTP_403_FORBIDDEN)
     try:
-        # haven't added authentication if user is admin
-        category = Category.objects.get(name=category_name)
-        serializer = CategorySerializer(category, data=request.data)
-        if not serializer.is_valid():
-            return Response({"error" : serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-        serializer.save()
-        return Response({"success": "Category succesfully updated!", "category_data" : serializer.data})
+        category = Category.objects.get(name__iexact=category_name) # Case-insensitive lookup
+        # For PUT, typically all fields are required. Use partial=True for PATCH-like behavior.
+        serializer = CategorySerializer(category, data=request.data, partial=True) 
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"success": "Category successfully updated!", "category_data": serializer.data}, status=status.HTTP_200_OK)
+        return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
     except Category.DoesNotExist:
-        return Response({"error": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"error": f"Category '{category_name}' not found"}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({"error": f"An unexpected error occurred: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['DELETE'])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated]) # Consider [IsAdminUser] or custom permission
 def delete_categories(request, category_name):
+    """
+    Delete a category by its name.
+    Requires admin privileges (conceptual).
+    """
+    # if not request.user.is_staff:
+    #     return Response({"error": "You do not have permission to perform this action."}, status=status.HTTP_403_FORBIDDEN)
     try:
-        # haven't added authentication if user is admin
-        category = Category.objects.get(name=category_name)
+        category = Category.objects.get(name__iexact=category_name)
+        category_name_deleted = category.name # Store for message
         category.delete()
-        return Response({"success": "Category deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+        # HTTP 200 OK with a message body, or HTTP 204 No Content if no body is preferred.
+        return Response({"success": f"Category '{category_name_deleted}' deleted successfully"}, status=status.HTTP_200_OK)
     except Category.DoesNotExist:
-        return Response({"error": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"error": f"Category '{category_name}' not found"}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({"error": f"An unexpected error occurred: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 # =================================================
-# See Challenges List Based on Category
+# Challenges by Category
 # =================================================
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def get_challenges_by_categories(request, category_name):
+    """
+    Retrieve challenges based on a category name.
+    Uses CategoryDetailSerializer (as defined in your serializers.py, which serializes Challenge objects
+    with specific fields: title, difficutly, point).
+    """
     try:
-        challenges = Challenge.objects.get(category=category_name)
+        category = Category.objects.get(name__iexact=category_name)
+    except Category.DoesNotExist:
+        return Response({'error': f'Category "{category_name}" not found.'}, status=status.HTTP_404_NOT_FOUND)
+    
+    try:
+        # Assuming 'challenge' is the related_name from Category to Challenge in your Challenge model's ForeignKey
+        # If Challenge.category = ForeignKey(Category, related_name="challenge"), then category.challenge.all() works.
+        # Or, more explicitly:
+        challenges = Challenge.objects.filter(category=category)
+        
+        if not challenges.exists():
+            return Response({'message': f'No challenges found in the category: {category.name}'}, status=status.HTTP_200_OK) # Or 404 if preferred
+            
+        # Your CategoryDetailSerializer is defined with Meta.model = Challenge
+        # and fields = ['title', 'difficutly', 'point']. This will serialize the list of Challenge objects.
         serializer = CategoryDetailSerializer(challenges, many=True)
-        return Response({"challenges" : serializer.data})
-    except Challenge.DoesNotExist:
-        return Response({'error': 'No challenge in the category'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"category": category.name, "challenges": serializer.data}, status=status.HTTP_200_OK)
+    except Exception as e: # Catch other potential errors during challenge fetching or serialization
+        return Response({"error": f"An error occurred while fetching challenges: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 # =================================================
-# CRUD Challenge (Not Done)
+# CRUD Challenge
 # =================================================
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
+def get_all_challenges(request):
+    """
+    Retrieve a list of all challenges.
+    Uses ChallengeSerializer which excludes the flag.
+    """
+    try:
+        challenges = Challenge.objects.all()
+        serializer = ChallengeSerializer(challenges, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({"error": f"An unexpected error occurred: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def get_challenge_detail(request, challenge_id):
+    """
+    Retrieve details of a specific challenge by its ID.
+    Uses ChallengeSerializer which excludes the flag.
+    """
     try:
         challenge = Challenge.objects.get(pk=challenge_id)
-        serializer = ChallengeSerializer(challenge, many=True)
-        return Response(serializer.data)
+        serializer = ChallengeSerializer(challenge) # many=False is default for single object
+        return Response(serializer.data, status=status.HTTP_200_OK)
     except Challenge.DoesNotExist:
-        return Response({'error': 'Challenge not found'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'error': f'Challenge with ID {challenge_id} not found'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({"error": f"An unexpected error occurred: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def create(request):
-    data = request.data.copy()
+@permission_classes([IsAuthenticated]) # Or IsAdminUser / custom permission for who can create challenges
+def create_challenge(request):
+    """
+    Create a new challenge.
+    The 'author' will be set to the authenticated user.
+    'attachment' should be sent as a file in a multipart/form-data request.
+    """
+    data = request.data.copy() # Use .copy() if you might modify it, otherwise request.data is fine
     data['author'] = request.user.id
-    data['solve_count'] = 0
-    data['attachment'] = '' # need to be updated
-    data['rating'] = 0.0
-    serializer = CreateChallengeSerializer(data=data)
-    if not serializer.is_valid():
-        return Response({"error" : serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-    return Response({"success" : serializers.data}, status=status.HTTP_201_CREATED)
+    
+    # Defaults like solve_count, rating are handled by model defaults.
+    # No need to set data['attachment'] = '' here;
+    # CreateChallengeSerializer will handle the file from request.FILES if provided.
+
+    # Pass request.FILES to the serializer if handling file uploads
+    serializer = CreateChallengeSerializer(data=data, context={'request': request})
+    if serializer.is_valid():
+        serializer.save() # Author is already part of the data passed to serializer
+        return Response({"success": "Challenge successfully created", "challenge_data": serializer.data}, status=status.HTTP_201_CREATED)
+    return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['PUT'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def edit_challenge(request, challenge_id):
+    """
+    Edit an existing challenge by its ID.
+    Only the author or an admin (conceptual) can edit.
+    """
+    try:
+        challenge = Challenge.objects.get(pk=challenge_id)
+
+        # Permission check: Only author or admin (e.g., request.user.is_staff)
+        if challenge.author != request.user and not request.user.is_staff: # Assuming request.user is your 'user.User' model instance
+            return Response({"error": "You do not have permission to edit this challenge."}, status=status.HTTP_403_FORBIDDEN)
+
+        # Use CreateChallengeSerializer for updates to allow all fields to be changed, or a specific UpdateChallengeSerializer.
+        # partial=True allows for partial updates (PATCH behavior).
+        serializer = CreateChallengeSerializer(challenge, data=request.data, partial=True, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"success": "Challenge successfully updated!", "challenge_data": serializer.data}, status=status.HTTP_200_OK)
+        return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+    except Challenge.DoesNotExist:
+        return Response({"error": f"Challenge with ID {challenge_id} not found"}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({"error": f"An unexpected error occurred: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['DELETE'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def delete_challenge(request, challenge_id):
+    """
+    Delete a challenge by its ID.
+    Only the author or an admin (conceptual) can delete.
+    """
+    try:
+        challenge = Challenge.objects.get(pk=challenge_id)
+
+        if challenge.author != request.user and not request.user.is_staff:
+            return Response({"error": "You do not have permission to delete this challenge."}, status=status.HTTP_403_FORBIDDEN)
+        
+        challenge_title = challenge.title # For the success message
+        challenge.delete()
+        return Response({"success": f"Challenge '{challenge_title}' deleted successfully"}, status=status.HTTP_200_OK) # Or HTTP_204_NO_CONTENT
+    except Challenge.DoesNotExist:
+        return Response({"error": f"Challenge with ID {challenge_id} not found"}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({"error": f"An unexpected error occurred: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
