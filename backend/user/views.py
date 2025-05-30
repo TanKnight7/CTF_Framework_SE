@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from knox.models import AuthToken
 from rest_framework.decorators import api_view
 from .models import User
-from .serializers import UserSerializer, PublicUserSerializer
+from .serializers import UserRegistrationSerializer, UserListSerializer, UserDetailSerializer, UserUpdateSerializer
 from rest_framework.decorators import authentication_classes, permission_classes
 from knox.auth import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -20,38 +20,26 @@ def login(request):
     
     # Deleting all existing tokens..
     AuthToken.objects.filter(user=user).delete()
-    
     token_instance, token = AuthToken.objects.create(user)
-    serializer = PublicUserSerializer(user)
-    return Response({"token": token, "user": serializer.data}, status=status.HTTP_200_OK)
+    
+    return Response({"token": token}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def register(request):
-    serializer = UserSerializer(data=request.data)
+    serializer = UserRegistrationSerializer(data=request.data)
     if not serializer.is_valid():
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    validated_data = serializer.validated_data
-    validated_data['role'] = 'player' # Force role to 'player'
+    user = serializer.save()
     
-    user = User.objects.create(**validated_data)
-    user.set_password(serializer.validated_data['password']) # Hash the password
-    user.save()
-    
-    return Response({"message": "User successfully registered.", "user": UserSerializer(user).data}, status=status.HTTP_201_CREATED)
-
-@api_view(['GET'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def test_token(request):
-    return Response("Passed for {}".format(request.user.email))
+    return Response({"message": "User successfully registered.", "user": UserRegistrationSerializer(user).data}, status=status.HTTP_201_CREATED)
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def get_all_users(request):
     users = User.objects.all()
-    serializer = PublicUserSerializer(users, many=True)
+    serializer = UserListSerializer(users, many=True)
     return Response(serializer.data)
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -64,27 +52,20 @@ def get_update_delete_user(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
     
     if request.method == 'GET':
-        if user == request.user: 
-            serializer = UserSerializer(user)
-        else:
-            serializer = PublicUserSerializer(user)
-            
+        serializer = UserDetailSerializer(user, context={'request':request})
         return Response(serializer.data)
     
-    if user != request.user:
-        return Response({"error": "You do not have permission to modify this user's profile."}, 
+    if user != request.user and request.user.role != 'admin':
+        return Response({"error": "You do not have permission to modify or delete this user's profile."}, 
                         status=status.HTTP_403_FORBIDDEN)
     
     if request.method == 'PUT':
-        allowed_fields = ['bio', 'country']
-        updated_data = {key: value for key, value in request.data.items() if key in allowed_fields}
-        
-        serializer = UserSerializer(user, data=updated_data, partial=True)
+        serializer = UserUpdateSerializer(user, data=request.data, partial=True)
         if not serializer.is_valid():
             return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         
         serializer.save()
-        return Response({"success": "Profile updated.", "user_data": serializer.data}, status=status.HTTP_200_OK)
+        return Response({"success": "Profile updated.", "data": UserDetailSerializer(user, context={'request':request}).data}, status=status.HTTP_200_OK)
 
     if request.method == 'DELETE':
         user.delete()
@@ -94,4 +75,4 @@ def get_update_delete_user(request, pk):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def me(request):
-    return Response({"me": UserSerializer(request.user).data}, status=status.HTTP_200_OK)
+    return Response({"me": UserDetailSerializer(request.user, context={'request':request}).data}, status=status.HTTP_200_OK)

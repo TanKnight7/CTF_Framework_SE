@@ -10,13 +10,8 @@ class Leaderboard(models.Model):
         return self.name
 
 class LeaderboardEntry(models.Model):
-    ENTRY_TYPE_CHOICES = (
-        ('user', 'User'),
-        ('team', 'Team'),
-    )
     # This model stores each user's score in the leaderboard
     leaderboard = models.ForeignKey(Leaderboard, related_name='entries', on_delete=models.CASCADE)
-    entry_type = models.CharField(max_length=10, choices=ENTRY_TYPE_CHOICES)
     user = models.ForeignKey('user.User', null=True, blank=True, on_delete=models.CASCADE)  # If entry type is 'user'
     team = models.ForeignKey('team.Team', null=True, blank=True, on_delete=models.CASCADE)  # If entry type is 'team'
     score = models.IntegerField()  # The score the user achieved

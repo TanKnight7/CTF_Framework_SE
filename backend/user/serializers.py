@@ -1,31 +1,49 @@
 from rest_framework import serializers
+from django.contrib.auth.password_validation import validate_password
 from .models import User
 
-class UserSerializer(serializers.ModelSerializer):
+class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        # fields = "__all__"
-        fields = ['id', 'username', 'password', 'email', 'role', 'bio', 'country', 'team']
+        fields = ['username', 'password', 'email']
         extra_kwargs = {
-            'password': {'write_only':True} # Bikin passwordnya writeonly, jadi ga bakalan dishow passwordnya
+            'password': {'write_only': True}
         }
-
-class PublicUserSerializer(serializers.ModelSerializer):
-    team = serializers.SerializerMethodField()
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'role', 'bio', 'country', 'team']
     
-    def get_team(self, obj):
-        from team.serializers import TeamSerializer
-        if obj.team:
-            data = TeamSerializer(obj.team).data
-            return {"id": data['id'], 'name': data['name']}
-        return None
+    def validate_password(self, value):
+        validate_password(value, user=self.instance)
+        return value
 
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        return user
 
-
-class PublicTeamUserSerializer(serializers.ModelSerializer):
+class UserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username']
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'role', 'bio', 'country', 'team']
+    
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        request = self.context.get('request', None)
+        
+        if request:
+            user = request.user
+            if user != instance and not user.is_staff:
+                # Hide email if viewer is NOT owner or staff
+                data.pop('email', None)
+        else:
+            # No request context, be safe and remove email
+            data.pop('email', None)
+
+        return data
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['email', 'bio', 'country']

@@ -31,5 +31,5 @@ Content-Type: application/json
 }
 
 ### view user data by id
-GET http://127.0.0.1:9999/users/2/
-Authorization: Token 5b3ff696160c128322395fb63a56393809119497f68a481e01a312d57c5cf0a6
+GET http://127.0.0.1:9999/users/1/
+Authorization: Token 7a4b1f56b8bc450b229594bf0edbf1ca2117a001da6d11cc30b83a40f783a393

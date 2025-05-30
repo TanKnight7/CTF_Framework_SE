@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.permissions import IsAuthenticated # Consider IsAdminUser for admin-specific actions
-from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated, IsAdminUser # Consider IsAdminUser for admin-specific actions
+from knox.auth import TokenAuthentication
 from rest_framework.response import Response
 # from django.shortcuts import get_object_or_404 # Useful alternative
 
@@ -188,7 +188,7 @@ def create_challenge(request):
 
 @api_view(['PUT'])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def edit_challenge(request, challenge_id):
     """
     Edit an existing challenge by its ID.
@@ -198,7 +198,7 @@ def edit_challenge(request, challenge_id):
         challenge = Challenge.objects.get(pk=challenge_id)
 
         # Permission check: Only author or admin (e.g., request.user.is_staff)
-        if challenge.author != request.user and not request.user.is_staff: # Assuming request.user is your 'user.User' model instance
+        if challenge.author != request.user and not request.user.role == "admin": # Assuming request.user is your 'user.User' model instance
             return Response({"error": "You do not have permission to edit this challenge."}, status=status.HTTP_403_FORBIDDEN)
 
         # Use CreateChallengeSerializer for updates to allow all fields to be changed, or a specific UpdateChallengeSerializer.

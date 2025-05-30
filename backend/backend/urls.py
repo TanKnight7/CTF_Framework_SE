@@ -27,4 +27,5 @@ urlpatterns = [
     path('tickets/', include('ticket.urls')),
     path('writeups/', include('writeup.urls')),
     path('leaderboard/', include('leaderboard.urls')),
+    path('challenges/', include('challenge.urls')),
 ] + static (settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)

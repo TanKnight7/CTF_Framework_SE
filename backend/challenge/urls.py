@@ -18,20 +18,20 @@ urlpatterns = [
     # Challenges by Category Endpoints
     # =================================================
     # GET challenges for a specific category by its name
-    path('categories/<str:category_name>/challenges/', views.get_challenges_by_categories, name='get_challenges_by_category'),
+    path('categories/<str:category_name>/', views.get_challenges_by_categories, name='get_challenges_by_category'),
 
     # =================================================
     # CRUD Challenge Endpoints
     # =================================================
     # GET all challenges
-    path('challenges/', views.get_all_challenges, name='get_all_challenges'),
+    path('', views.get_all_challenges, name='get_all_challenges'),
     # POST create a new challenge
-    path('challenges/create/', views.create_challenge, name='create_challenge'),
+    path('create/', views.create_challenge, name='create_challenge'),
     # GET details for a specific challenge by its ID
-    path('challenges/<int:challenge_id>/', views.get_challenge_detail, name='get_challenge_detail'),
+    path('<int:challenge_id>/', views.get_challenge_detail, name='get_challenge_detail'),
     # PUT edit a specific challenge by its ID
-    path('challenges/<int:challenge_id>/edit/', views.edit_challenge, name='edit_challenge'),
+    path('<int:challenge_id>/edit/', views.edit_challenge, name='edit_challenge'),
     # DELETE a specific challenge by its ID
-    path('challenges/<int:challenge_id>/delete/', views.delete_challenge, name='delete_challenge'),
+    path('<int:challenge_id>/delete/', views.delete_challenge, name='delete_challenge'),
 ]
 

@@ -16,6 +16,8 @@ services:
   backend:
     build: ./backend
     container_name: softeng_backend
+    volumes:
+      - ./backend:/app
     environment:
       - DB_HOST=db
       - DB_NAME=mydb

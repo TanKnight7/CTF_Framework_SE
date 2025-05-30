@@ -10,7 +10,7 @@ class ChallengeSerializer(serializers.ModelSerializer):
 class CreateChallengeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Challenge
-        fields = '__all__'
+        exclude = ['rating', 'point', 'solve_count']
 
 # Basic Category Serializer - for simple category listings
 class CategorySerializer(serializers.ModelSerializer):
