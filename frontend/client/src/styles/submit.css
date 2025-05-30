@@ -1,0 +1,355 @@
+/* SubmitWriteupPage.css */
+@import url("https://fonts.googleapis.com/css2?family=VT323&family=Roboto+Mono:wght@400;700&display=swap");
+
+:root {
+  --neon-green: #00ff00;
+  --dark-green: #003300;
+  --terminal-green: #33ff33;
+  --background-black: #000000;
+  --terminal-header: #00ff00;
+  --terminal-border: #333333;
+  --error-red: #ff3333;
+  --success-green: #00cc00;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.submit-writeup-page {
+  width: 100vw;
+  height: 100vh;
+  background-color: transparent;
+  color: var(--neon-green);
+  font-family: "Roboto Mono", monospace;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  overflow-y: auto;
+  padding-bottom: 40px;
+}
+
+/* Matrix Background Effect */
+.matrix-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  opacity: 0.15;
+}
+
+@keyframes flicker {
+  0%,
+  19.999%,
+  22%,
+  62.999%,
+  64%,
+  64.999%,
+  70%,
+  100% {
+    opacity: 0.8;
+    text-shadow: 0 0 4px var(--neon-green);
+  }
+  20%,
+  21.999%,
+  63%,
+  63.999%,
+  65%,
+  69.999% {
+    opacity: 0.4;
+    text-shadow: none;
+  }
+}
+
+/* Content Styling */
+.content {
+  z-index: 2;
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.header {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.logo {
+  font-family: "VT323", monospace;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--neon-green);
+  text-shadow: 0 0 10px var(--neon-green);
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+}
+
+h1 {
+  font-family: "VT323", monospace;
+  font-size: 2.5rem;
+  color: var(--neon-green);
+  text-shadow: 0 0 8px var(--neon-green);
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+}
+
+/* Terminal Styling */
+.terminal {
+  width: 100%;
+  max-width: 800px;
+  background-color: var(--background-black);
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid var(--terminal-border);
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+}
+
+.terminal-header {
+  background-color: var(--terminal-header);
+  padding: 8px 15px;
+  display: flex;
+  align-items: center;
+  height: 30px;
+}
+
+.terminal-button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #ff5f56;
+  margin-right: 8px;
+  display: inline-block;
+}
+
+.terminal-button:nth-child(2) {
+  background-color: #ffbd2e;
+}
+
+.terminal-title {
+  margin-left: auto;
+  margin-right: auto;
+  color: black;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.terminal-content {
+  padding: 20px;
+  font-family: "Roboto Mono", monospace;
+  font-size: 16px;
+  color: var(--terminal-green);
+  min-height: 300px;
+}
+
+.command-line {
+  margin-bottom: 20px;
+  opacity: 0.8;
+}
+
+/* Form Styling */
+.writeup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 16px;
+  color: var(--terminal-green);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 1px solid var(--terminal-green);
+  color: var(--terminal-green);
+  padding: 10px 15px;
+  font-family: "Roboto Mono", monospace;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--neon-green);
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 150px;
+  line-height: 1.5;
+}
+
+.challenge-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2333ff33' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+  padding-right: 30px;
+}
+
+.file-input-container {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+.file-input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.file-input-text {
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 1px solid var(--terminal-green);
+  color: var(--terminal-green);
+  padding: 10px 15px;
+  font-family: "Roboto Mono", monospace;
+  font-size: 16px;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.error-message {
+  color: var(--error-red);
+  margin-top: 10px;
+  font-size: 14px;
+  text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+}
+
+.success-message {
+  color: var(--success-green);
+  margin-top: 10px;
+  font-size: 14px;
+  text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+}
+
+.submit-button {
+  background-color: var(--dark-green);
+  color: var(--neon-green);
+  border: 1px solid var(--neon-green);
+  padding: 12px 20px;
+  font-family: "Roboto Mono", monospace;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  text-shadow: 0 0 5px var(--neon-green);
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+  align-self: flex-start;
+}
+
+.submit-button:hover {
+  background-color: rgba(0, 255, 0, 0.2);
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
+}
+
+.submit-button:active {
+  transform: translateY(2px);
+}
+
+.submit-button.loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .content {
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  .logo {
+    font-size: 2rem;
+  }
+
+  .terminal-content {
+    font-size: 14px;
+    padding: 15px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea,
+  .file-input-text {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .logo {
+    font-size: 1.8rem;
+  }
+
+  .terminal {
+    max-width: 95%;
+  }
+
+  .submit-button {
+    width: 100%;
+  }
+}
+
+.logout-button {
+  background-color: var(--dark-green);
+  color: var(--neon-green);
+  border: 1px solid var(--neon-green);
+  padding: 8px 15px;
+  font-family: "Roboto Mono", monospace;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-shadow: 0 0 5px var(--neon-green);
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+}
+
+.logout-button:hover {
+  background-color: rgba(0, 255, 0, 0.2);
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
+}
+
+.logout-button:active {
+  transform: translateY(2px);
+}

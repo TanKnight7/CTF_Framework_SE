@@ -1,0 +1,81 @@
+/* Terminal Container */
+.terminal-container {
+  width: 100%;
+  background-color: var(--terminal-black);
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: 'Courier New', monospace;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--terminal-green);
+}
+
+/* Terminal Title Bar */
+.terminal-title-bar {
+  background-color: var(--terminal-green);
+  color: var(--terminal-black);
+  display: flex;
+  padding: 8px 12px;
+  align-items: center;
+}
+
+.terminal-buttons {
+  display: flex;
+  margin-right: 12px;
+}
+
+.terminal-button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.terminal-button-close {
+  background-color: #FF5F57;
+}
+
+.terminal-button-minimize {
+  background-color: #FFBD2E;
+}
+
+.terminal-button-maximize {
+  background-color: #28C940;
+}
+
+.terminal-title {
+  flex-grow: 1;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Terminal Content */
+.terminal-content {
+  padding: 12px;
+  color: var(--terminal-green);
+  min-height: 200px;
+  max-height: 400px;
+  overflow-y: auto;
+  line-height: 1.6;
+}
+
+.terminal-line {
+  padding: 2px 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Terminal Cursor */
+.terminal-cursor {
+  display: inline-block;
+  width: 10px;
+  height: 18px;
+  background-color: var(--terminal-green);
+  animation: blink 1s step-end infinite;
+  vertical-align: middle;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}

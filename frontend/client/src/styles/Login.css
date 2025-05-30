@@ -1,0 +1,328 @@
+@import url("https://fonts.googleapis.com/css2?family=VT323&family=Roboto+Mono:wght@400;700&display=swap");
+
+:root {
+  --neon-green: #00ff00;
+  --dark-green: #003300;
+  --terminal-green: #33ff33;
+  --background-black: #000000;
+  --terminal-header: #00ff00;
+  --terminal-border: #333333;
+  --error-red: #ff3333;
+  --terminal-white: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.login-page {
+  width: 100vw;
+  height: 100vh;
+  background-color: transparent;
+  color: var(--neon-green);
+  font-family: "Roboto Mono", monospace;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes flicker {
+  0%,
+  19.999%,
+  22%,
+  62.999%,
+  64%,
+  64.999%,
+  70%,
+  100% {
+    opacity: 0.8;
+    text-shadow: 0 0 4px var(--neon-green);
+  }
+  20%,
+  21.999%,
+  63%,
+  63.999%,
+  65%,
+  69.999% {
+    opacity: 0.4;
+    text-shadow: none;
+  }
+}
+
+/* Content Styling */
+.content {
+  z-index: 2;
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.header {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.logo {
+  font-family: "VT323", monospace;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--neon-green);
+  text-shadow: 0 0 10px var(--neon-green);
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+}
+
+h1 {
+  font-family: "VT323", monospace;
+  font-size: 2.5rem;
+  color: var(--neon-green);
+  text-shadow: 0 0 8px var(--neon-green);
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+}
+
+/* Terminal Styling */
+.terminal {
+  width: 100%;
+  max-width: 600px;
+  background-color: var(--background-black);
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid var(--terminal-border);
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+}
+
+.terminal-header {
+  background-color: var(--terminal-header);
+  padding: 8px 15px;
+  display: flex;
+  align-items: center;
+  height: 30px;
+}
+
+.terminal-button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #ff5f56;
+  margin-right: 8px;
+  display: inline-block;
+}
+
+.terminal-button:nth-child(2) {
+  background-color: #ffbd2e;
+}
+
+.terminal-title {
+  margin-left: auto;
+  margin-right: auto;
+  color: black;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.terminal-content {
+  padding: 20px;
+  font-family: "Roboto Mono", monospace;
+  font-size: 16px;
+  color: var(--terminal-green);
+  min-height: 300px;
+}
+
+.command-line {
+  margin-bottom: 20px;
+  opacity: 0.8;
+}
+
+/* Form Styling */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 16px;
+  color: var(--terminal-green);
+}
+
+.form-group input {
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 1px solid var(--terminal-green);
+  color: var(--terminal-white);
+  padding: 10px 15px;
+  font-family: "Roboto Mono", monospace;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+  border-color: var(--neon-green);
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+.error-message {
+  color: var(--error-red);
+  margin-top: 10px;
+  font-size: 14px;
+  text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+}
+
+.login-button {
+  background-color: var(--dark-green);
+  color: var(--neon-green);
+  border: 1px solid var(--neon-green);
+  padding: 12px 20px;
+  font-family: "Roboto Mono", monospace;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  text-shadow: 0 0 5px var(--neon-green);
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+  align-self: flex-start;
+}
+
+.login-button:hover {
+  background-color: rgba(0, 255, 0, 0.2);
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
+}
+
+.login-button:active {
+  transform: translateY(2px);
+}
+
+.login-button.loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .content {
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  .logo {
+    font-size: 2rem;
+  }
+
+  .terminal-content {
+    font-size: 14px;
+    padding: 15px;
+  }
+
+  .form-group input {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .logo {
+    font-size: 1.8rem;
+  }
+
+  .terminal {
+    max-width: 95%;
+  }
+
+  .login-button {
+    width: 100%;
+  }
+}
+
+/* Add this to your Login.css or a dedicated Register.css */
+
+.form-group.password-group {
+  position: relative; /* Allows absolute positioning of the button */
+}
+
+.form-group.password-group input {
+  padding-right: 60px; /* Make space for the button */
+}
+
+/* Container for password input and show/hide button */
+.password-input-container {
+  position: relative;
+  display: flex; /* Aligns input and button if needed, though button is absolute */
+  align-items: center;
+}
+
+/* Style the password input field */
+.password-input-container input[type="password"],
+.password-input-container input[type="text"] {
+  /* Assuming base input styles are defined elsewhere */
+  /* Add padding to the right to make space for the button */
+  padding-right: 45px; /* Adjust as needed based on button size */
+  width: 100%; /* Ensure input takes full width of its container */
+  /* Add terminal theme focus */
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.password-input-container input[type="password"]:focus,
+.password-input-container input[type="text"]:focus {
+  /* Use existing focus styles or add themed ones */
+  border-color: var(--terminal-green, #00ff00); /* Use variable or fallback */
+  box-shadow: 0 0 8px rgba(0, 255, 0, 0.6); /* Green glow */
+  outline: none; /* Remove default outline */
+}
+
+/* Style the show/hide button */
+.show-hide-password {
+  position: absolute;
+  right: 10px; /* Position inside the input field */
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  color: var(--terminal-green, #00ff00); /* Use variable or fallback */
+  font-size: 0.8rem; /* Smaller font size */
+  font-weight: bold;
+  text-transform: uppercase;
+  opacity: 0.7;
+  transition: opacity 0.3s ease, color 0.3s ease;
+}
+
+.show-hide-password:hover {
+  opacity: 1;
+  color: var(--text-primary, #ffffff); /* Brighter color on hover */
+}
+
+.show-hide-password:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.login-page .terminal .form-group input,
+.login-page .terminal .password-input-container input {
+  color: var(
+    --terminal-white,
+    #ffffff
+  ) !important; /* Added !important as a stronger measure if specificity alone isn't enough */
+}
