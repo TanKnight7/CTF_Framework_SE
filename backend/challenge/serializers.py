@@ -11,12 +11,18 @@ class CreateChallengeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Challenge
         exclude = ['rating', 'point', 'solve_count']
+    
+    def create(self, validated_data):
+        user = self.context.get('request').user
+        validated_data['author'] = user
+        challenge = Challenge.objects.create(**validated_data)
+        return challenge
 
 # Basic Category Serializer - for simple category listings
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = '__all__'
+        fields = ['name']
 
 # Detailed Category Serializer - includes challenges related to this category
 class CategoryDetailSerializer(serializers.ModelSerializer):

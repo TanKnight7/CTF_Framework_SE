@@ -44,7 +44,7 @@ def create_category(request):
     serializer = CategorySerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-        return Response({"success": "Successfully created category", "category_data": serializer.data}, status=status.HTTP_201_CREATED)
+        return Response({"success": "Successfully created category", "data": serializer.data}, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT'])
@@ -63,7 +63,7 @@ def edit_categories(request, category_name):
         serializer = CategorySerializer(category, data=request.data, partial=True) 
         if serializer.is_valid():
             serializer.save()
-            return Response({"success": "Category successfully updated!", "category_data": serializer.data}, status=status.HTTP_200_OK)
+            return Response({"success": "Category successfully updated!", "data": serializer.data}, status=status.HTTP_200_OK)
         return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
     except Category.DoesNotExist:
         return Response({"error": f"Category '{category_name}' not found"}, status=status.HTTP_404_NOT_FOUND)
@@ -171,24 +171,22 @@ def create_challenge(request):
     The 'author' will be set to the authenticated user.
     'attachment' should be sent as a file in a multipart/form-data request.
     """
-    data = request.data.copy() # Use .copy() if you might modify it, otherwise request.data is fine
-    data['author'] = request.user.id
     
     # Defaults like solve_count, rating are handled by model defaults.
     # No need to set data['attachment'] = '' here;
     # CreateChallengeSerializer will handle the file from request.FILES if provided.
 
     # Pass request.FILES to the serializer if handling file uploads
-    serializer = CreateChallengeSerializer(data=data, context={'request': request})
+    serializer = CreateChallengeSerializer(data=request.data, context={'request': request})
     if serializer.is_valid():
         serializer.save() # Author is already part of the data passed to serializer
-        return Response({"success": "Challenge successfully created", "challenge_data": serializer.data}, status=status.HTTP_201_CREATED)
+        return Response({"success": "Challenge successfully created", "data": serializer.data}, status=status.HTTP_201_CREATED)
     return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['PUT'])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated, IsAdminUser])
+@permission_classes([IsAuthenticated])
 def edit_challenge(request, challenge_id):
     """
     Edit an existing challenge by its ID.
@@ -224,7 +222,7 @@ def delete_challenge(request, challenge_id):
     try:
         challenge = Challenge.objects.get(pk=challenge_id)
 
-        if challenge.author != request.user and not request.user.is_staff:
+        if challenge.author != request.user and request.user.role != "admin":
             return Response({"error": "You do not have permission to delete this challenge."}, status=status.HTTP_403_FORBIDDEN)
         
         challenge_title = challenge.title # For the success message
