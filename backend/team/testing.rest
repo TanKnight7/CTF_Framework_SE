@@ -2,12 +2,13 @@
 ### Create a new team
 POST http://127.0.0.1:9999/teams/create/
 Content-Type: application/json
-Authorization: Token 0fb2bad072537e91821b7853b5849732f47c9a4be64d5b6d1423a05c622e0685
+Authorization: Token f890c00447f0db612c3bdba9b94c7b66be756e2e88a1f53e4b7bad7727e285d5
 
 {
-  "name": "Team Falcosa",
-  "institute": "OpenAI Academy"
-}
+  "name": "Team Falcosaaaa",
+  "institute": "OpenAI Academy",
+  "token":"gacor"
+  }
 
 ### Get current user's team
 GET http://127.0.0.1:9999/teams/me/
@@ -52,4 +53,4 @@ Authorization: Token 33b0d0ef448d230e45ae98253f10e8e081b568cd83b0cce72079946b0ae
 ### leave a team (if you have a view for this)
 GET http://127.0.0.1:9999/teams/leave/
 Content-Type: application/json
-Authorization: Token 277a9d3979524a3413a94d34d987f0b8ad0a99756330d3175256f4359ce16edb 
+Authorization: Token f890c00447f0db612c3bdba9b94c7b66be756e2e88a1f53e4b7bad7727e285d5 

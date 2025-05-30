@@ -5,7 +5,7 @@ from django.utils import timezone
 
 ## Import models and serializers
 from team.models import Team
-from team.serializers import PublicTeamLeaderboardSerializer
+from team.serializers import TeamListSerializer
 
 ## Imports authorization mechanism
 from rest_framework.decorators import authentication_classes, permission_classes
@@ -18,7 +18,7 @@ from rest_framework.permissions import IsAuthenticated
 @permission_classes([IsAuthenticated])
 def leaderboard(request):
     teams = Team.objects.order_by('-total_point')
-    serializer = PublicTeamLeaderboardSerializer(teams, many=True)
+    serializer = TeamListSerializer(teams, many=True)
     
     leaderboard_with_ranks = [
         {

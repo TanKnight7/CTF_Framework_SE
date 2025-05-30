@@ -1,27 +1,46 @@
 from rest_framework import status
 from rest_framework.response import Response
-from knox.models import AuthToken
 from rest_framework.decorators import api_view
+
+### ==== Models & Serializers
 from .models import Team
-from .serializers import TeamSerializer, PublicTeamSerializer
-import uuid
+from .serializers import TeamRegistrationSerializer, TeamListSerializer, TeamDetailSerializer, TeamUpdateSerializer
 
-
+### ==== Authentication & Authorization
 from rest_framework.decorators import authentication_classes, permission_classes
 from knox.auth import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
+# =====================
+# ==== CREATE TEAM ====
+# =====================
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def create_team(request):
+    serializer = TeamRegistrationSerializer(data=request.data, context={'request':request})
+    if not serializer.is_valid():
+        return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+    
+    team = serializer.save()
+    
+    return Response(TeamRegistrationSerializer(team).data, status=status.HTTP_201_CREATED)
 
+# ========================
+# ====== TEAM LIST =======
+# ========================
 @api_view(['GET'])
 def get_all_teams(request):
     try:
         team = Team.objects.all()
-        serializer = PublicTeamSerializer(team, many=True)
+        serializer = TeamListSerializer(team, many=True)
         return Response(serializer.data)
     except Team.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-
+# ==============================
+# ===== TEAM DETAILS BY ID =====
+# ==============================
 @api_view(['GET', 'PUT'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -32,25 +51,22 @@ def get_update_team(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
     
     if request.method == 'GET':
-        serializer = PublicTeamSerializer(team)
-        return Response(serializer.data)
+        return Response(TeamDetailSerializer(team, context={'request':request}).data)
     
     if team.leader != request.user:
-        return Response({"error": "You do not have permission to modify this team's profile."}, 
-                        status=status.HTTP_403_FORBIDDEN)
+        return Response({"error": "You do not have permission to modify this team's profile."}, status=status.HTTP_403_FORBIDDEN)
     
     if request.method == 'PUT':
-        allowed_fields = ['institute']
-        updated_data = {key: value for key, value in request.data.items() if key in allowed_fields}
-        
-        serializer = TeamSerializer(team, data=updated_data, partial=True)
+        serializer = TeamUpdateSerializer(team, data=request.data, partial=True)
         if not serializer.is_valid():
             return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         
-        serializer.save()
-        return Response({"success": "Team Profile updated.", "team_data": serializer.data}, status=status.HTTP_200_OK)
+        team = serializer.save()
+        return Response({"success": "Team Profile updated.", "data": TeamDetailSerializer(team, context={'request':request}).data}, status=status.HTTP_200_OK)
 
-
+# ===========================
+# ===== MY TEAM DETAILS =====
+# ===========================
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -58,32 +74,12 @@ def me(request):
     if request.user.team is None:
         return Response(status=status.HTTP_404_NOT_FOUND)
         
-    return Response({"me": TeamSerializer(request.user.team).data}, status=status.HTTP_200_OK)
-
+    return Response({"data": TeamDetailSerializer(request.user.team, context={'request':request}).data}, status=status.HTTP_200_OK)
+    
+# ===========================
+# ======== JOIN TEAM ========
+# ===========================
 @api_view(['POST'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def create_team(request):
-    if request.user.team is not None:
-        return Response({"error": "You have joined a team."}, status=status.HTTP_400_BAD_REQUEST)
-    
-    data = request.data.copy()
-    data['leader'] = request.user.id
-    data['token'] = str(uuid.uuid4())
-    serializer = TeamSerializer(data=data)
-    if not serializer.is_valid():
-        return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-    
-    if Team.objects.filter(name__iexact=data['name']).exists():
-        return Response({"error": "team with this name already exists."}, status=status.HTTP_400_BAD_REQUEST)
-        
-    team = serializer.save()
-    request.user.team = team
-    request.user.save()
-    return Response(TeamSerializer(team).data, status=status.HTTP_201_CREATED)
-    
-
-@api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def join_team(request, pk, token):
@@ -98,9 +94,12 @@ def join_team(request, pk, token):
     request.user.team = team
     request.user.save()
     
-    return Response({"success": "Successfully joining a team", "team": PublicTeamSerializer(team).data}, status=status.HTTP_200_OK)
+    return Response({"success": "Successfully joining a team", "team": TeamDetailSerializer(team, context={'request':request}).data}, status=status.HTTP_200_OK)
 
-@api_view(['GET'])
+# ===========================
+# ======== LEAVE TEAM =======
+# ===========================
+@api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def leave_team(request):

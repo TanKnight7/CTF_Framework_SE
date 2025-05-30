@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from team.serializers import PublicTeamSerializer
+from team.serializers import TeamListSerializer
 from .models import LeaderboardEntry, Leaderboard
 
 class LeaderboardEntrySerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(read_only=True)  # Display username for user entries
-    team = PublicTeamSerializer(read_only=True)  # Include the team data for team entries
+    team = TeamListSerializer(read_only=True)  # Include the team data for team entries
     
     class Meta:
         model = LeaderboardEntry

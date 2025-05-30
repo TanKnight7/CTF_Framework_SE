@@ -1,9 +1,13 @@
 from rest_framework import status
 from rest_framework.response import Response
-from knox.models import AuthToken
 from rest_framework.decorators import api_view
+
+### ==== Models & Serializers
+from knox.models import AuthToken
 from .models import User
 from .serializers import UserRegistrationSerializer, UserListSerializer, UserDetailSerializer, UserUpdateSerializer
+
+### ==== Authentication & Authorization
 from rest_framework.decorators import authentication_classes, permission_classes
 from knox.auth import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated

@@ -34,7 +34,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
         
         if request:
             user = request.user
-            if user != instance and not user.is_staff:
+            if user != instance and not user.role != 'admin':
                 # Hide email if viewer is NOT owner or staff
                 data.pop('email', None)
         else:
