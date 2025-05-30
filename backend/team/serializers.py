@@ -6,8 +6,13 @@ import uuid
 class TeamRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
-        fields = ['name', 'institute', 'token', 'leader']
-        read_only_fields = ['token', 'leader']
+        fields = ['id', 'name', 'institute', 'token', 'leader']
+        read_only_fields = ['id', 'token', 'leader']
+    
+    def validate_name(self, value):
+        if Team.objects.filter(name__iexact=value).exists():
+            raise serializers.ValidationError("A team with this name already exists.")
+        return value.lower()
     
     def validate(self, attrs):
         user = self.context.get('request').user

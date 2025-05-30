@@ -5,7 +5,7 @@ Content-Type: application/json
 Authorization: Token f890c00447f0db612c3bdba9b94c7b66be756e2e88a1f53e4b7bad7727e285d5
 
 {
-  "name": "Team Falcosaaaa",
+  "name": "Team Falcoasaaaaa",
   "institute": "OpenAI Academy",
   "token":"gacor"
   }
@@ -13,7 +13,7 @@ Authorization: Token f890c00447f0db612c3bdba9b94c7b66be756e2e88a1f53e4b7bad7727e
 ### Get current user's team
 GET http://127.0.0.1:9999/teams/me/
 Content-Type: application/json
-Authorization: Token 451c7781271cd1a68bbac5f8d900953872cb32fb9c3a433bcfd0936e318e2b3f
+Authorization: Token f890c00447f0db612c3bdba9b94c7b66be756e2e88a1f53e4b7bad7727e285d5
 
 
 
@@ -46,11 +46,11 @@ Content-Type: application/json
 Authorization: Token 277a9d3979524a3413a94d34d987f0b8ad0a99756330d3175256f4359ce16edb
 
 ### Join a team (if you have a view for this)
-GET http://127.0.0.1:9999/teams/join/2/b8c08c1c-ec97-4bce-b9e2-7cddcd65fc4c/
+POST http://127.0.0.1:9999/teams/join/8/6c9399ff-d76e-4995-acbf-2598e26142d1/
 Content-Type: application/json
-Authorization: Token 33b0d0ef448d230e45ae98253f10e8e081b568cd83b0cce72079946b0aed8042
+Authorization: Token 01ee0ad47bc2f3a5a98d52e226321143a2640ef0800bc8a056e9d0a890973a45
 
 ### leave a team (if you have a view for this)
-GET http://127.0.0.1:9999/teams/leave/
+POST http://127.0.0.1:9999/teams/leave/
 Content-Type: application/json
-Authorization: Token f890c00447f0db612c3bdba9b94c7b66be756e2e88a1f53e4b7bad7727e285d5 
+Authorization: Token 01ee0ad47bc2f3a5a98d52e226321143a2640ef0800bc8a056e9d0a890973a45 

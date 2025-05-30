@@ -49,8 +49,7 @@ class CreateTeamTest(TestSetUp):
         team_data['name'] = 'Testingteam'
         res2 = self.client.post(self.create_team_url, team_data,format="json")
         self.assertEqual(res2.status_code, 400)
-        self.assertIn("error", res2.json())
-        self.assertIn("team with this name already exists.", res2.json()['error'])
+        self.assertIn("team with this name already exists.", str(res2.json()))
     
     def test_user_cannot_create_team_if_already_member_of_a_team(self):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user1_token)
@@ -62,8 +61,7 @@ class CreateTeamTest(TestSetUp):
         team_data['name'] = 'DifferentName'
         res2 = self.client.post(self.create_team_url, team_data, format="json")
         self.assertEqual(res2.status_code, 400)
-        self.assertIn("error", res2.json())
-        self.assertIn("You have joined a team.", res2.json()['error'])
+        self.assertIn("User already", str(res2.json()))
         
         
         
@@ -78,7 +76,7 @@ class JoinTeamTest(TestSetUp):
         id, token = res1.json()['id'], res1.json()['token']
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user2_token)
         self.join_team_url = reverse('join_team', kwargs={'pk': id, 'token': token})
-        res2 = self.client.get(self.join_team_url, format="json")
+        res2 = self.client.post(self.join_team_url, format="json")
         self.assertEqual(res2.status_code, 200)
         
         
@@ -97,7 +95,7 @@ class JoinTeamTest(TestSetUp):
         
         id, token = res2.json()['id'], res2.json()['token']
         self.join_team_url = reverse('join_team', kwargs={'pk': id, 'token': token})
-        res3 = self.client.get(self.join_team_url, format="json")
+        res3 = self.client.post(self.join_team_url, format="json")
         self.assertEqual(res3.status_code, 400)
         self.assertIn("error", res3.json())
         self.assertIn("You have joined a team.", res3.json()['error'])
@@ -105,7 +103,7 @@ class JoinTeamTest(TestSetUp):
 class LeaveTeamTest(TestSetUp):
     def test_user_cannot_leave_team_if_not_a_member(self):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user1_token)
-        res = self.client.get(self.leave_team_url, format="json")
+        res = self.client.post(self.leave_team_url, format="json")
         self.assertEqual(res.status_code, 400)
         self.assertIn("error", res.json())
         self.assertIn("You haven't joined a team", res.json()['error'])
@@ -119,7 +117,7 @@ class LeaveTeamTest(TestSetUp):
         team = Team.objects.filter(name=self.team_data['name']).first()
         self.assertIsInstance(team, Team)
         
-        res2 = self.client.get(self.leave_team_url, format="json")
+        res2 = self.client.post(self.leave_team_url, format="json")
         self.assertEqual(res2.status_code, 200)
         
         team = Team.objects.filter(name=self.team_data['name']).first()
@@ -135,11 +133,11 @@ class LeaveTeamTest(TestSetUp):
         id, token = res1.json()['id'], res1.json()['token']
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user2_token)
         self.join_team_url = reverse('join_team', kwargs={'pk': id, 'token': token})
-        res2 = self.client.get(self.join_team_url, format="json")
+        res2 = self.client.post(self.join_team_url, format="json")
         self.assertEqual(res2.status_code, 200)
 
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user1_token)
-        res3 = self.client.get(self.leave_team_url, format="json")
+        res3 = self.client.post(self.leave_team_url, format="json")
         self.assertEqual(res3.status_code, 200)
         
         team = Team.objects.filter(pk=id).first()
@@ -165,10 +163,10 @@ class AccessControlTest(TestSetUp):
         
         self.join_team_url = reverse('join_team', kwargs={'pk': 1, 'token':'123'})
         
-        res = self.client.get(self.join_team_url)
+        res = self.client.post(self.join_team_url)
         self.assertEqual(res.status_code, 401)
 
-        res = self.client.get(self.leave_team_url)
+        res = self.client.post(self.leave_team_url)
         self.assertEqual(res.status_code, 401)
         
     def test_user_cannot_join_team_without_valid_token(self):
@@ -179,7 +177,7 @@ class AccessControlTest(TestSetUp):
         id, token = res1.json()['id'], res1.json()['token']
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user2_token)
         self.join_team_url = reverse('join_team', kwargs={'pk': id, 'token': '123'}) # invalid token
-        res2 = self.client.get(self.join_team_url, format="json")
+        res2 = self.client.post(self.join_team_url, format="json")
         self.assertEqual(res2.status_code, 404)
         self.assertIn("error", res2.json())
         self.assertIn("Team with this id or invalid token does not exist.", res2.json()['error'])

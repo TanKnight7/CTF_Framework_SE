@@ -9,6 +9,10 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True}
         }
+    def validate_username(self, value):
+        if User.objects.filter(username__iexact=value).exists():
+            raise serializers.ValidationError("A user with this name already exists.")
+        return value.lower()
     
     def validate_password(self, value):
         validate_password(value, user=self.instance)
