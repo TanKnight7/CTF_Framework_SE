@@ -5,8 +5,8 @@ from knox.auth import TokenAuthentication
 from rest_framework.response import Response
 # from django.shortcuts import get_object_or_404 # Useful alternative
 
-from .models import Category, Challenge
-from .serializers import ChallengeSerializer, CategorySerializer, CategoryDetailSerializer, CreateChallengeSerializer
+from .models import Category, Challenge, ChallengeSolve
+from .serializers import ChallengeListSerializer, ChallengeSerializer, CategorySerializer, CategoryDetailSerializer, CreateChallengeSerializer, ChallengeSolveSerializer
 # It's good practice to import your User model if you need to interact with it directly,
 # e.g., from django.contrib.auth import get_user_model
 # User = get_user_model()
@@ -233,3 +233,68 @@ def delete_challenge(request, challenge_id):
     except Exception as e:
         return Response({"error": f"An unexpected error occurred: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def submit_flag(request, challenge_id):
+    """
+    SUBMIT FLEG
+    """
+    if not request.user.team:
+        return Response({"message": f"You must join a team to submit a flag!"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        challenge = Challenge.objects.get(pk=challenge_id)
+    except Challenge.DoesNotExist:
+        return Response({"message": f"Challenge does not exists."}, status=status.HTTP_404_NOT_FOUND)
+    
+    user_submitted_flag = request.data.get('flag')
+    if user_submitted_flag is None:
+        return Response({"message": f"Specify the flag bro.."}, status=status.HTTP_400_BAD_REQUEST)
+    
+    if ChallengeSolve.objects.filter(user=request.user, challenge=challenge).exists():
+        return Response({"message": "You already solved this challenge."}, status=status.HTTP_400_BAD_REQUEST)
+    
+    team_members = request.user.team.members.all()
+    if ChallengeSolve.objects.filter(user__in=team_members, challenge=challenge).exists():
+        return Response({"message": "Your team already solved this challenge."}, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+    if challenge.flag != user_submitted_flag:
+        return Response({"message": f"Wrong answer."}, status=status.HTTP_400_BAD_REQUEST)
+    
+    ChallengeSolve.objects.create(user=request.user, challenge=challenge)
+    
+    return Response({"message":"Correct."}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def solved_by_me(request):
+    """
+    Delete a challenge by its ID.
+    Only the author or an admin (conceptual) can delete.
+    """
+    solves = ChallengeSolve.objects.filter(user=request.user)
+    if not solves.exists():
+        return Response({"message": f"You have not solved any challenges yet."}, status=status.HTTP_404_NOT_FOUND)
+    
+    return Response(ChallengeSolveSerializer(solves, many=True).data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def solved_by_team(request):
+    if not request.user.team:
+        return Response({"message": f"You haven't joined a team"}, status=status.HTTP_404_NOT_FOUND)
+    
+    
+    team_members = request.user.team.members.all()
+    solves = ChallengeSolve.objects.filter(user__in=team_members)
+    
+    if not solves.exists():
+        return Response({"message": f"Your team haven't solved any challenges"}, status=status.HTTP_404_NOT_FOUND)
+
+    return Response({"message": ChallengeSolveSerializer(solves, many=True).data}, status=status.HTTP_200_OK)

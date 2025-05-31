@@ -1,0 +1,4 @@
+### See leaderboard
+GET /api/leaderboard/ HTTP/1.1
+Host: localhost:9999
+Authorization: Token f1c58e2f15cf84bd2d894a2b536bb0f1447e64bf5541de971bc930b308b41a56

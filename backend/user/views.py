@@ -79,4 +79,4 @@ def get_update_delete_user(request, pk):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def me(request):
-    return Response({"me": UserDetailSerializer(request.user, context={'request':request}).data}, status=status.HTTP_200_OK)
+    return Response(UserDetailSerializer(request.user, context={'request':request}).data, status=status.HTTP_200_OK)

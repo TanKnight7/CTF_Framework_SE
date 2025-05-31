@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import Team
+from challenge.models import ChallengeSolve
 from user.serializers import UserListSerializer
+from django.db.models import Sum
 import uuid
 
 class TeamRegistrationSerializer(serializers.ModelSerializer):
@@ -34,9 +36,21 @@ class TeamRegistrationSerializer(serializers.ModelSerializer):
         return team
 
 class TeamListSerializer(serializers.ModelSerializer):
+    solve_count = serializers.SerializerMethodField()
+    total_point = serializers.SerializerMethodField()
     class Meta:
         model = Team
-        fields = ['id', 'name', 'total_point']
+        fields = ['id', 'name', 'total_point', 'solve_count']
+    
+    def get_solve_count(self, instance):
+        return ChallengeSolve.objects.filter(user__in=instance.members.all()).count()
+    
+    def get_total_point(self, instance):
+        return (
+            ChallengeSolve.objects
+            .filter(user__in=instance.members.all())
+            .aggregate(total=Sum('challenge__point'))['total'] or 0
+        )
 
 class TeamDetailSerializer(serializers.ModelSerializer):
     members = UserListSerializer(many=True, read_only=True)

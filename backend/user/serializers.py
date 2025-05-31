@@ -28,6 +28,8 @@ class UserListSerializer(serializers.ModelSerializer):
         fields = ['id', 'username']
 
 class UserDetailSerializer(serializers.ModelSerializer):
+    from team.serializers import TeamListSerializer
+    team = TeamListSerializer()
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'role', 'bio', 'country', 'team']

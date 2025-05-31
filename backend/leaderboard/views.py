@@ -28,4 +28,4 @@ def leaderboard(request):
         for index, team_data in enumerate(serializer.data)
     ]
     
-    return Response({"teams": leaderboard_with_ranks}, status=status.HTTP_200_OK)
+    return Response(leaderboard_with_ranks, status=status.HTTP_200_OK)

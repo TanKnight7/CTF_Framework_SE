@@ -1,8 +1,8 @@
 
 ### Create a new team
-POST http://127.0.0.1:9999/teams/create/
+POST http://127.0.0.1:9999/api/teams/create/
 Content-Type: application/json
-Authorization: Token f890c00447f0db612c3bdba9b94c7b66be756e2e88a1f53e4b7bad7727e285d5
+Authorization: Token f1c58e2f15cf84bd2d894a2b536bb0f1447e64bf5541de971bc930b308b41a56
 
 {
   "name": "Team Falcoasaaaaa",
@@ -11,17 +11,17 @@ Authorization: Token f890c00447f0db612c3bdba9b94c7b66be756e2e88a1f53e4b7bad7727e
   }
 
 ### Get current user's team
-GET http://127.0.0.1:9999/teams/me/
+GET http://127.0.0.1:9999/api/teams/me/
 Content-Type: application/json
-Authorization: Token f890c00447f0db612c3bdba9b94c7b66be756e2e88a1f53e4b7bad7727e285d5
+Authorization: Token a589371b7fb414e443fc70341af04882de625c24f4950ff07429e67289afdd14
 
 
 
 
 ### Get team by id
-GET http://127.0.0.1:9999/teams/1/
+GET http://127.0.0.1:9999/api/teams/2/
 Content-Type: application/json
-Authorization: Token 451c7781271cd1a68bbac5f8d900953872cb32fb9c3a433bcfd0936e318e2b3f
+Authorization: Token a589371b7fb414e443fc70341af04882de625c24f4950ff07429e67289afdd14
 
 
 
@@ -41,16 +41,16 @@ Authorization: Token f615517b9dd9583cb42def4b3c98a4912dda94836ed6d518ed4af832998
 
 
 ### List all teams (if you have a view for this)
-GET http://127.0.0.1:9999/teams/
+GET http://127.0.0.1:9999/api/teams/
 Content-Type: application/json
-Authorization: Token 277a9d3979524a3413a94d34d987f0b8ad0a99756330d3175256f4359ce16edb
+Authorization: Token a589371b7fb414e443fc70341af04882de625c24f4950ff07429e67289afdd14
 
 ### Join a team (if you have a view for this)
-POST http://127.0.0.1:9999/teams/join/8/6c9399ff-d76e-4995-acbf-2598e26142d1/
+POST http://127.0.0.1:9999/api/teams/join/2/2a321eea-feb8-4854-8af0-dff5243a3f51/
 Content-Type: application/json
-Authorization: Token 01ee0ad47bc2f3a5a98d52e226321143a2640ef0800bc8a056e9d0a890973a45
+Authorization: Token f1c58e2f15cf84bd2d894a2b536bb0f1447e64bf5541de971bc930b308b41a56
 
 ### leave a team (if you have a view for this)
-POST http://127.0.0.1:9999/teams/leave/
+POST http://127.0.0.1:9999/api/teams/leave/
 Content-Type: application/json
-Authorization: Token 01ee0ad47bc2f3a5a98d52e226321143a2640ef0800bc8a056e9d0a890973a45 
+Authorization: Token a589371b7fb414e443fc70341af04882de625c24f4950ff07429e67289afdd14 

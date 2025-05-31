@@ -33,5 +33,12 @@ urlpatterns = [
     path('<int:challenge_id>/edit/', views.edit_challenge, name='edit_challenge'),
     # DELETE a specific challenge by its ID
     path('<int:challenge_id>/delete/', views.delete_challenge, name='delete_challenge'),
+    
+    # SUBMIT FLAG
+    path('<int:challenge_id>/submit/', views.submit_flag, name='submit_flag'),
+    
+    # SOLVED CHALLENGES
+    path('solved/me/', views.solved_by_me, name='solved_by_me'),
+    path('solved/team/', views.solved_by_team, name='solved_by_team'),
 ]
 

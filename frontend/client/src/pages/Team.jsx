@@ -1,15 +1,15 @@
-import Terminal from '../components/Terminal';
-import { teamInfo } from '../data/mockData';
+import Terminal from "../components/Terminal";
+import { teamInfo } from "../data/mockData";
 
 const Team = () => {
   const calculatePercentage = (solved, total) => {
     return (solved / total) * 100;
   };
-  
+
   return (
     <div className="container">
       <h1 className="terminal-text text-2xl mb-6">Team</h1>
-      
+
       <div className="card mb-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
           <div>
@@ -21,7 +21,7 @@ const Team = () => {
             <div className="text-muted">Total Score</div>
           </div>
         </div>
-        
+
         <h3 className="terminal-text text-lg mb-3">Challenge Progress</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {Object.entries(teamInfo.stats).map(([category, data]) => (
@@ -33,19 +33,21 @@ const Team = () => {
                 </span>
               </div>
               <div className="w-full bg-tertiary-bg h-2 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-terminal-green" 
-                  style={{ width: `${calculatePercentage(data.solved, data.total)}%` }}
+                <div
+                  className="h-full bg-terminal-green"
+                  style={{
+                    width: `${calculatePercentage(data.solved, data.total)}%`,
+                  }}
                 ></div>
               </div>
             </div>
           ))}
         </div>
       </div>
-      
+
       <h2 className="terminal-text text-xl mb-4">Team Members</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {teamInfo.members.map(member => (
+        {teamInfo.members.map((member) => (
           <div key={member.id} className="card">
             <div className="flex flex-col items-center text-center">
               <div className="text-4xl mb-3">{member.avatar}</div>
@@ -57,7 +59,7 @@ const Team = () => {
           </div>
         ))}
       </div>
-      
+
       <h2 className="terminal-text text-xl mb-4">Team Activity</h2>
       <Terminal
         title="team_activity.log"
@@ -73,7 +75,7 @@ const Team = () => {
           "[2023-05-10 18:20] BinaryNinja downloaded 'Buffer Overflow' challenge files",
           "[2023-05-10 16:55] WebWizard downloaded 'XSS Challenge' challenge files",
           "----------------------------",
-          "$ _"
+          "$ _",
         ]}
       />
     </div>
