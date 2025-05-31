@@ -5,10 +5,7 @@ export async function registerUser(data) {
     const response = await api.post("/api/users/register/", data);
     return response.data;
   } catch (err) {
-    if (err.status == 400) {
-      throw new Error("Username Already Exist");
-    }
-    throw new Error(err);
+    return err.response?.data;
   }
 }
 
@@ -17,7 +14,7 @@ export async function login(data) {
     const response = await api.post("/api/users/login/", data);
     return response.data;
   } catch (err) {
-    throw new Error(err);
+    return err.response?.data;
   }
 }
 

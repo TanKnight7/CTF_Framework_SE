@@ -4,7 +4,7 @@ import "../styles/Login.css"; // Ensure this file contains the enhanced password
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "../services/apiCTF";
-
+import { toast } from "react-toastify";
 const Login = () => {
   const { register, handleSubmit, formState } = useForm();
   const { errors } = formState;
@@ -18,10 +18,16 @@ const Login = () => {
     mutationFn: (userData) => login(userData),
     onSuccess: (responseData) => {
       console.log("Login berhasil:", responseData);
+      if (responseData.error) {
+        return toast.error(JSON.stringify(responseData.error));
+      }
+
+      toast.success(JSON.stringify(responseData));
       localStorage.setItem("Token", responseData.token);
       navigate("/");
     },
     onError: (error) => {
+      toast.error(JSON.stringify(error));
       console.error("Login gagal:", error);
     },
   });

@@ -32,7 +32,7 @@ def login(request):
 def register(request):
     serializer = UserRegistrationSerializer(data=request.data)
     if not serializer.is_valid():
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
     
     user = serializer.save()
     
