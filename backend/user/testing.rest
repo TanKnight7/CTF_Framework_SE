@@ -1,14 +1,14 @@
 
 ### list all users
-GET http://127.0.0.1:9999/users/
+GET http://127.0.0.1:9999/api/users/
 Content-Type: application/json
-Authorization: Token f76cf926772472ce2fe8689e7de272392d495bd41c08265e02d4025d5253fa9a
+Authorization: Token a070379cf9804e5ba4c40fd2f6d923b81262c6e7bfb5726da405f4a3d1b84eec
 
 
 ### Get current user data
-GET http://127.0.0.1:9999/users/me
+GET http://127.0.0.1:9999/api/users/me/
 Content-Type: application/json
-Authorization: Token f76cf926772472ce2fe8689e7de272392d495bd41c08265e02d4025d5253fa9a
+Authorization: Token a070379cf9804e5ba4c40fd2f6d923b81262c6e7bfb5726da405f4a3d1b84eec
 
 
 ### Register an account

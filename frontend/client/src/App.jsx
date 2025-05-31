@@ -4,6 +4,9 @@ import Navbar from "./components/Navbar";
 import BottomNavigation from "./components/BottomNavigation";
 import MatrixBackground from "./components/MatrixBackground";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 // Pages
 import Home from "./pages/Home";
 import Announcements from "./pages/Announcements";
@@ -19,6 +22,9 @@ import Ticket from "./pages/TicketPage";
 import TicketChat from "./pages/TicketChat";
 import CreateTicket from "./pages/CreateTicket";
 import ProtectedRoute from "./components/ProtectedRoutes";
+import JoinTeam from "./pages/JoinTeam";
+import CreateTeam from "./pages/CreateTeam";
+import Settings from "./pages/Settings";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -47,6 +53,18 @@ const App = () => {
 
   return (
     <>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       <MatrixBackground />
       <Navbar />
 
@@ -57,7 +75,10 @@ const App = () => {
               <Route path="/leaderboard" element={<Leaderboard />} />
               <Route path="/challenges" element={<Challenges />} />
               <Route path="/team" element={<Team />} />
+              <Route path="/createTeam" element={<CreateTeam />} />
+              <Route path="/joinTeam" element={<JoinTeam />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/settings" element={<Settings />} />
               <Route path="writeups/submit" element={<Submit />} />
               <Route path="/writeups" element={<Writeups />} />
               <Route path="/Tickets" element={<Ticket />} />

@@ -7,6 +7,6 @@ urlpatterns = [
     path('me/', views.me, name='me'),
     
     path('create/', views.create_team, name='create_team'),
-    path('join/<int:pk>/<str:token>/', views.join_team, name='join_team'),
+    path('join/<str:token>/', views.join_team, name='join_team'),
     path('leave/', views.leave_team, name='leave_team'),
 ]

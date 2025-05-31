@@ -13,7 +13,7 @@ Authorization: Token f1c58e2f15cf84bd2d894a2b536bb0f1447e64bf5541de971bc930b308b
 ### Get current user's team
 GET http://127.0.0.1:9999/api/teams/me/
 Content-Type: application/json
-Authorization: Token a589371b7fb414e443fc70341af04882de625c24f4950ff07429e67289afdd14
+Authorization: Token a070379cf9804e5ba4c40fd2f6d923b81262c6e7bfb5726da405f4a3d1b84eec
 
 
 
@@ -46,11 +46,11 @@ Content-Type: application/json
 Authorization: Token a589371b7fb414e443fc70341af04882de625c24f4950ff07429e67289afdd14
 
 ### Join a team (if you have a view for this)
-POST http://127.0.0.1:9999/api/teams/join/2/2a321eea-feb8-4854-8af0-dff5243a3f51/
+POST http://127.0.0.1:9999/api/teams/join/56c5203f-6c70-4b06-bf83-a893107c8249/
 Content-Type: application/json
 Authorization: Token f1c58e2f15cf84bd2d894a2b536bb0f1447e64bf5541de971bc930b308b41a56
 
 ### leave a team (if you have a view for this)
 POST http://127.0.0.1:9999/api/teams/leave/
 Content-Type: application/json
-Authorization: Token a589371b7fb414e443fc70341af04882de625c24f4950ff07429e67289afdd14 
+Authorization: Token f1c58e2f15cf84bd2d894a2b536bb0f1447e64bf5541de971bc930b308b41a56 

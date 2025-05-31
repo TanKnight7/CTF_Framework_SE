@@ -4,12 +4,12 @@ Host: localhost:9999
 Content-Type: application/json
 Authorization: Token f1c58e2f15cf84bd2d894a2b536bb0f1447e64bf5541de971bc930b308b41a56
 
-{"name":"Web Exploitation"}
+{"name":"Software Enginner"}
 
 ### view categories
 GET /api/challenges/categories/ HTTP/1.1
 Host: localhost:9999
-Authorization: Token f1c58e2f15cf84bd2d894a2b536bb0f1447e64bf5541de971bc930b308b41a56
+Authorization: Token a070379cf9804e5ba4c40fd2f6d923b81262c6e7bfb5726da405f4a3d1b84eec
 
 
 ### Create Challenge
@@ -21,7 +21,7 @@ Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0g
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="title"
 
-XSS Chall
+Marvel exploitations
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="flag"
 
@@ -37,7 +37,7 @@ Content-Disposition: form-data; name="difficulty"
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="category"
 
-1
+2
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="attachment"; filename="test.txt"
 Content-Type: text/plain
@@ -52,7 +52,7 @@ Host: localhost:9999
 Authorization: Token f1c58e2f15cf84bd2d894a2b536bb0f1447e64bf5541de971bc930b308b41a56
 
 ### Submit Flag
-POST /api/challenges/1/submit/ HTTP/1.1
+POST /api/challenges/5/submit/ HTTP/1.1
 Host: localhost:9999
 Content-Type: application/json
 Authorization: Token f1c58e2f15cf84bd2d894a2b536bb0f1447e64bf5541de971bc930b308b41a56

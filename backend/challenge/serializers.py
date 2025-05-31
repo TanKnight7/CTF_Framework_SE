@@ -4,16 +4,27 @@ from user.serializers import UserListSerializer
 
 # Basic Category Serializer - for simple category listings
 class CategorySerializer(serializers.ModelSerializer):
+    total_chall = serializers.SerializerMethodField()
+    total_solved_by_team = serializers.SerializerMethodField()
     class Meta:
         model = Category
-        fields = ['name']
+        fields = ['name', 'total_chall', 'total_solved_by_team']
+    
+    def get_total_solved_by_team(self, instance):
+        # Count solves where the challenge belongs to this category
+        return ChallengeSolve.objects.filter(challenge__category=instance).count()
+    
+    def get_total_chall(self, instance):
+        return Challenge.objects.filter(category=instance).count()
+    
 
 class ChallengeListSerializer(serializers.ModelSerializer):
     category = serializers.StringRelatedField()
     solved_by = UserListSerializer(many=True)
     class Meta:
         model = Challenge
-        fields = ['id', 'title', 'category', 'difficulty', 'point', 'rating', 'solved_by']
+        fields = ['id', 'title', 'category', 'difficulty', 'point', 'rating', 'solved_by', 'description', 'attachment']
+
 
 class ChallengeSolveSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)

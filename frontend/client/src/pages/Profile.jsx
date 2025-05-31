@@ -32,10 +32,12 @@ const ProfileEnhanced = () => {
     "$ tail -10 /var/log/user/CaptainCyber_activity.log",
     "Loading user activity...",
     "----------------------------",
-    ...solved_challenges.map(({ challenge, solved_at }) => {
-      const date = new Date(solved_at).toLocaleString();
-      return `[${date}] Solved '${challenge.title}' for ${challenge.point} points`;
-    }),
+    ...(solved_challenges
+      ? solved_challenges.map(({ challenge, solved_at }) => {
+          const date = new Date(solved_at).toLocaleString();
+          return `[${date}] Solved '${challenge.title}' for ${challenge.point} points`;
+        })
+      : ["No user activity yet."]),
     "----------------------------",
     "$ _",
   ];
@@ -52,11 +54,10 @@ const ProfileEnhanced = () => {
         <div className="md:col-span-1">
           <div className="card sticky top-4">
             <div className="flex flex-col items-center text-center mb-6">
-              <div className="text-5xl mb-4">AVATAR NOT SET</div>
               <h2 className="text-xl mb-1">{profile.username}</h2>
               <p className="text-sm text-muted mb-4">{profile.role}</p>
               <div className="terminal-text text-2xl mb-1">
-                USER SCORE NOT SET
+                {profile.total_point}
               </div>
               <p className="text-sm text-muted">Total Points</p>
             </div>
@@ -71,10 +72,6 @@ const ProfileEnhanced = () => {
               <div className="flex justify-between mb-2 mt-2">
                 <span className="text-muted">Team</span>
                 <span>{profile.team?.name}</span>
-              </div>
-              <div className="flex justify-between mb-2">
-                <span className="text-muted">Rank</span>
-                <span># RANK NOT SET</span>
               </div>
 
               {/* Country Field - New */}

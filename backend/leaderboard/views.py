@@ -19,13 +19,4 @@ from rest_framework.permissions import IsAuthenticated
 def leaderboard(request):
     teams = Team.objects.order_by('-total_point')
     serializer = TeamListSerializer(teams, many=True)
-    
-    leaderboard_with_ranks = [
-        {
-            "rank": index + 1,
-            **team_data
-        }
-        for index, team_data in enumerate(serializer.data)
-    ]
-    
-    return Response(leaderboard_with_ranks, status=status.HTTP_200_OK)
+    return Response(serializer.data, status=status.HTTP_200_OK)

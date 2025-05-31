@@ -140,7 +140,7 @@ def get_all_challenges(request):
     """
     try:
         challenges = Challenge.objects.all()
-        serializer = ChallengeSerializer(challenges, many=True)
+        serializer = ChallengeListSerializer(challenges, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({"error": f"An unexpected error occurred: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

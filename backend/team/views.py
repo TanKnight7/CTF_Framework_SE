@@ -72,9 +72,9 @@ def get_update_team(request, pk):
 @permission_classes([IsAuthenticated])
 def me(request):
     if request.user.team is None:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response({"error":"You haven't joined a team."}, status=status.HTTP_200_OK)
         
-    return Response({"data": TeamDetailSerializer(request.user.team, context={'request':request}).data}, status=status.HTTP_200_OK)
+    return Response(TeamDetailSerializer(request.user.team, context={'request':request}).data, status=status.HTTP_200_OK)
     
 # ===========================
 # ======== JOIN TEAM ========
@@ -82,14 +82,14 @@ def me(request):
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def join_team(request, pk, token):
+def join_team(request, token):
     if request.user.team is not None:
         return Response({"error": "You have joined a team."}, status=status.HTTP_400_BAD_REQUEST)
     
     try:
-        team = Team.objects.get(pk=pk, token=token)
+        team = Team.objects.get(token=token)
     except Team.DoesNotExist:
-        return Response({"error": "Team with this id or invalid token does not exist."}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"error": "Invalid token."}, status=status.HTTP_404_NOT_FOUND)
     
     request.user.team = team
     request.user.save()

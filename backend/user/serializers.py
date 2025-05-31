@@ -1,7 +1,9 @@
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 from .models import User
-
+from challenge.models import ChallengeSolve
+from django.db.models import Sum
+        
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -23,16 +25,25 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return user
 
 class UserListSerializer(serializers.ModelSerializer):
+    total_point = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ['id', 'username']
+        fields = ['id', 'username', 'total_point']
+        
+    def get_total_point(self, instance):
+        return (
+            ChallengeSolve.objects
+            .filter(user=instance)
+            .aggregate(total=Sum('challenge__point'))['total'] or 0
+        )
 
 class UserDetailSerializer(serializers.ModelSerializer):
     from team.serializers import TeamListSerializer
+    total_point = serializers.SerializerMethodField()
     team = TeamListSerializer()
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'role', 'bio', 'country', 'team']
+        fields = ['id', 'username', 'email', 'role', 'bio', 'country', 'team', 'total_point']
     
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -48,6 +59,13 @@ class UserDetailSerializer(serializers.ModelSerializer):
             data.pop('email', None)
 
         return data
+    
+    def get_total_point(self, instance):
+        return (
+            ChallengeSolve.objects
+            .filter(user=instance)
+            .aggregate(total=Sum('challenge__point'))['total'] or 0
+        )
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
