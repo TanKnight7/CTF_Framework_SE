@@ -12,7 +12,16 @@ class CategorySerializer(serializers.ModelSerializer):
     
     def get_total_solved_by_team(self, instance):
         # Count solves where the challenge belongs to this category
-        return ChallengeSolve.objects.filter(challenge__category=instance).count()
+        request = self.context.get('request')
+        if not request or not hasattr(request.user, 'team'):
+            return 0
+        
+        
+        team = request.user.team
+        if not team:
+            return 0
+        
+        return ChallengeSolve.objects.filter(challenge__category=instance, user__in=team.members.all()).count()
     
     def get_total_chall(self, instance):
         return Challenge.objects.filter(category=instance).count()

@@ -24,7 +24,7 @@ def get_categories(request):
     """
     try:
         categories = Category.objects.all()
-        serializer = CategorySerializer(categories, many=True)
+        serializer = CategorySerializer(categories, many=True, context={"request":request})
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({"error": f"An unexpected error occurred: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -41,7 +41,7 @@ def create_category(request):
     # if not request.user.is_staff:
     #     return Response({"error": "You do not have permission to perform this action."}, status=status.HTTP_403_FORBIDDEN)
     
-    serializer = CategorySerializer(data=request.data)
+    serializer = CategorySerializer(data=request.data, context={'request':request})
     if serializer.is_valid():
         serializer.save()
         return Response({"success": "Successfully created category", "data": serializer.data}, status=status.HTTP_201_CREATED)
@@ -60,7 +60,7 @@ def edit_categories(request, category_name):
     try:
         category = Category.objects.get(name__iexact=category_name) # Case-insensitive lookup
         # For PUT, typically all fields are required. Use partial=True for PATCH-like behavior.
-        serializer = CategorySerializer(category, data=request.data, partial=True) 
+        serializer = CategorySerializer(category, data=request.data, partial=True, context={'request':request}) 
         if serializer.is_valid():
             serializer.save()
             return Response({"success": "Category successfully updated!", "data": serializer.data}, status=status.HTTP_200_OK)

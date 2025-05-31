@@ -112,17 +112,18 @@ const Team = () => {
 
           <h2 className="terminal-text text-xl mb-4">Team Members</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {TeamDetails.members.map((member) => (
-              <div key={member.id} className="card">
-                <div className="flex flex-col items-center text-center">
-                  <h3 className="text-lg mb-1">{member.username}</h3>
-                  <div className="terminal-text text-2xl mb-2">
-                    {member.total_point}
+            {TeamDetails &&
+              TeamDetails.members.map((member) => (
+                <div key={member.id} className="card">
+                  <div className="flex flex-col items-center text-center">
+                    <h3 className="text-lg mb-1">{member.username}</h3>
+                    <div className="terminal-text text-2xl mb-2">
+                      {member.total_point}
+                    </div>
+                    <div className="text-sm text-muted">Points</div>
                   </div>
-                  <div className="text-sm text-muted">Points</div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
 
           <h2 className="terminal-text text-xl mb-4">Team Activity</h2>
@@ -132,7 +133,7 @@ const Team = () => {
               "$ tail -10 /var/log/team_activity.log",
               "Loading activity log...",
               "----------------------------",
-              ...(TeamDetails.solves
+              ...(TeamDetails.solves && TeamDetails.solves.length > 0
                 ? TeamDetails.solves.map((solves) => {
                     const date = new Date(solves.solved_at).toLocaleString();
                     return `[${date}] '${solves.username}' Solved '${solves.challenge.category} - ${solves.challenge.title}' for ${solves.challenge.point} points`;
