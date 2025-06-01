@@ -141,3 +141,26 @@ export async function getChallenges() {
     return err.response?.data;
   }
 }
+
+export async function submitFlag(data) {
+  try {
+    const response = await api.post(
+      `/api/challenges/${data.challenge_id}/submit/`,
+      {
+        flag: data.flag,
+      }
+    );
+    return response.data;
+  } catch (err) {
+    return err.response?.data;
+  }
+}
+
+export async function getSolved() {
+  try {
+    const response = await api.get(`/api/challenges/solved/team/`);
+    return response.data;
+  } catch (err) {
+    return err.response?.data;
+  }
+}

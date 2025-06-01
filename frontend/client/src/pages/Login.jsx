@@ -25,6 +25,7 @@ const Login = () => {
       toast.success(JSON.stringify(responseData));
       localStorage.setItem("Token", responseData.token);
       navigate("/");
+      window.location.href = "/";
     },
     onError: (error) => {
       toast.error(JSON.stringify(error));

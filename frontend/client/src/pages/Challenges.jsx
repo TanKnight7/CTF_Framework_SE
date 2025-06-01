@@ -1,12 +1,17 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getChallenges, getCategories } from "../services/apiCTF";
+import { getChallenges, getCategories, getSolved } from "../services/apiCTF";
+import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
+import { submitFlag } from "../services/apiCTF";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Challenges = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedDifficulty, setSelectedDifficulty] = useState("all");
   const [selectedChallenge, setSelectedChallenge] = useState(null);
-
+  const navigate = useNavigate();
   const {
     isPending: isChallengesPending,
     isError: isChallengesError,
@@ -16,6 +21,74 @@ const Challenges = () => {
     queryKey: ["getChallenges"],
     queryFn: getChallenges,
   });
+
+  const {
+    isPending: isSolvedPending,
+    isError: isSolvedError,
+    error: solvedError,
+    data: solved,
+  } = useQuery({
+    queryKey: ["getSolved"],
+    queryFn: getSolved,
+  });
+
+  const solvedChallenges = solved?.message || [];
+
+  const isChallengeSolved = (challengeId) => {
+    return solvedChallenges.some((item) => item.challenge.id === challengeId);
+  };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+    reset,
+  } = useForm();
+
+  const mutation = useMutation({
+    mutationFn: (flagData) => submitFlag(flagData),
+    onSuccess: (responseData) => {
+      console.log("Flag submission response:", responseData);
+
+      if (responseData.error) {
+        return toast.error(`❌ ${responseData.error}`);
+      }
+
+      const message = responseData.message?.toLowerCase();
+
+      if (message === "wrong answer.") {
+        toast.error("❌ Wrong answer.");
+      } else if (message === "correct.") {
+        toast.success("✅ Correct flag!");
+        setTimeout(() => {
+          window.location.reload();
+        }, 10000);
+      } else {
+        toast.info(message || "⚠️ Unexpected response.");
+      }
+
+      reset();
+    },
+    onError: (error) => {
+      toast.error("🚨 Submission failed.");
+      console.error("Flag submission error:", error);
+    },
+  });
+
+  function onSubmit(data) {
+    if (!selectedChallenge) {
+      toast.warn("⚠️ Please select a challenge first.");
+      return;
+    }
+
+    const payload = {
+      challenge_id: selectedChallenge.id,
+      flag: data.flag,
+    };
+
+    mutation.mutate(payload);
+  }
 
   const {
     isPending: isCategoriesPending,
@@ -163,11 +236,11 @@ const Challenges = () => {
                       <span className="terminal-text">
                         {challenge.point} pts
                       </span>
-                      {/* {challenge.solved && (
-                      <span className="text-xs px-2 py-1 rounded-full bg-terminal-green text-terminal-black">
-                        Solved
-                      </span>
-                    )} */}
+                      {isChallengeSolved(challenge.id) && (
+                        <span className="text-xs px-2 py-1 rounded-full bg-terminal-green text-terminal-black">
+                          Solved
+                        </span>
+                      )}
                     </div>
                   </div>
 
@@ -213,19 +286,26 @@ const Challenges = () => {
                         </div>
                       </div>
 
-                      <div className="mb-4">
-                        <h3 className="text-sm text-muted mb-2">Submit Flag</h3>
-                        <div className="flex">
-                          <input
-                            type="text"
-                            placeholder="CTF{your_flag_here}"
-                            className="bg-tertiary-bg border border-border-color p-2 rounded-l-md flex-1 text-terminal-white"
-                          />
-                          <button className="bg-terminal-green text-terminal-black p-2 rounded-r-md">
-                            Submit
-                          </button>
+                      <form onSubmit={handleSubmit(onSubmit)}>
+                        <div className="mb-4">
+                          <h3 className="text-sm text-muted mb-2">
+                            Submit Flag
+                          </h3>
+                          <div className="flex">
+                            <input
+                              type="text"
+                              placeholder="CTF{your_flag_here}"
+                              className="bg-tertiary-bg border border-border-color p-2 rounded-l-md flex-1 text-terminal-white"
+                              {...register("flag", {
+                                required: "Flag is Required",
+                              })}
+                            />
+                            <button className="bg-terminal-green text-terminal-black p-2 rounded-r-md">
+                              Submit
+                            </button>
+                          </div>
                         </div>
-                      </div>
+                      </form>
 
                       {/* {selectedChallenge.solved && (
                       <div className="p-3 bg-tertiary-bg rounded-md">
