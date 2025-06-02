@@ -55,13 +55,29 @@ class TeamListSerializer(serializers.ModelSerializer):
         )
     
     def get_rank(self, instance):
-        teams = list(Team.objects.order_by('-total_point').values_list('id', flat=True))
+        from django.db.models import Sum
+
+        # Build a list of (team_id, total_point) pairs
+        team_points = []
+        for team in Team.objects.all():
+            total_point = (
+                ChallengeSolve.objects
+                .filter(user__in=team.members.all())
+                .aggregate(total=Sum('challenge__point'))['total'] or 0
+            )
+            team_points.append((team.id, total_point))
+
+        # Sort the list by total_point descending
+        team_points.sort(key=lambda x: x[1], reverse=True)
+
+        # Extract the ordered team IDs
+        sorted_team_ids = [team_id for team_id, _ in team_points]
+
         try:
-            # Find the position (index) of the team instance in this ordered list
-            rank = teams.index(instance.id) + 1  # +1 because index is zero-based
+            rank = sorted_team_ids.index(instance.id) + 1  # 1-based index
         except ValueError:
-            # If the team is not found in the list, return None or some default value
             return None
+
         return rank
 
 class TeamDetailSerializer(serializers.ModelSerializer):
@@ -98,13 +114,29 @@ class TeamDetailSerializer(serializers.ModelSerializer):
         )
     
     def get_rank(self, instance):
-        teams = list(Team.objects.order_by('-total_point').values_list('id', flat=True))
+        from django.db.models import Sum
+
+        # Build a list of (team_id, total_point) pairs
+        team_points = []
+        for team in Team.objects.all():
+            total_point = (
+                ChallengeSolve.objects
+                .filter(user__in=team.members.all())
+                .aggregate(total=Sum('challenge__point'))['total'] or 0
+            )
+            team_points.append((team.id, total_point))
+
+        # Sort the list by total_point descending
+        team_points.sort(key=lambda x: x[1], reverse=True)
+
+        # Extract the ordered team IDs
+        sorted_team_ids = [team_id for team_id, _ in team_points]
+
         try:
-            # Find the position (index) of the team instance in this ordered list
-            rank = teams.index(instance.id) + 1  # +1 because index is zero-based
+            rank = sorted_team_ids.index(instance.id) + 1  # 1-based index
         except ValueError:
-            # If the team is not found in the list, return None or some default value
             return None
+
         return rank
     
     def get_solves(self, instance):

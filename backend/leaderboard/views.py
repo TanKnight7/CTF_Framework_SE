@@ -17,6 +17,10 @@ from rest_framework.permissions import IsAuthenticated
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def leaderboard(request):
-    teams = Team.objects.order_by('-total_point')
+    teams = Team.objects.all()
     serializer = TeamListSerializer(teams, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    # Sort serialized data in Python
+    sorted_data = sorted(serializer.data, key=lambda x: x['total_point'], reverse=True)
+
+    return Response(sorted_data, status=status.HTTP_200_OK)

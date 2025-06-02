@@ -6,6 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import { submitFlag } from "../services/apiCTF";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Challenges = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -35,7 +36,10 @@ const Challenges = () => {
   const solvedChallenges = solved?.message || [];
 
   const isChallengeSolved = (challengeId) => {
-    return solvedChallenges.some((item) => item.challenge.id === challengeId);
+    if (typeof solvedChallenges === "object") {
+      console.log(solvedChallenges);
+      return solvedChallenges.some((item) => item.challenge.id === challengeId);
+    }
   };
 
   const {
@@ -103,6 +107,7 @@ const Challenges = () => {
   if (isChallengesPending || isCategoriesPending) {
     return "Data loading..";
   }
+
   const filteredChallenges = challenges.filter((challenge) => {
     const category = challenge.category.toLowerCase();
     if (
@@ -198,6 +203,7 @@ const Challenges = () => {
                         ? "border-terminal-green"
                         : ""
                     }`}
+                    id={challenge.title}
                     onClick={() =>
                       setSelectedChallenge(
                         selectedChallenge?.id === challenge.id
