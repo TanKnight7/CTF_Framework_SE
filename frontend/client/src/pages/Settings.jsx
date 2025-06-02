@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-
-const mockUserData = {
-  username: "cyberNinja",
-  email: "ninja@example.com",
-  bio: "Passionate about web security and CTFs. Always learning.",
-  country: "USA",
-};
+import { getProfile, updateProfile } from "../services/apiCTF";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+// ['email', 'bio', 'country', 'username', 'password']
 
 const Settings = () => {
+  const { isPending: isProfilePending, data: profile } = useQuery({
+    queryKey: ["getProfile"],
+    queryFn: getProfile,
+  });
+
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -17,15 +21,27 @@ const Settings = () => {
     formState: { errors, isSubmitting, isDirty },
   } = useForm({
     defaultValues: {
-      username: mockUserData.username,
-      bio: mockUserData.bio,
-      country: mockUserData.country,
+      username: "",
+      bio: "",
+      country: "",
       currentPassword: "",
       newPassword: "",
       confirmNewPassword: "",
     },
   });
 
+  useEffect(() => {
+    if (profile) {
+      reset({
+        username: profile.username || "",
+        bio: profile.bio || "",
+        country: profile.country || "",
+        currentPassword: "",
+        newPassword: "",
+        confirmNewPassword: "",
+      });
+    }
+  }, [profile, reset]);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [commandPrefix, setCommandPrefix] = useState("$");
@@ -39,71 +55,58 @@ const Settings = () => {
     return () => clearInterval(commandInterval);
   }, []);
 
+  const cleanData = (obj) =>
+    Object.fromEntries(
+      Object.entries(obj).filter(
+        ([_, value]) => value !== null && value !== undefined && value !== ""
+      )
+    );
+
+  const mutation = useMutation({
+    mutationFn: (userData) => updateProfile(userData),
+    onSuccess: (responseData) => {
+      console.log(responseData);
+      if (responseData?.error) {
+        return toast.error(JSON.stringify(responseData?.error));
+      }
+      toast.success(JSON.stringify(responseData));
+      navigate("/profile");
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Error occured");
+    },
+  });
   const onSubmit = async (data) => {
     setErrorMessage("");
     setSuccessMessage("");
 
-    const profileData = {
+    const profileData = cleanData({
       username: data.username,
       bio: data.bio,
       country: data.country,
-    };
+    });
 
-    const passwordData = {
-      currentPassword: data.currentPassword,
-      newPassword: data.newPassword,
-    };
+    const passwordData = cleanData({
+      old_password: data.currentPassword,
+      password: data.newPassword,
+      confirmPassword: data.confirmNewPassword,
+    });
 
-    try {
-      console.log("Updating profile with:", profileData);
-      // Simulate API call for profile update
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Only attempt password change if new password fields are filled
-      if (passwordData.newPassword && passwordData.currentPassword) {
-        console.log("Changing password...");
-        // Simulate API call for password change
-        await new Promise((resolve, reject) => {
-          setTimeout(() => {
-            // Mock validation: fail if current password is not 'password123'
-            if (passwordData.currentPassword !== "password123") {
-              reject(new Error("Incorrect current password."));
-            } else {
-              resolve(true);
-            }
-          }, 1000);
-        });
-        console.log("Password changed successfully (mock).");
-      } else if (passwordData.newPassword || passwordData.currentPassword) {
-        // If only one password field is filled, it might be an error or incomplete attempt
-        if (passwordData.newPassword && !passwordData.currentPassword) {
-          throw new Error(
-            "Current password is required to set a new password."
-          );
-        }
-        // No error if only current password is filled but new is empty
+    if (passwordData.password) {
+      if (passwordData.password !== passwordData.confirmPassword) {
+        toast.error("New password does not match.");
+        return;
       }
-
-      setSuccessMessage("Settings updated successfully!");
-      // Reset form state after successful submission, keeping new values
-      reset(data, { keepDirty: false, keepValues: true });
-      // Clear password fields after successful update for security
-      reset(
-        {
-          ...data, // keep other fields
-          currentPassword: "",
-          newPassword: "",
-          confirmNewPassword: "",
-        },
-        { keepDirty: false, keepValues: true }
-      );
-    } catch (error) {
-      setErrorMessage(
-        error.message || "Failed to update settings. Please try again."
-      );
     }
-    // --- End Mock API Call Simulation ---
+
+    const submittedData = { ...profileData, ...passwordData, id: profile.id };
+    mutation.mutate(submittedData);
   };
+
+  if (isProfilePending) {
+    return "Data loading..";
+  }
 
   return (
     <div className="container relative overflow-hidden">

@@ -66,10 +66,6 @@ const SubmitPage = () => {
   return (
     <div className="submit-writeup-page">
       <div className="content">
-        <div className="header">
-          <div className="logo">TANCTF</div>
-        </div>
-
         <div className="terminal">
           <div className="terminal-header">
             <span className="terminal-button"></span>

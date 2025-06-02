@@ -107,20 +107,22 @@ const Challenges = () => {
     return "Data loading..";
   }
 
-  const filteredChallenges = challenges ? challenges.filter((challenge) => {
-    const category = challenge.category.toLowerCase();
-    if (
-      selectedCategory !== "all" &&
-      !category.includes(selectedCategory.toLowerCase())
-    )
-      return false;
-    if (
-      selectedDifficulty !== "all" &&
-      challenge.difficulty !== selectedDifficulty
-    )
-      return false;
-    return true;
-  }) : []
+  const filteredChallenges = challenges
+    ? challenges.filter((challenge) => {
+        const category = challenge.category.toLowerCase();
+        if (
+          selectedCategory !== "all" &&
+          !category.includes(selectedCategory.toLowerCase())
+        )
+          return false;
+        if (
+          selectedDifficulty !== "all" &&
+          challenge.difficulty !== selectedDifficulty
+        )
+          return false;
+        return true;
+      })
+    : [];
 
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {
@@ -284,9 +286,32 @@ const Challenges = () => {
                       <div className="mb-4 p-3 bg-tertiary-bg rounded-md">
                         <h3 className="text-sm text-muted mb-2">Attachment</h3>
                         <div className="flex items-center">
-                          <i className="fas fa-file-download mr-2"></i>
                           <span className="terminal-text">
-                            {selectedChallenge.attachment}
+                            {selectedChallenge.attachments &&
+                            selectedChallenge.attachments.length > 0 ? (
+                              selectedChallenge.attachments.map(
+                                (attachment) => (
+                                  <div
+                                    key={attachment.file}
+                                    className="attachment-item"
+                                  >
+                                    <i className="fas fa-file-download mr-2"></i>
+                                    <strong>{attachment.name}</strong>:{" "}
+                                    <a
+                                      href={attachment.file} // Use download_url if available, else fallback
+                                      download
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-terminal-green underline"
+                                    >
+                                      Download
+                                    </a>
+                                  </div>
+                                )
+                              )
+                            ) : (
+                              <span>No attachments available.</span>
+                            )}
                           </span>
                         </div>
                       </div>

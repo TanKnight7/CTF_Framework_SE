@@ -79,7 +79,6 @@ const App = () => {
               <Route path="/joinTeam" element={<JoinTeam />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/settings" element={<Settings />} />
-              <Route path="writeups/submit" element={<Submit />} />
               <Route path="/writeups" element={<Writeups />} />
               <Route path="/Tickets" element={<Ticket />} />
               <Route path="/tickets/:ticketId" element={<TicketChat />} />

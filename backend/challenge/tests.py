@@ -18,7 +18,7 @@ def create_category(token):
         "name" : "Reverse"
     }
 
-    response = requests.post(CREATE_CATEGORY_URL, data=data, headers=headers)
+    response = requests.post(CREATE_CATEGORY_URL, json=data, headers=headers)
 
     print("Status Code:", response.status_code)
     print("Response:", response.json())
@@ -54,7 +54,7 @@ def create_challenge(token):
 if __name__ == "__main__":
     # token = get_token()
     # if token:
-    token = "8dd9b01eef78f92f81f52429912f7b6e08d9a1529b32d763aae0ad07dae5458c"
+    token = "46ef675a7ae29a59ff2ecff40e31a0cb29b8d56429cb98f31295e66f59a4598a"
     create_category(token)
     create_challenge(token)
 

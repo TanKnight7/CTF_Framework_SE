@@ -2,7 +2,7 @@
 ### Create a new team
 POST http://127.0.0.1:9999/api/teams/create/
 Content-Type: application/json
-Authorization: Token f1c58e2f15cf84bd2d894a2b536bb0f1447e64bf5541de971bc930b308b41a56
+Authorization: Token 408d74a068de894eca0fe08184dd5d327d8ea573597e059eaadf2d64f7bdc6a4
 
 {
   "name": "Team Falcoasaaaaa",

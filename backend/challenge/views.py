@@ -5,7 +5,7 @@ from knox.auth import TokenAuthentication
 from rest_framework.response import Response
 # from django.shortcuts import get_object_or_404 # Useful alternative
 
-from .models import Category, Challenge, ChallengeSolve
+from .models import Category, Challenge, ChallengeSolve, ChallengeAttachment
 from .serializers import ChallengeListSerializer, ChallengeSerializer, CategorySerializer, CategoryDetailSerializer, CreateChallengeSerializer, ChallengeSolveSerializer
 # It's good practice to import your User model if you need to interact with it directly,
 # e.g., from django.contrib.auth import get_user_model

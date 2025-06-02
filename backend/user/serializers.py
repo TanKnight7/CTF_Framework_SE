@@ -3,7 +3,8 @@ from django.contrib.auth.password_validation import validate_password
 from .models import User
 from challenge.models import ChallengeSolve
 from django.db.models import Sum
-        
+from django.db import IntegrityError
+
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -70,4 +71,36 @@ class UserDetailSerializer(serializers.ModelSerializer):
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['email', 'bio', 'country']
+        fields = ['email', 'bio', 'country', 'username', 'password']
+        extra_kwargs = {
+            'password': {'write_only': True, 'required': False},
+            'email': {'required': False},
+            'bio': {'required': False},
+            'country': {'required': False},
+            'username': {'required': False},
+        }
+    
+    def update(self, instance, validated_data):
+        password = validated_data.pop('password', None)
+
+        # Update other fields normally
+        try:
+            for attr, value in validated_data.items():
+                setattr(instance, attr, value)
+            instance.full_clean()  # Run model validation (e.g., unique constraints)
+        except IntegrityError as e:
+            # Handle database integrity errors (like duplicate fields)
+            raise serializers.ValidationError({"error": "Duplicate value error, email or username might already be taken."})
+        except Exception as e:
+            # Other validation errors
+            raise serializers.ValidationError({"error": str(e)})
+
+        # Update password if provided
+        if password:
+            try:
+                instance.set_password(password)
+            except Exception as e:
+                raise serializers.ValidationError({"error": f"Error setting password: {str(e)}"})
+
+        instance.save()
+        return instance

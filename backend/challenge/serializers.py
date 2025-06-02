@@ -39,7 +39,7 @@ class ChallengeListSerializer(serializers.ModelSerializer):
     attachments = ChallengeAttachmentSerializer(many=True, read_only=True)
     class Meta:
         model = Challenge
-        fields = ['id', 'title', 'category', 'difficulty', 'point', 'rating', 'solved_by', 'description']
+        fields = ['id', 'title', 'category', 'difficulty', 'point', 'rating', 'solved_by', 'description', 'attachments']
 
 
 class ChallengeSolveSerializer(serializers.ModelSerializer):

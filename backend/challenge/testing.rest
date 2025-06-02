@@ -15,13 +15,13 @@ Authorization: Token d3391169d3cf1d8157e957e88cf3c17d52b9d16b575e8ac3b8689d6f296
 ### Create Challenge
 POST /api/challenges/create/ HTTP/1.1
 Host: localhost:9999
-Authorization: Token 8626833d817efca0e127cf67587dc628dd4eb20c373a9b8854e3d2aed09c2343
+Authorization: Token 46ef675a7ae29a59ff2ecff40e31a0cb29b8d56429cb98f31295e66f59a4598a
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="title"
 
-Tes123 Exploit
+Tes123 Exploita
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="flag"
 
@@ -39,10 +39,15 @@ Content-Disposition: form-data; name="category"
 
 1
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="attachment"; filename="test.txt"
+Content-Disposition: form-data; name="attachments"; filename="file1.txt"
 Content-Type: text/plain
 
-ini chall susah yagesya
+ini file 1
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="attachments"; filename="file1.txt"
+Content-Type: text/plain
+
+ini file2
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
 

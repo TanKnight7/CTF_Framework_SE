@@ -30,6 +30,14 @@ Content-Type: application/json
   "password": "attacker"
 }
 
-### view user data by id
-GET http://127.0.0.1:9999/api/users/3/
-Authorization: Token a070379cf9804e5ba4c40fd2f6d923b81262c6e7bfb5726da405f4a3d1b84eec
+### Change user data by user id
+PUT http://127.0.0.1:9999/api/users/1/
+Authorization: Token 54cdf85e2109363d1718e7361de08e20ee8e5519b43a4d5e046cdc4b98411235
+Content-Type: application/json
+
+{
+  "username": "attackers",
+  "password": "attacker",
+  "email": "attackers@gmail.com",
+  "old_password":"attacker"
+}

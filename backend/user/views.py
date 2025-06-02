@@ -64,6 +64,18 @@ def get_update_delete_user(request, pk):
                         status=status.HTTP_403_FORBIDDEN)
     
     if request.method == 'PUT':
+        old_password = request.data.get('old_password', None)
+        new_password = request.data.get('password', None)
+        
+        if new_password:
+            if not old_password:
+                return Response({"error": "Old password is required to set a new password."},
+                            status=status.HTTP_400_BAD_REQUEST)
+            if not user.check_password(old_password):
+                return Response({"error": "Old password is incorrect."},
+                            status=status.HTTP_400_BAD_REQUEST)
+        
+        
         serializer = UserUpdateSerializer(user, data=request.data, partial=True)
         if not serializer.is_valid():
             return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)

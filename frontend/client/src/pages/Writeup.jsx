@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { getWriteups } from "../services/apiCTF";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import SubmitPage from "./Submit";
 
 const Writeup = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -119,108 +120,111 @@ const Writeup = () => {
     }
   };
   return (
-    <div className="container relative overflow-hidden">
-      {/* Optional: Matrix rain background */}
-      {/* <canvas className="matrix-rain" id="matrixRain"></canvas> */}
+    <>
+      <SubmitPage />
+      <div className="container relative overflow-hidden">
+        {/* Optional: Matrix rain background */}
+        {/* <canvas className="matrix-rain" id="matrixRain"></canvas> */}
 
-      <div className="relative z-10">
-        <h1 className="terminal-text text-3xl mb-6 glow-terminal">
-          Writeup Archive
-        </h1>
+        <div className="relative z-10">
+          <h1 className="terminal-text text-3xl mb-6 glow-terminal">
+            Writeup Archive
+          </h1>
 
-        {/* Search Control Only */}
-        <div className="card mb-6 bg-secondary-bg border border-border-color rounded-md p-4 flex flex-col md:flex-row gap-4 items-center">
-          <div className="flex-grow w-full">
-            <input
-              type="text"
-              placeholder="Search by title, author"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full p-2 rounded-md bg-tertiary-bg border border-border-color focus:border-terminal-green focus:outline-none focus:ring-1 focus:ring-terminal-green text-text-primary text-terminal-green"
-            />
+          {/* Search Control Only */}
+          <div className="card mb-6 bg-secondary-bg border border-border-color rounded-md p-4 flex flex-col md:flex-row gap-4 items-center">
+            <div className="flex-grow w-full">
+              <input
+                type="text"
+                placeholder="Search by title, author"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full p-2 rounded-md bg-tertiary-bg border border-border-color focus:border-terminal-green focus:outline-none focus:ring-1 focus:ring-terminal-green text-text-primary text-terminal-green"
+              />
+            </div>
+            {/* Removed Filter Controls */}
           </div>
-          {/* Removed Filter Controls */}
-        </div>
 
-        {/* Simplified Writeups Table */}
-        <div className="card bg-secondary-bg border border-border-color rounded-md p-0 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-border-color bg-tertiary-bg">
-                  <th
-                    className="text-left py-3 px-4 terminal-text cursor-pointer hover:text-white"
-                    onClick={() => requestSort("title")}
-                  >
-                    Title{getSortIndicator("title")}
-                  </th>
-                  <th
-                    className="text-left py-3 px-4 terminal-text cursor-pointer hover:text-white"
-                    onClick={() => requestSort("author")}
-                  >
-                    Team / User{getSortIndicator("author")}
-                  </th>
-                  {/* Removed Challenge Header */}
-                  {/* Removed Category Header */}
-                  <th
-                    className="text-left py-3 px-4 terminal-text cursor-pointer hover:text-white"
-                    onClick={() => requestSort("submission_time")}
-                  >
-                    Date{getSortIndicator("submission_time")}
-                  </th>
-                  {/* Removed File Type Header - User didn't explicitly ask to keep it, let's remove for simplicity */}
-                  <th className="text-center py-3 px-4 terminal-text">
-                    Download
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {processedWriteups.length > 0 ? (
-                  processedWriteups.map((writeup) => (
-                    <tr
-                      key={writeup.id}
-                      className="interactive-row border-b border-border-color"
+          {/* Simplified Writeups Table */}
+          <div className="card bg-secondary-bg border border-border-color rounded-md p-0 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-border-color bg-tertiary-bg">
+                    <th
+                      className="text-left py-3 px-4 terminal-text cursor-pointer hover:text-white"
+                      onClick={() => requestSort("title")}
                     >
-                      <td className="py-3 px-4 text-text-primary">
-                        {writeup.title}
-                      </td>
-                      <td className="py-3 px-4 text-text-primary">
-                        {writeup.author}
-                      </td>
-                      {/* Removed Challenge Cell */}
-                      {/* Removed Category Cell */}
-                      <td className="py-3 px-4 text-muted text-sm">
-                        {formatDate(writeup.submission_time)}
-                      </td>
-                      {/* Removed File Type Cell */}
-                      <td className="py-3 px-4 text-center">
-                        <a
-                          onClick={() =>
-                            handleDownload(writeup.attachment, writeup.title)
-                          }
-                          download
-                          className="filter-button active text-sm py-1 px-2 scale-on-hover inline-block no-underline"
-                          title={`Download ${writeup.title}`}
-                        >
-                          💾 Download
-                        </a>
+                      Title{getSortIndicator("title")}
+                    </th>
+                    <th
+                      className="text-left py-3 px-4 terminal-text cursor-pointer hover:text-white"
+                      onClick={() => requestSort("author")}
+                    >
+                      Team / User{getSortIndicator("author")}
+                    </th>
+                    {/* Removed Challenge Header */}
+                    {/* Removed Category Header */}
+                    <th
+                      className="text-left py-3 px-4 terminal-text cursor-pointer hover:text-white"
+                      onClick={() => requestSort("submission_time")}
+                    >
+                      Date{getSortIndicator("submission_time")}
+                    </th>
+                    {/* Removed File Type Header - User didn't explicitly ask to keep it, let's remove for simplicity */}
+                    <th className="text-center py-3 px-4 terminal-text">
+                      Download
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {processedWriteups.length > 0 ? (
+                    processedWriteups.map((writeup) => (
+                      <tr
+                        key={writeup.id}
+                        className="interactive-row border-b border-border-color"
+                      >
+                        <td className="py-3 px-4 text-text-primary">
+                          {writeup.title}
+                        </td>
+                        <td className="py-3 px-4 text-text-primary">
+                          {writeup.author}
+                        </td>
+                        {/* Removed Challenge Cell */}
+                        {/* Removed Category Cell */}
+                        <td className="py-3 px-4 text-muted text-sm">
+                          {formatDate(writeup.submission_time)}
+                        </td>
+                        {/* Removed File Type Cell */}
+                        <td className="py-3 px-4 text-center">
+                          <a
+                            onClick={() =>
+                              handleDownload(writeup.attachment, writeup.title)
+                            }
+                            download
+                            className="filter-button active text-sm py-1 px-2 scale-on-hover inline-block no-underline"
+                            title={`Download ${writeup.title}`}
+                          >
+                            💾 Download
+                          </a>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      {/* Adjusted colSpan */}
+                      <td colSpan="4" className="text-center py-6 text-muted">
+                        No writeups found matching your criteria.
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    {/* Adjusted colSpan */}
-                    <td colSpan="4" className="text-center py-6 text-muted">
-                      No writeups found matching your criteria.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

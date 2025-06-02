@@ -188,3 +188,13 @@ export async function getWriteups() {
     return err.response?.data;
   }
 }
+
+export async function updateProfile(data) {
+  try {
+    console.log(data);
+    const response = await api.put(`/api/users/${data.id}/`, data);
+    return response.data;
+  } catch (err) {
+    return err.response?.data;
+  }
+}
