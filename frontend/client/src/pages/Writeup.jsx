@@ -1,89 +1,43 @@
-import React, { useState, useEffect, useMemo } from "react";
-
-// Mock data for writeups - replace with actual data fetching
-const mockWriteupData = [
-  {
-    id: 1,
-    title: "Web Exploitation Mastery",
-    author: "cyberNinja",
-    challenge: "Login Bypass",
-    category: "Web",
-    date: "2024-05-28",
-    fileType: "PDF",
-    filePath: "/path/to/writeups/web_mastery.pdf",
-  },
-  {
-    id: 2,
-    title: "Cracking the Code",
-    author: "rootKit",
-    challenge: "Caesar Cipher Advanced",
-    category: "Crypto",
-    date: "2024-05-27",
-    fileType: "MD",
-    filePath: "/path/to/writeups/cracking_code.md",
-  },
-  {
-    id: 3,
-    title: "Forensic Files: Memory Dump Analysis",
-    author: "dataDigger",
-    challenge: "Memory Forensics 101",
-    category: "Forensics",
-    date: "2024-05-29",
-    fileType: "PDF",
-    filePath: "/path/to/writeups/memory_dump.pdf",
-  },
-  {
-    id: 4,
-    title: "Reverse Engineering a Simple Binary",
-    author: "pwn3r",
-    challenge: "Beginner Reversing",
-    category: "Reverse",
-    date: "2024-05-26",
-    fileType: "TXT",
-    filePath: "/path/to/writeups/reversing_binary.txt",
-  },
-  {
-    id: 5,
-    title: "OSINT Techniques for Geolocation",
-    author: "secOps",
-    challenge: "Find the Location",
-    category: "OSINT",
-    date: "2024-05-25",
-    fileType: "MD",
-    filePath: "/path/to/writeups/osint_geo.md",
-  },
-  {
-    id: 6,
-    title: "Advanced SQL Injection",
-    author: "hacker404",
-    challenge: "Database Takeover",
-    category: "Web",
-    date: "2024-05-29",
-    fileType: "PDF",
-    filePath: "/path/to/writeups/advanced_sqli.pdf",
-  },
-  {
-    id: 7,
-    title: "Steganography Secrets",
-    author: "packetWizard",
-    challenge: "Hidden in Plain Sight",
-    category: "Stego",
-    date: "2024-05-24",
-    fileType: "MD",
-    filePath: "/path/to/writeups/stego_secrets.md",
-  },
-];
+import { useState, useEffect, useMemo } from "react";
+import { getWriteups } from "../services/apiCTF";
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 const Writeup = () => {
-  const [writeups, setWriteups] = useState(mockWriteupData);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState({
-    key: "date",
+    key: "submission_time",
     direction: "descending",
   });
 
+  const {
+    isPending: isWriteupsPending,
+    isError: isWriteupsError,
+    error: writeupsError,
+    data: writeups,
+  } = useQuery({
+    queryKey: ["getWriteups"],
+    queryFn: getWriteups,
+  });
+
+  // Handle sorting request
+  const requestSort = (key) => {
+    let direction = "ascending";
+    if (sortConfig.key === key && sortConfig.direction === "ascending") {
+      direction = "descending";
+    }
+    setSortConfig({ key, direction });
+  };
+
+  // Get sort direction indicator
+  const getSortIndicator = (key) => {
+    if (sortConfig.key !== key) return "";
+    return sortConfig.direction === "ascending" ? " ▲" : " ▼";
+  };
+
   // Memoized filtered and sorted data
   const processedWriteups = useMemo(() => {
+    if (!writeups) return [];
     let filteredData = writeups;
 
     // Apply search term filter (removed category from search)
@@ -91,10 +45,7 @@ const Writeup = () => {
       filteredData = filteredData.filter(
         (writeup) =>
           writeup.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          writeup.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          writeup.challenge.toLowerCase().includes(searchTerm.toLowerCase()) // Keep challenge search? User didn't explicitly remove it, but it's not displayed.
-        // Let's keep it for now, but it might be confusing.
-        // Alternative: Remove challenge search too.
+          writeup.author.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -102,10 +53,10 @@ const Writeup = () => {
     if (sortConfig.key) {
       filteredData.sort((a, b) => {
         // Handle date sorting specifically if needed, otherwise assume string comparison works
-        if (sortConfig.key === "date") {
+        if (sortConfig.key === "submission_time") {
           // Basic date string comparison, might need refinement for robust date sorting
-          const dateA = new Date(a.date);
-          const dateB = new Date(b.date);
+          const dateA = new Date(a.submission_time);
+          const dateB = new Date(b.submission_time);
           if (dateA < dateB)
             return sortConfig.direction === "ascending" ? -1 : 1;
           if (dateA > dateB)
@@ -126,21 +77,47 @@ const Writeup = () => {
     return filteredData;
   }, [writeups, searchTerm, sortConfig]);
 
-  // Handle sorting request
-  const requestSort = (key) => {
-    let direction = "ascending";
-    if (sortConfig.key === key && sortConfig.direction === "ascending") {
-      direction = "descending";
+  if (isWriteupsPending) {
+    return "Data loading..";
+  }
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const pad = (num) => num.toString().padStart(2, "0");
+
+    const year = date.getFullYear();
+    const month = pad(date.getMonth() + 1); // Months are zero-based
+    const day = pad(date.getDate());
+
+    const hours = pad(date.getHours());
+    const minutes = pad(date.getMinutes());
+    const seconds = pad(date.getSeconds());
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  };
+
+  const handleDownload = async (url, filename) => {
+    try {
+      // Check if file exists with a HEAD request
+      const response = await fetch(url, { method: "HEAD" });
+
+      if (response.ok) {
+        // File exists — trigger download
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = filename || "";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        toast.success(`Successfully downloaded ${filename}`);
+      } else {
+        toast.error("File not found or unavailable for download.");
+      }
+    } catch (error) {
+      toast.error("An error occurred while checking the file.");
+      console.error(error);
     }
-    setSortConfig({ key, direction });
   };
-
-  // Get sort direction indicator
-  const getSortIndicator = (key) => {
-    if (sortConfig.key !== key) return "";
-    return sortConfig.direction === "ascending" ? " ▲" : " ▼";
-  };
-
   return (
     <div className="container relative overflow-hidden">
       {/* Optional: Matrix rain background */}
@@ -187,9 +164,9 @@ const Writeup = () => {
                   {/* Removed Category Header */}
                   <th
                     className="text-left py-3 px-4 terminal-text cursor-pointer hover:text-white"
-                    onClick={() => requestSort("date")}
+                    onClick={() => requestSort("submission_time")}
                   >
-                    Date{getSortIndicator("date")}
+                    Date{getSortIndicator("submission_time")}
                   </th>
                   {/* Removed File Type Header - User didn't explicitly ask to keep it, let's remove for simplicity */}
                   <th className="text-center py-3 px-4 terminal-text">
@@ -213,12 +190,14 @@ const Writeup = () => {
                       {/* Removed Challenge Cell */}
                       {/* Removed Category Cell */}
                       <td className="py-3 px-4 text-muted text-sm">
-                        {writeup.date}
+                        {formatDate(writeup.submission_time)}
                       </td>
                       {/* Removed File Type Cell */}
                       <td className="py-3 px-4 text-center">
                         <a
-                          href={writeup.filePath} // In real app, ensure this path is correct/secure
+                          onClick={() =>
+                            handleDownload(writeup.attachment, writeup.title)
+                          }
                           download
                           className="filter-button active text-sm py-1 px-2 scale-on-hover inline-block no-underline"
                           title={`Download ${writeup.title}`}

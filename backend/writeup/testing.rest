@@ -1,0 +1,32 @@
+### Submit WU
+POST /api/writeups/submit/ HTTP/1.1
+Host: localhost:9999
+Authorization: Token 9c477b58eff57233729fdbb03275489240a016c47cf334525a0cc8fd089960b2
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="title"
+
+Tes123 Exploit
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="flag"
+
+HTB{fake_flag}
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="description"
+
+Soal ini susah
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="difficulty"
+
+1
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="category"
+
+1
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="attachment"; filename="test.txt"
+Content-Type: text/plain
+
+ini chall susah yagesya
+------WebKitFormBoundary7MA4YWxkTrZu0gW--

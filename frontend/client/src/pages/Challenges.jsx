@@ -6,7 +6,6 @@ import { useMutation } from "@tanstack/react-query";
 import { submitFlag } from "../services/apiCTF";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 
 const Challenges = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");

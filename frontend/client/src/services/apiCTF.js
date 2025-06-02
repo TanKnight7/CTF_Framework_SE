@@ -164,3 +164,27 @@ export async function getSolved() {
     return err.response?.data;
   }
 }
+
+export async function submitWriteup(data) {
+  try {
+    console.log(data);
+    const response = await api.post("/api/writeups/submit/", data);
+    return response.data;
+  } catch (err) {
+    return err.response?.data;
+  }
+}
+export async function getWriteups() {
+  try {
+    const response = await api.get(`/api/writeups/`);
+    const modifiedData = response.data.map((writeup) => {
+      return {
+        ...writeup,
+        author: writeup.team ? writeup.team : writeup.user,
+      };
+    });
+    return modifiedData;
+  } catch (err) {
+    return err.response?.data;
+  }
+}

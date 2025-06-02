@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/submit.css";
+import { submitWriteup } from "../services/apiCTF";
+import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 const SubmitPage = () => {
   const [writeup, setWriteup] = useState("");
-  const [file, setFile] = useState<File | null>(null);
+  const [file, setFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -22,40 +26,42 @@ const SubmitPage = () => {
     return () => clearInterval(commandInterval);
   }, []);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setFile(e.target.files[0]);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
+
+  const mutation = useMutation({
+    mutationFn: (userData) => submitWriteup(userData),
+    onSuccess: (responseData) => {
+      console.log(responseData);
+      if (responseData?.error) {
+        return toast.error(JSON.stringify(responseData?.error));
+      }
+      toast.success(JSON.stringify(responseData));
+      setFile(null);
+      reset();
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Error occured");
+    },
+  });
+
+  function onSubmit(data) {
+    const fileList = data.attachment; // this is a FileList
+    if (!fileList || fileList.length === 0) {
+      toast.error("Please select a file");
+      return;
     }
-  };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    const formData = new FormData();
+    formData.append("attachment", fileList[0]); // grab the actual File object
 
-    setIsLoading(true);
-    setErrorMessage("");
-    setSuccessMessage("");
-
-    // Simulate API call
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      // For demo purposes, always succeed
-      setSuccessMessage(
-        "Writeup submitted successfully! Your solution is being reviewed."
-      );
-
-      // Could navigate to a success page if needed
-      // navigate('/success');
-    } catch (error) {
-      setErrorMessage("Error: Connection failed. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleLogout = () => {
-    navigate("/login");
-  };
+    mutation.mutate(formData);
+  }
 
   return (
     <div className="submit-writeup-page">
@@ -73,20 +79,34 @@ const SubmitPage = () => {
           <div className="terminal-content">
             <div className="command-line">$ ./submit --writeup</div>
 
-            <form onSubmit={handleSubmit} className="writeup-form">
+            <form onSubmit={handleSubmit(onSubmit)} className="writeup-form">
               <div className="form-group">
                 <label htmlFor="file">{commandPrefix} attach file:</label>
                 <div className="file-input-container">
                   <input
                     type="file"
                     id="file"
-                    onChange={handleFileChange}
                     disabled={isLoading}
                     className="file-input"
+                    {...register("attachment", {
+                      required: "Attachment is required",
+                      onChange: (e) => {
+                        const selectedFile = e.target.files?.[0];
+                        if (selectedFile) {
+                          setFile(selectedFile); // ✅ update state to show filename
+                        }
+                      },
+                    })}
                   />
+
                   <div className="file-input-text">
                     {file ? file.name : "No file selected"}
                   </div>
+                  {errors?.attachment?.message && (
+                    <small className="text-red-700 block">
+                      {errors.attachment.message}
+                    </small>
+                  )}
                 </div>
               </div>
 
