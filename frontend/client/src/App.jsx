@@ -25,6 +25,8 @@ import ProtectedRoute from "./components/ProtectedRoutes";
 import JoinTeam from "./pages/JoinTeam";
 import CreateTeam from "./pages/CreateTeam";
 import Settings from "./pages/Settings";
+import CreateChallenge from "./pages/CreateChallenge";
+import CreateCategory from "./pages/CreateCategory";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -74,6 +76,14 @@ const App = () => {
             <Route element={<ProtectedRoute />}>
               <Route path="/leaderboard" element={<Leaderboard />} />
               <Route path="/challenges" element={<Challenges />} />
+              <Route
+                path="/admin/createchallenges"
+                element={<CreateChallenge />}
+              />
+              <Route
+                path="/admin/createcategory"
+                element={<CreateCategory />}
+              />
               <Route path="/team" element={<Team />} />
               <Route path="/createTeam" element={<CreateTeam />} />
               <Route path="/joinTeam" element={<JoinTeam />} />
