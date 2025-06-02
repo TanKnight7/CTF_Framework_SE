@@ -107,7 +107,7 @@ const Challenges = () => {
     return "Data loading..";
   }
 
-  const filteredChallenges = challenges.filter((challenge) => {
+  const filteredChallenges = challenges ? challenges.filter((challenge) => {
     const category = challenge.category.toLowerCase();
     if (
       selectedCategory !== "all" &&
@@ -120,7 +120,7 @@ const Challenges = () => {
     )
       return false;
     return true;
-  });
+  }) : []
 
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {

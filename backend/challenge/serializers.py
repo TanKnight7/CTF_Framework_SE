@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Category, Challenge, ChallengeSolve
+from .models import Category, Challenge, ChallengeSolve, ChallengeAttachment
 from user.serializers import UserListSerializer
 
 # Basic Category Serializer - for simple category listings
@@ -25,14 +25,21 @@ class CategorySerializer(serializers.ModelSerializer):
     
     def get_total_chall(self, instance):
         return Challenge.objects.filter(category=instance).count()
-    
+
+
+class ChallengeAttachmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChallengeAttachment
+        fields = ['name', 'file']
+
 
 class ChallengeListSerializer(serializers.ModelSerializer):
     category = serializers.StringRelatedField()
     solved_by = UserListSerializer(many=True)
+    attachments = ChallengeAttachmentSerializer(many=True, read_only=True)
     class Meta:
         model = Challenge
-        fields = ['id', 'title', 'category', 'difficulty', 'point', 'rating', 'solved_by', 'description', 'attachment']
+        fields = ['id', 'title', 'category', 'difficulty', 'point', 'rating', 'solved_by', 'description']
 
 
 class ChallengeSolveSerializer(serializers.ModelSerializer):
@@ -50,14 +57,16 @@ class ChallengeSolveSerializer(serializers.ModelSerializer):
             'category': instance.challenge.category.name
         }
 
-# Basic Challenge Serializer - for listing challenges without nesting
 class ChallengeSerializer(serializers.ModelSerializer):
     solved_by = UserListSerializer(many=True, read_only=True)
     class Meta:
         model = Challenge
         exclude = ['flag']
 
+
 class CreateChallengeSerializer(serializers.ModelSerializer):
+    attachments = ChallengeAttachmentSerializer(many=True, required=False)
+
     class Meta:
         model = Challenge
         exclude = ['rating', 'point', 'solved_by']

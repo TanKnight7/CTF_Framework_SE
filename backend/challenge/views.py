@@ -171,18 +171,33 @@ def create_challenge(request):
     The 'author' will be set to the authenticated user.
     'attachment' should be sent as a file in a multipart/form-data request.
     """
-    
-    # Defaults like solve_count, rating are handled by model defaults.
-    # No need to set data['attachment'] = '' here;
-    # CreateChallengeSerializer will handle the file from request.FILES if provided.
-
-    # Pass request.FILES to the serializer if handling file uploads
+    files = request.FILES.getlist('attachments')
     serializer = CreateChallengeSerializer(data=request.data, context={'request': request})
+    
     if serializer.is_valid():
-        serializer.save() # Author is already part of the data passed to serializer
-        return Response({"success": "Challenge successfully created", "data": serializer.data}, status=status.HTTP_201_CREATED)
+        challenge = serializer.save()
+        for file in files:
+            attachment_name = file.name
+            ChallengeAttachment.objects.create(
+                challenge=challenge,
+                file=file,
+                name=attachment_name
+            )
+        
+        response_data = serializer.data.copy()
+        response_data['attachments'] = [
+            {
+                'name': att.name,
+                'file': att.file.url if att.file else None
+            } for att in challenge.attachments.all()
+        ]
+        
+        return Response({
+            "success": "Challenge successfully created", 
+            "data": response_data
+        }, status=status.HTTP_201_CREATED)
+    
     return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-
 
 @api_view(['PUT'])
 @authentication_classes([TokenAuthentication])
