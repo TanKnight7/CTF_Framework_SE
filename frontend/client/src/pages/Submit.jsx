@@ -15,9 +15,6 @@ const SubmitPage = () => {
   const [commandPrefix, setCommandPrefix] = useState("$");
   const navigate = useNavigate();
 
-  // Sample
-
-  // Command prompt animation
   React.useEffect(() => {
     const commandInterval = setInterval(() => {
       setCommandPrefix((prev) => (prev === "$" ? "$ _" : "$"));

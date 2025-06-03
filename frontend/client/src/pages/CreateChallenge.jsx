@@ -1,8 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { useQuery } from "@tanstack/react-query";
 import "../styles/Login.css";
+import { getCategories } from "../services/apiCTF";
+import { createChallannge } from "../services/apiCTF";
+import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify"; // Add this import
 
+// Mock categories data - replace with API call in production
 const mockCategories = [
   { id: 1, name: "Web" },
   { id: 2, name: "Crypto" },
@@ -14,29 +20,94 @@ const mockCategories = [
 ];
 
 const CreateChallenge = () => {
-  const [formData, setFormData] = useState({
-    title: "",
-    category: "",
-    description: "",
-    difficulty: "medium",
-    point: "",
-    flag: "",
+  const { register, handleSubmit, formState, reset, getValues } = useForm({
+    defaultValues: {
+      title: "",
+      category: "",
+      description: "",
+      difficulty: "medium",
+      points: "",
+      flag: "",
+    },
   });
 
-  const [categories, setCategories] = useState([]);
-  const [isLoadingCategories, setIsLoadingCategories] = useState(false);
+  // Remove formData state - React Hook Form handles this
+  const {
+    isPending: isCategoriesPending,
+    isError: isCategoriesError,
+    error: categoriesError,
+    data: categories,
+  } = useQuery({
+    queryKey: ["categories"],
+    queryFn: getCategories,
+  });
 
-  // Multiple file attachment state
   const [attachments, setAttachments] = useState([]);
-
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [commandPrefix, setCommandPrefix] = useState("$");
 
   const fileInputRef = useRef(null);
-
   const navigate = useNavigate();
+
+  const mutation = useMutation({
+    mutationFn: (userData) => {
+      // Create FormData for file upload
+      const formData = new FormData();
+
+      // Add form fields
+      Object.keys(userData).forEach((key) => {
+        if (key !== "attachments") {
+          formData.append(key, userData[key]);
+        }
+      });
+
+      // Add attachments
+      attachments.forEach((attachment, index) => {
+        formData.append(`attachment_${index}`, attachment.file);
+      });
+
+      return createChallannge(formData);
+    },
+    onSuccess: (responseData) => {
+      console.log("Create Challenge berhasil:", responseData);
+      if (responseData.error) {
+        setErrorMessage(JSON.stringify(responseData.error));
+        return toast.error(JSON.stringify(responseData.error));
+      }
+
+      toast.success("Challenge created successfully!");
+      setSuccessMessage("Successfully Created Challenge");
+      setErrorMessage("");
+
+      // Reset form and attachments
+      reset();
+      setAttachments([]);
+    },
+    onError: (error) => {
+      const errorMsg =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to create challenge";
+      setErrorMessage(errorMsg);
+      toast.error(errorMsg);
+      console.error("Failed To Create Challenge", error);
+    },
+  });
+
+  function onSubmit(data) {
+    // Clear previous messages
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    // Validate attachments if needed
+    // if (attachments.length === 0) {
+    //   setErrorMessage("At least one attachment is required");
+    //   return;
+    // }
+
+    mutation.mutate(data);
+  }
 
   useEffect(() => {
     const commandInterval = setInterval(() => {
@@ -44,31 +115,6 @@ const CreateChallenge = () => {
     }, 500);
     return () => clearInterval(commandInterval);
   }, []);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      setIsLoadingCategories(true);
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        setCategories(mockCategories);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-        setErrorMessage("Failed to load categories. Please refresh the page.");
-      } finally {
-        setIsLoadingCategories(false);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
@@ -109,83 +155,6 @@ const CreateChallenge = () => {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!formData.title.trim()) {
-      setErrorMessage("Error: Challenge title is required");
-      return;
-    }
-
-    if (!formData.category) {
-      setErrorMessage("Error: Category is required");
-      return;
-    }
-
-    if (!formData.description.trim()) {
-      setErrorMessage("Error: Description is required");
-      return;
-    }
-
-    if (
-      !formData.points ||
-      isNaN(formData.points) ||
-      parseInt(formData.points) <= 0
-    ) {
-      setErrorMessage("Error: Points must be a positive number");
-      return;
-    }
-
-    if (!formData.flag.trim()) {
-      setErrorMessage("Error: Flag is required");
-      return;
-    }
-
-    setIsLoading(true);
-    setErrorMessage("");
-    setSuccessMessage("");
-
-    // Simulate API call
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      // Create FormData object for file upload
-      const submitData = new FormData();
-      Object.keys(formData).forEach((key) => {
-        submitData.append(key, formData[key]);
-      });
-
-      // Add all attachments
-      attachments.forEach((attachment, index) => {
-        submitData.append(`attachment_${index}`, attachment.file);
-      });
-
-      // Mock API call - replace with actual API call in production
-      console.log("Creating challenge:", formData);
-      console.log("With attachments:", attachments);
-
-      setSuccessMessage(`Challenge "${formData.title}" created successfully!`);
-
-      setFormData({
-        title: "",
-        category: "",
-        description: "",
-        difficulty: "medium",
-        points: "",
-        flag: "",
-      });
-      setAttachments([]);
-    } catch (error) {
-      setErrorMessage(
-        error.response?.data?.message ||
-          error.message ||
-          "Failed to create challenge. Please try again."
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <div className="login-page">
       <div className="content">
@@ -205,20 +174,32 @@ const CreateChallenge = () => {
               $ ./create_challenge --interactive
             </div>
 
-            <form onSubmit={handleSubmit} className="login-form">
+            <form onSubmit={handleSubmit(onSubmit)} className="login-form">
               {/* Challenge Title */}
               <div className="form-group">
                 <label htmlFor="title">{commandPrefix} challenge_title:</label>
                 <input
                   type="text"
                   id="title"
-                  name="title"
-                  value={formData.title}
-                  onChange={handleChange}
-                  disabled={isLoading}
-                  autoComplete="off"
-                  spellCheck="false"
+                  {...register("title", {
+                    required: "Challenge title is required",
+                  })}
+                  disabled={mutation.isPending}
+                  style={{
+                    backgroundColor: "rgba(0, 0, 0, 0.7)",
+                    border: "1px solid var(--terminal-green)",
+                    color: "var(--terminal-white)",
+                    padding: "10px 15px",
+                    fontFamily: "'Roboto Mono', monospace",
+                    fontSize: "16px",
+                    width: "100%",
+                  }}
                 />
+                {formState.errors.title && (
+                  <span style={{ color: "red", fontSize: "14px" }}>
+                    {formState.errors.title.message}
+                  </span>
+                )}
               </div>
 
               {/* Category Dropdown */}
@@ -226,10 +207,10 @@ const CreateChallenge = () => {
                 <label htmlFor="category">{commandPrefix} category:</label>
                 <select
                   id="category"
-                  name="category"
-                  value={formData.category}
-                  onChange={handleChange}
-                  disabled={isLoading || isLoadingCategories}
+                  {...register("category", {
+                    required: "Category is required",
+                  })}
+                  disabled={mutation.isPending || isCategoriesPending}
                   style={{
                     backgroundColor: "rgba(0, 0, 0, 0.7)",
                     border: "1px solid var(--terminal-green)",
@@ -241,18 +222,27 @@ const CreateChallenge = () => {
                   }}
                 >
                   <option value="">-- Select Category --</option>
-                  {isLoadingCategories ? (
+                  {isCategoriesPending ? (
                     <option value="" disabled>
                       Loading categories...
                     </option>
+                  ) : isCategoriesError ? (
+                    <option value="" disabled>
+                      Error loading categories
+                    </option>
                   ) : (
-                    categories.map((category) => (
+                    (categories || []).map((category) => (
                       <option key={category.id} value={category.id}>
                         {category.name}
                       </option>
                     ))
                   )}
                 </select>
+                {formState.errors.category && (
+                  <span style={{ color: "red", fontSize: "14px" }}>
+                    {formState.errors.category.message}
+                  </span>
+                )}
               </div>
 
               {/* Description */}
@@ -262,10 +252,10 @@ const CreateChallenge = () => {
                 </label>
                 <textarea
                   id="description"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  disabled={isLoading}
+                  {...register("description", {
+                    required: "Description is required",
+                  })}
+                  disabled={mutation.isPending}
                   rows="4"
                   style={{
                     backgroundColor: "rgba(0, 0, 0, 0.7)",
@@ -277,7 +267,12 @@ const CreateChallenge = () => {
                     width: "100%",
                     resize: "vertical",
                   }}
-                ></textarea>
+                />
+                {formState.errors.description && (
+                  <span style={{ color: "red", fontSize: "14px" }}>
+                    {formState.errors.description.message}
+                  </span>
+                )}
               </div>
 
               {/* Difficulty */}
@@ -285,10 +280,10 @@ const CreateChallenge = () => {
                 <label htmlFor="difficulty">{commandPrefix} difficulty:</label>
                 <select
                   id="difficulty"
-                  name="difficulty"
-                  value={formData.difficulty}
-                  onChange={handleChange}
-                  disabled={isLoading}
+                  {...register("difficulty", {
+                    required: "Difficulty is required",
+                  })}
+                  disabled={mutation.isPending}
                   style={{
                     backgroundColor: "rgba(0, 0, 0, 0.7)",
                     border: "1px solid var(--terminal-green)",
@@ -299,26 +294,45 @@ const CreateChallenge = () => {
                     width: "100%",
                   }}
                 >
-                  <option value="easy">Easy</option>
-                  <option value="medium">Medium</option>
-                  <option value="hard">Hard</option>
-                  <option value="expert">Expert</option>
+                  <option value={1}>1 - Very Easy</option>
+                  <option value={2}>2 - Easy</option>
+                  <option value={3}>3 - Medium</option>
+                  <option value={4}>4 - Hard</option>
+                  <option value={5}>5 - Expert</option>
                 </select>
+                {formState.errors.difficulty && (
+                  <span style={{ color: "red", fontSize: "14px" }}>
+                    {formState.errors.difficulty.message}
+                  </span>
+                )}
               </div>
 
               <div className="form-group">
                 <label htmlFor="points">{commandPrefix} points:</label>
                 <input
-                  type="text"
+                  type="number"
                   id="points"
-                  name="points"
-                  value={formData.points}
-                  onChange={handleChange}
-                  disabled={isLoading}
+                  {...register("points", {
+                    required: "Points is required",
+                    min: { value: 1, message: "Points must be at least 1" },
+                  })}
+                  disabled={mutation.isPending}
                   placeholder="Enter points (e.g., 100, 250, 500)"
-                  autoComplete="off"
-                  spellCheck="false"
+                  style={{
+                    backgroundColor: "rgba(0, 0, 0, 0.7)",
+                    border: "1px solid var(--terminal-green)",
+                    color: "var(--terminal-white)",
+                    padding: "10px 15px",
+                    fontFamily: "'Roboto Mono', monospace",
+                    fontSize: "16px",
+                    width: "100%",
+                  }}
                 />
+                {formState.errors.points && (
+                  <span style={{ color: "red", fontSize: "14px" }}>
+                    {formState.errors.points.message}
+                  </span>
+                )}
               </div>
 
               <div className="form-group">
@@ -326,14 +340,26 @@ const CreateChallenge = () => {
                 <input
                   type="text"
                   id="flag"
-                  name="flag"
-                  value={formData.flag}
-                  onChange={handleChange}
-                  disabled={isLoading}
-                  autoComplete="off"
-                  spellCheck="false"
+                  {...register("flag", {
+                    required: "Flag is required",
+                  })}
+                  disabled={mutation.isPending}
                   placeholder="flag{example_flag_format}"
+                  style={{
+                    backgroundColor: "rgba(0, 0, 0, 0.7)",
+                    border: "1px solid var(--terminal-green)",
+                    color: "var(--terminal-white)",
+                    padding: "10px 15px",
+                    fontFamily: "'Roboto Mono', monospace",
+                    fontSize: "16px",
+                    width: "100%",
+                  }}
                 />
+                {formState.errors.flag && (
+                  <span style={{ color: "red", fontSize: "14px" }}>
+                    {formState.errors.flag.message}
+                  </span>
+                )}
               </div>
 
               <div className="form-group">
@@ -349,14 +375,14 @@ const CreateChallenge = () => {
                     type="file"
                     ref={fileInputRef}
                     onChange={handleFileChange}
-                    disabled={isLoading}
+                    disabled={mutation.isPending}
                     multiple
                     style={{ display: "none" }}
                   />
                   <button
                     type="button"
                     onClick={triggerFileInput}
-                    disabled={isLoading}
+                    disabled={mutation.isPending}
                     style={{
                       backgroundColor: "var(--dark-green)",
                       color: "var(--neon-green)",
@@ -374,7 +400,7 @@ const CreateChallenge = () => {
                     <button
                       type="button"
                       onClick={clearAllAttachments}
-                      disabled={isLoading}
+                      disabled={mutation.isPending}
                       style={{
                         backgroundColor: "var(--dark-red, #660000)",
                         color: "var(--neon-red, #ff6666)",
@@ -434,7 +460,7 @@ const CreateChallenge = () => {
                         <button
                           type="button"
                           onClick={() => removeAttachment(attachment.id)}
-                          disabled={isLoading}
+                          disabled={mutation.isPending}
                           style={{
                             backgroundColor: "transparent",
                             color: "var(--neon-red, #ff6666)",
@@ -473,10 +499,14 @@ const CreateChallenge = () => {
               {/* Submit Button */}
               <button
                 type="submit"
-                className={`login-button ${isLoading ? "loading" : ""}`}
-                disabled={isLoading}
+                className={`login-button ${
+                  mutation.isPending ? "loading" : ""
+                }`}
+                disabled={mutation.isPending}
               >
-                {isLoading ? "Creating Challenge..." : "Create Challenge"}
+                {mutation.isPending
+                  ? "Creating Challenge..."
+                  : "Create Challenge"}
               </button>
             </form>
           </div>

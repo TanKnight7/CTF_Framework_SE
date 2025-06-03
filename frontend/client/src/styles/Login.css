@@ -255,54 +255,46 @@ h1 {
   }
 }
 
-/* Add this to your Login.css or a dedicated Register.css */
-
 .form-group.password-group {
-  position: relative; /* Allows absolute positioning of the button */
+  position: relative;
 }
 
 .form-group.password-group input {
-  padding-right: 60px; /* Make space for the button */
+  padding-right: 60px;
 }
 
-/* Container for password input and show/hide button */
 .password-input-container {
   position: relative;
-  display: flex; /* Aligns input and button if needed, though button is absolute */
+  display: flex;
   align-items: center;
 }
 
 /* Style the password input field */
 .password-input-container input[type="password"],
 .password-input-container input[type="text"] {
-  /* Assuming base input styles are defined elsewhere */
-  /* Add padding to the right to make space for the button */
-  padding-right: 45px; /* Adjust as needed based on button size */
-  width: 100%; /* Ensure input takes full width of its container */
-  /* Add terminal theme focus */
+  padding-right: 45px;
+  width: 100%;
   transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .password-input-container input[type="password"]:focus,
 .password-input-container input[type="text"]:focus {
-  /* Use existing focus styles or add themed ones */
-  border-color: var(--terminal-green, #00ff00); /* Use variable or fallback */
-  box-shadow: 0 0 8px rgba(0, 255, 0, 0.6); /* Green glow */
-  outline: none; /* Remove default outline */
+  border-color: var(--terminal-green, #00ff00);
+  box-shadow: 0 0 8px rgba(0, 255, 0, 0.6);
+  outline: none;
 }
 
-/* Style the show/hide button */
 .show-hide-password {
   position: absolute;
-  right: 10px; /* Position inside the input field */
+  right: 10px;
   top: 50%;
   transform: translateY(-50%);
   background: transparent;
   border: none;
   padding: 5px;
   cursor: pointer;
-  color: var(--terminal-green, #00ff00); /* Use variable or fallback */
-  font-size: 0.8rem; /* Smaller font size */
+  color: var(--terminal-green, #00ff00);
+  font-size: 0.8rem;
   font-weight: bold;
   text-transform: uppercase;
   opacity: 0.7;
@@ -311,7 +303,7 @@ h1 {
 
 .show-hide-password:hover {
   opacity: 1;
-  color: var(--text-primary, #ffffff); /* Brighter color on hover */
+  color: var(--text-primary, #ffffff);
 }
 
 .show-hide-password:disabled {
@@ -321,8 +313,5 @@ h1 {
 
 .login-page .terminal .form-group input,
 .login-page .terminal .password-input-container input {
-  color: var(
-    --terminal-white,
-    #ffffff
-  ) !important; /* Added !important as a stronger measure if specificity alone isn't enough */
+  color: var(--terminal-white, #ffffff) !important;
 }

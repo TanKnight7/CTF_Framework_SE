@@ -174,6 +174,7 @@ export async function submitWriteup(data) {
     return err.response?.data;
   }
 }
+
 export async function getWriteups() {
   try {
     const response = await api.get(`/api/writeups/`);
@@ -193,6 +194,26 @@ export async function updateProfile(data) {
   try {
     console.log(data);
     const response = await api.put(`/api/users/${data.id}/`, data);
+    return response.data;
+  } catch (err) {
+    return err.response?.data;
+  }
+}
+
+export async function createCategory(data) {
+  try {
+    console.log(data);
+    const response = await api.post("/api/challenges/categories/create/", data);
+    return response.data;
+  } catch (err) {
+    return err.response?.data;
+  }
+}
+
+export async function createChallannge(data) {
+  try {
+    console.log(data);
+    const response = await api.post("/api/challenges/create/", data);
     return response.data;
   } catch (err) {
     return err.response?.data;
