@@ -115,7 +115,7 @@ const BottomNavigation = () => {
               </NavLink>
             </li>
 
-            {isLoggedIn && isAdmin && (
+            {isLoggedIn && (
               <>
                 <li className="nav-item">
                   <NavLink
