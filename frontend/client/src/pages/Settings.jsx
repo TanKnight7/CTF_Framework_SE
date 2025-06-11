@@ -4,7 +4,6 @@ import { getProfile, updateProfile } from "../services/apiCTF";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-// ['email', 'bio', 'country', 'username', 'password']
 
 const Settings = () => {
   const { isPending: isProfilePending, data: profile } = useQuery({
@@ -110,22 +109,17 @@ const Settings = () => {
 
   return (
     <div className="container relative overflow-hidden">
-      {/* Optional: Animated Grid Background */}
-      {/* <div className="animated-grid-background"></div> */}
-
       <div className="relative z-10">
         <h1 className="terminal-text text-3xl mb-6 main-title-glow">
           User Settings
         </h1>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-          {/* --- Profile Information Section --- */}
           <div className="card card-enhanced p-6">
             <h2 className="terminal-text text-xl mb-4 section-title-glow">
               Profile Information
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Username */}
               <div className="form-group">
                 <label htmlFor="username" className="block terminal-text mb-1">
                   {commandPrefix} Username:
@@ -145,7 +139,6 @@ const Settings = () => {
                 )}
               </div>
 
-              {/* Country */}
               <div className="form-group">
                 <label htmlFor="country" className="block terminal-text mb-1">
                   {commandPrefix} Country:
@@ -156,11 +149,9 @@ const Settings = () => {
                   {...register("country")}
                   className="w-full p-2 rounded-md bg-tertiary-bg border border-border-color focus:border-terminal-green focus:outline-none focus:ring-1 focus:ring-terminal-green text-text-primary"
                 />
-                {/* No error display needed unless validation is added */}
               </div>
             </div>
 
-            {/* Bio */}
             <div className="form-group mt-6">
               <label htmlFor="bio" className="block terminal-text mb-1">
                 {commandPrefix} Bio:
@@ -171,16 +162,14 @@ const Settings = () => {
                 rows="4"
                 className="w-full p-2 rounded-md bg-tertiary-bg border border-border-color focus:border-terminal-green focus:outline-none focus:ring-1 focus:ring-terminal-green text-text-primary resize-none"
               ></textarea>
-              {/* No error display needed unless validation is added */}
             </div>
           </div>
 
-          {/* --- Change Password Section --- */}
           <div className="card card-enhanced p-6">
             <h2 className="terminal-text text-xl mb-4 section-title-glow">
               Change Password
             </h2>
-            {/* Current Password */}
+
             <div className="form-group mb-4 password-group">
               <label
                 htmlFor="currentPassword"
@@ -193,7 +182,6 @@ const Settings = () => {
                   type="password"
                   id="currentPassword"
                   {...register("currentPassword", {
-                    // Required only if newPassword is being set
                     validate: (value) =>
                       !watch("newPassword") ||
                       !!value ||
@@ -201,7 +189,6 @@ const Settings = () => {
                   })}
                   className="w-full p-2 rounded-md bg-tertiary-bg border border-border-color focus:border-terminal-green focus:outline-none focus:ring-1 focus:ring-terminal-green text-text-primary"
                 />
-                {/* Optional: Add show/hide button if desired, requires state management */}
               </div>
               {errors.currentPassword && (
                 <small className="error-message block mt-1">
@@ -210,7 +197,6 @@ const Settings = () => {
               )}
             </div>
 
-            {/* New Password */}
             <div className="form-group mb-4 password-group">
               <label htmlFor="newPassword" className="block terminal-text mb-1">
                 {commandPrefix} New Password:
@@ -235,7 +221,6 @@ const Settings = () => {
               )}
             </div>
 
-            {/* Confirm New Password */}
             <div className="form-group mb-6 password-group">
               <label
                 htmlFor="confirmNewPassword"
@@ -262,7 +247,6 @@ const Settings = () => {
             </div>
           </div>
 
-          {/* --- Submit Button & Messages --- */}
           <div className="mt-6 text-right">
             {errorMessage && (
               <div className="error-message text-left mb-4">{errorMessage}</div>
@@ -277,7 +261,7 @@ const Settings = () => {
               className={`filter-button active create-ticket-button scale-on-hover ${
                 isSubmitting || !isDirty ? "opacity-50 cursor-not-allowed" : ""
               }`}
-              disabled={isSubmitting || !isDirty} // Disable if submitting or no changes made
+              disabled={isSubmitting || !isDirty}
             >
               {isSubmitting ? "Saving Changes..." : "Save Changes"}
             </button>

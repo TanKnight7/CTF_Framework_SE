@@ -3,7 +3,6 @@ import Terminal from "../components/Terminal";
 import { eventInfo } from "../data/mockData";
 
 const Home = () => {
-  // Format event info for terminal display
   const formatEventInfoForTerminal = () => {
     return [
       "$ cat /etc/ctf/event_info.txt",
@@ -28,7 +27,6 @@ const Home = () => {
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {/* Event Status Card */}
           <div className="card col-span-1">
             <h2 className="terminal-text text-xl mb-4">Event Status</h2>
             <div className="flex flex-col gap-4">
@@ -67,7 +65,6 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Terminal View Card */}
           <div className="card col-span-2">
             <Terminal
               title="event_info.sh"
@@ -76,7 +73,6 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Quick Access Cards */}
         <h2 className="terminal-text text-xl mb-4">Quick Access</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Link

@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Assuming React Router is used
-import { mockTickets } from "../data/Data"; // Import mock data
+import { Link, useNavigate } from "react-router-dom";
+import { mockTickets } from "../data/Data";
 
 const Ticket = () => {
   const [tickets, setTickets] = useState(mockTickets);
   const navigate = useNavigate();
 
   const handleRowClick = (ticketId) => {
-    // Navigate to the specific ticket chat page
     navigate(`/tickets/${ticketId}`);
   };
 
@@ -19,9 +18,6 @@ const Ticket = () => {
 
   return (
     <div className="container relative overflow-hidden">
-      {/* Optional: Animated Grid Background */}
-      {/* <div className="animated-grid-background"></div> */}
-
       <div className="relative z-10">
         <div className="flex justify-between items-center mb-6">
           <h1 className="terminal-text text-3xl main-title-glow">
@@ -34,7 +30,6 @@ const Ticket = () => {
           </Link>
         </div>
 
-        {/* Tickets Table */}
         <div className="card card-enhanced p-0 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">

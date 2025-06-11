@@ -62,8 +62,9 @@ const Register = () => {
 
         <div className="terminal">
           <div className="terminal-header">
-            <span className="terminal-button"></span>
-            <span className="terminal-button"></span>
+            <span className="terminal-button terminal-button-close"></span>
+            <span className="terminal-button terminal-button-minimize"></span>
+            <span className="terminal-button terminal-button-maximize"></span>
             <span className="terminal-title">secure_register.sh</span>
           </div>
           <div className="terminal-content">
@@ -118,7 +119,6 @@ const Register = () => {
                 <label htmlFor="password">{commandPrefix} Password:</label>
                 <div className="password-input-container">
                   {" "}
-                  {/* Added this wrapper */}
                   <input
                     type={showPassword ? "text" : "password"}
                     id="password"
@@ -153,7 +153,6 @@ const Register = () => {
                 </label>
                 <div className="password-input-container">
                   {" "}
-                  {/* Added this wrapper */}
                   <input
                     type={showConfirmPassword ? "text" : "password"}
                     id="confirmPassword"

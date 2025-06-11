@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom"; // Assuming React Router is used
-import { mockChallenges, mockTickets } from "../data/Data"; // Import mock data
+import { useNavigate } from "react-router-dom";
+import { mockChallenges, mockTickets } from "../data/Data";
 
 const CreateTicket = () => {
   const [challengeSearchTerm, setChallengeSearchTerm] = useState("");
@@ -9,7 +9,6 @@ const CreateTicket = () => {
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
-  // Filter challenges based on search term
   const filteredChallenges = useMemo(() => {
     if (!challengeSearchTerm) return [];
     return mockChallenges.filter((challenge) =>
@@ -19,7 +18,7 @@ const CreateTicket = () => {
 
   const handleChallengeSelect = (challenge) => {
     setSelectedChallenge(challenge);
-    setChallengeSearchTerm(""); // Clear search after selection
+    setChallengeSearchTerm("");
   };
 
   const handleSubmit = (e) => {
@@ -29,8 +28,6 @@ const CreateTicket = () => {
       return;
     }
 
-    // --- Mock Ticket Creation Logic ---
-    // In a real app, this would send data to a backend API
     const newTicketId = `TKT-${String(mockTickets.length + 1).padStart(
       3,
       "0"
@@ -41,39 +38,33 @@ const CreateTicket = () => {
       challengeId: selectedChallenge.id,
       challengeName: selectedChallenge.name,
       subject: subject,
-      user: "currentUser", // Replace with actual logged-in user
-      problemSetter: "admin", // Or determine dynamically
+      user: "currentUser",
+      problemSetter: "admin",
       lastUpdated: new Date().toISOString(),
       messages: [
         {
-          sender: "currentUser", // Replace with actual logged-in user
+          sender: "currentUser",
           timestamp: new Date().toISOString(),
           text: message,
         },
       ],
     };
 
-    // Add to mock data (in real app, you'd rely on backend state)
-    // This is just for demo purposes and won't persist
     console.log("Creating new ticket (mock):", newTicket);
-    // mockTickets.push(newTicket); // Avoid mutating imported mock data directly
 
     alert(`Ticket ${newTicketId} created successfully!`);
-    // Navigate to the new ticket's chat page or back to the list
-    navigate(`/tickets/${newTicketId}`); // Or navigate('/tickets');
-    // --- End Mock Logic ---
+
+    navigate(`/tickets/${newTicketId}`);
   };
 
   return (
     <div className="container relative overflow-hidden">
-      {/* <div className="animated-grid-background"></div> */}
       <div className="relative z-10">
         <h1 className="terminal-text text-3xl mb-6 main-title-glow">
           Create New Ticket
         </h1>
 
         <form onSubmit={handleSubmit} className="card card-enhanced p-6">
-          {/* Challenge Selection */}
           <div className="mb-4">
             <label
               htmlFor="challengeSearch"
@@ -148,7 +139,6 @@ const CreateTicket = () => {
             ></textarea>
           </div>
 
-          {/* Submit Button */}
           <div className="text-right">
             <button
               type="submit"

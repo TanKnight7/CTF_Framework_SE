@@ -6,9 +6,8 @@ import { getCategories } from "../services/apiCTF";
 import { createChallannge } from "../services/apiCTF";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "react-toastify"; // Add this import
+import { toast } from "react-toastify";
 
-// Mock categories data - replace with API call in production
 const mockCategories = [
   { id: 1, name: "Web" },
   { id: 2, name: "Crypto" },
@@ -80,7 +79,6 @@ const CreateChallenge = () => {
       setSuccessMessage("Successfully Created Challenge");
       setErrorMessage("");
 
-      // Reset form and attachments
       reset();
       setAttachments([]);
     },
@@ -96,15 +94,8 @@ const CreateChallenge = () => {
   });
 
   function onSubmit(data) {
-    // Clear previous messages
     setErrorMessage("");
     setSuccessMessage("");
-
-    // Validate attachments if needed
-    // if (attachments.length === 0) {
-    //   setErrorMessage("At least one attachment is required");
-    //   return;
-    // }
 
     mutation.mutate(data);
   }
@@ -165,8 +156,9 @@ const CreateChallenge = () => {
 
         <div className="terminal" style={{ maxWidth: "800px" }}>
           <div className="terminal-header">
-            <span className="terminal-button"></span>
-            <span className="terminal-button"></span>
+            <span className="terminal-button terminal-button-close"></span>
+            <span className="terminal-button terminal-button-minimize"></span>
+            <span className="terminal-button terminal-button-maximize"></span>
             <span className="terminal-title">create_challenge.sh</span>
           </div>
           <div className="terminal-content">

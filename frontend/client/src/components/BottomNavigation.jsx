@@ -24,11 +24,8 @@ const BottomNavigation = () => {
   return (
     <nav className="bottom-navigation">
       {" "}
-      {/* Add relevant classes from global.css if needed */}
       <ul className="nav-list">
         {" "}
-        {/* Add relevant classes from global.css if needed */}
-        {/* Always visible */}
         <li className="nav-item">
           <NavLink
             to="/"
@@ -52,7 +49,6 @@ const BottomNavigation = () => {
             <span className="nav-text">Announcements</span>
           </NavLink>
         </li>
-        {/* Conditionally visible based on login status */}
         {isLoggedIn && (
           <>
             <li className="nav-item">

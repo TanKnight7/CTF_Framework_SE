@@ -1,6 +1,6 @@
 import React, { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/Login.css"; // Ensure this file contains the enhanced password styles
+import "../styles/Login.css";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "../services/apiCTF";
@@ -55,8 +55,9 @@ const Login = () => {
 
         <div className="terminal">
           <div className="terminal-header">
-            <span className="terminal-button"></span>
-            <span className="terminal-button"></span>
+            <span className="terminal-button terminal-button-close"></span>
+            <span className="terminal-button terminal-button-minimize"></span>
+            <span className="terminal-button terminal-button-maximize"></span>
             <span className="terminal-title">secure_login.sh</span>
           </div>
           <div className="terminal-content">

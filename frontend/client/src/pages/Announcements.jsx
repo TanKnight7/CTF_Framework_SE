@@ -5,7 +5,6 @@ import { announcements } from "../data/mockData";
 const Announcements = () => {
   const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
 
-  // Format the announcements for the terminal
   const formatAnnouncementsForTerminal = () => {
     return [
       "$ cat /announcements/all.log",

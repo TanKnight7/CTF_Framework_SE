@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-// import { useParams } from "react-router-dom"; // Assuming React Router is used
+// import { useParams } from "react-router-dom";
 
-// --- Mock Data Embedded ---
 const mockTickets = [
   {
     ticketId: "TKT-001",
@@ -65,25 +64,20 @@ const mockTickets = [
     ],
   },
 ];
-// --- End Mock Data ---
 
-// Mock useParams for environments where React Router might not be fully set up for testing
-// In a real app, you'd use: import { useParams } from "react-router-dom";
 const useParams = () => {
-  // Simulate getting ticketId from URL, e.g., /tickets/TKT-001
   const pathParts = window.location.pathname.split("/");
-  const ticketIdFromPath = pathParts[pathParts.length - 1]; // Assumes ID is the last part
+  const ticketIdFromPath = pathParts[pathParts.length - 1];
   console.log("Mock useParams extracted ticketId:", ticketIdFromPath);
   return { ticketId: ticketIdFromPath };
 };
 
 const TicketChat = () => {
-  const { ticketId } = useParams(); // Get ticketId from URL (or mock)
+  const { ticketId } = useParams();
   const [ticket, setTicket] = useState(null);
   const [newMessage, setNewMessage] = useState("");
-  const messagesEndRef = useRef(null); // Ref to scroll to bottom
+  const messagesEndRef = useRef(null);
 
-  // Log initial values
   console.log(
     "Initial URL ticketId from useParams:",
     ticketId,
@@ -92,7 +86,6 @@ const TicketChat = () => {
   );
   console.log("Initial MockTickets data:", mockTickets);
 
-  // Find the ticket based on ticketId
   useEffect(() => {
     if (!ticketId) {
       console.warn("No ticketId found from URL parameters.");
@@ -112,7 +105,7 @@ const TicketChat = () => {
           t.ticketId
         }' (type: ${typeof t.ticketId})`
       );
-      return t.ticketId === ticketId; // Both should be strings
+      return t.ticketId === ticketId;
     });
 
     if (foundTicket) {
@@ -122,9 +115,8 @@ const TicketChat = () => {
       console.warn(`Ticket with ID '${ticketId}' not found in mockTickets.`);
       setTicket(null);
     }
-  }, [ticketId]); // Only re-run if ticketId changes
+  }, [ticketId]);
 
-  // Scroll to the bottom of the chat messages when new messages are added
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [ticket?.messages]);
@@ -134,7 +126,7 @@ const TicketChat = () => {
     if (!newMessage.trim() || !ticket) return;
 
     const messageToSend = {
-      sender: "currentUser", // Replace with actual logged-in user identifier
+      sender: "currentUser",
       timestamp: new Date().toISOString(),
       text: newMessage.trim(),
     };
@@ -148,7 +140,7 @@ const TicketChat = () => {
         ...prevTicket,
         messages: updatedMessages,
         lastUpdated: new Date().toISOString(),
-        status: "Open", // Re-open ticket if user replies? Or handle status differently.
+        status: "Open",
       };
     });
 
@@ -156,7 +148,6 @@ const TicketChat = () => {
     setNewMessage("");
   };
 
-  // Helper to get status class - reverted to original logic
   const getStatusClass = (status) => {
     return status?.toLowerCase() === "open"
       ? "ticket-status-open"
@@ -165,7 +156,6 @@ const TicketChat = () => {
 
   if (!ticket) {
     return (
-      // Using original class names for "Ticket Not Found"
       <div className="container relative z-10">
         <h1 className="terminal-text text-3xl mb-6 main-title-glow">
           Ticket Not Found
@@ -181,15 +171,11 @@ const TicketChat = () => {
   }
 
   return (
-    // Using original class names for the main container
     <div className="container relative overflow-hidden">
-      {/* <div className="animated-grid-background"></div>  // Original commented-out background */}
       <div className="relative z-10">
-        {/* Chat Header - using original class names */}
         <div className="chat-header card card-enhanced p-4 mb-4">
           <div className="flex justify-between items-start">
             {" "}
-            {/* Assuming 'flex justify-between items-start' is acceptable or part of original implied style */}
             <div>
               <h1 className="terminal-text text-2xl main-title-glow mb-1">
                 Ticket: {ticket.ticketId}
@@ -216,14 +202,12 @@ const TicketChat = () => {
           </div>
         </div>
 
-        {/* Chat Area - using original class names */}
         <div className="card card-enhanced p-4 chat-container">
-          {/* Messages Display - using original class names */}
           <div className="chat-messages">
             {ticket.messages &&
               ticket.messages.map((msg, index) => (
                 <div
-                  key={msg.timestamp + index} // Using timestamp + index for a more unique key
+                  key={msg.timestamp + index}
                   className={`chat-message ${
                     msg.sender === "currentUser"
                       ? "chat-message-user"
@@ -243,10 +227,9 @@ const TicketChat = () => {
                   </span>
                 </div>
               ))}
-            <div ref={messagesEndRef} /> {/* Anchor for scrolling */}
+            <div ref={messagesEndRef} />
           </div>
 
-          {/* Message Input Form - using original class names */}
           <form onSubmit={handleSendMessage} className="chat-input-area">
             <textarea
               value={newMessage}

@@ -50,7 +50,6 @@ const ProfileEnhanced = () => {
       <h1 className="terminal-text text-2xl mb-6">Profile</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* User Info */}
         <div className="md:col-span-1">
           <div className="card sticky top-4">
             <div className="flex flex-col items-center text-center mb-6">
@@ -62,7 +61,6 @@ const ProfileEnhanced = () => {
               <p className="text-sm text-muted">Total Points</p>
             </div>
 
-            {/* Bio Section - New */}
             <div className="border-t border-border-color pt-4 mb-4">
               <h3 className="terminal-text text-lg mb-2 mt-2">Bio</h3>
               <p className="text-sm mb-4">{profile.bio}</p>
@@ -74,7 +72,6 @@ const ProfileEnhanced = () => {
                 <span>{profile.team?.name}</span>
               </div>
 
-              {/* Country Field - New */}
               <div className="flex justify-between mb-2">
                 <span className="text-muted">Country</span>
                 <span>{profile.country}</span>

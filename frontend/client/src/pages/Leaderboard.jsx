@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
-import Terminal from "../components/Terminal"; // Assuming Terminal component exists
+import Terminal from "../components/Terminal";
 import { getLeaderboard } from "../services/apiCTF";
 
 const LeaderboardV2 = () => {
@@ -20,19 +20,15 @@ const LeaderboardV2 = () => {
 
   return (
     <div className="container relative overflow-hidden">
-      {/* Animated Grid Background */}
       <div className="animated-grid-background"></div>
 
-      {/* Ensure content is above the background */}
       <div className="relative z-10">
         <h1 className="terminal-text text-3xl mb-6 main-title-glow">
           Leaderboard
         </h1>
 
-        {/* Redesigned Visual Podium */}
         <div className="card card-enhanced mb-8 p-6">
           <div className="podium-container">
-            {/* Second Place */}
             <div className="podium-block podium-block-2 animate-rise-2">
               <div className="podium-team podium-team-2">
                 {leaderboard[1]?.name}
@@ -42,7 +38,7 @@ const LeaderboardV2 = () => {
                 {leaderboard[1]?.total_point || 0} Points
               </div>
             </div>
-            {/* First Place */}
+
             <div className="podium-block podium-block-1 animate-rise-1">
               <div className="podium-team podium-team-1">
                 {leaderboard[0]?.name}
@@ -52,7 +48,7 @@ const LeaderboardV2 = () => {
                 {leaderboard[0]?.total_point || 0} Points
               </div>
             </div>
-            {/* Third Place */}
+
             <div className="podium-block podium-block-3 animate-rise-3">
               <div className="podium-team podium-team-3 text-3xl font-bold">
                 {leaderboard[2]?.name}
@@ -62,12 +58,11 @@ const LeaderboardV2 = () => {
                 {leaderboard[2]?.total_point || 0} Points
               </div>
             </div>
-            {/* Podium Base */}
+
             <div className="podium-base"></div>
           </div>
         </div>
 
-        {/* Enhanced Leaderboard Table */}
         <div className="card card-enhanced mb-8 p-4">
           <h2 className="terminal-text text-xl mb-4 table-header-glow">
             Full Rankings
