@@ -25,10 +25,13 @@ import ProtectedRoute from "./components/ProtectedRoutes";
 import JoinTeam from "./pages/JoinTeam";
 import CreateTeam from "./pages/CreateTeam";
 import Settings from "./pages/Settings";
-import CreateChallenge from "./pages/CreateChallenge";
-import CreateCategory from "./pages/CreateCategory";
 import AdminRoute from "./components/AdminRoutes";
 import Admin from "./pages/Admin";
+import Admin_Users from "./pages/Admin_Users";
+import Admin_Submissions from "./pages/Admin_Submissions";
+import Admin_Challenges from "./pages/Admin_Challenges";
+import Admin_Writeups from "./pages/Admin_Writeups";
+import Admin_Leaderboard from "./pages/Admin_Leaderboard";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -90,13 +93,16 @@ const App = () => {
             </Route>
             <Route element={<AdminRoute />}>
               <Route path="/admin" element={<Admin />} />
+              <Route path="/admin/challenges" element={<Admin_Challenges />} />
+              <Route path="/admin/users" element={<Admin_Users />} />
               <Route
-                path="/admin/createchallenge"
-                element={<CreateChallenge />}
+                path="/admin/submissions"
+                element={<Admin_Submissions />}
               />
+              <Route path="/admin/writeups" element={<Admin_Writeups />} />
               <Route
-                path="/admin/createcategory"
-                element={<CreateCategory />}
+                path="/admin/leaderboard"
+                element={<Admin_Leaderboard />}
               />
             </Route>
             <Route path="/" element={<Home />} />

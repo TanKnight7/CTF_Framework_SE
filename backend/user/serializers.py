@@ -38,6 +38,11 @@ class UserListSerializer(serializers.ModelSerializer):
             .aggregate(total=Sum('challenge__point'))['total'] or 0
         )
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'role']
+
 class UserDetailSerializer(serializers.ModelSerializer):
     from team.serializers import TeamListSerializer
     total_point = serializers.SerializerMethodField()

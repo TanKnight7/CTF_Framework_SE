@@ -1,0 +1,5 @@
+
+### list all submissions
+GET http://127.0.0.1:9999/api/logs/submissions/
+Content-Type: application/json
+Authorization: Token 0d0631cd1214f928bc455833296eaae4dcce0872455b63d34962e767187ce72a

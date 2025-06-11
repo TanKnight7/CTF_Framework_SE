@@ -4,10 +4,11 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser # Consider I
 from knox.auth import TokenAuthentication
 from rest_framework.response import Response
 # from django.shortcuts import get_object_or_404 # Useful alternative
+import json
 
 from .models import Category, Challenge, ChallengeSolve, ChallengeAttachment
 from log.serializers import SubmissionSerlializers
-from .serializers import ChallengeListSerializer, ChallengeSerializer, CategorySerializer, CategoryDetailSerializer, CreateChallengeSerializer, ChallengeSolveSerializer
+from .serializers import ChallengeListSerializer, ChallengeSerializer, CategorySerializer, CategoryDetailSerializer, CreateChallengeSerializer, ChallengeSolveSerializer, AdminChallengeDetailSerializer
 # It's good practice to import your User model if you need to interact with it directly,
 # e.g., from django.contrib.auth import get_user_model
 # User = get_user_model()
@@ -156,7 +157,13 @@ def get_challenge_detail(request, challenge_id):
     """
     try:
         challenge = Challenge.objects.get(pk=challenge_id)
-        serializer = ChallengeSerializer(challenge) # many=False is default for single object
+        
+        # Use AdminChallengeDetailSerializer for admin users to include flag and attachments
+        if request.user.role == "admin":
+            serializer = AdminChallengeDetailSerializer(challenge)
+        else:
+            serializer = ChallengeSerializer(challenge)
+            
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Challenge.DoesNotExist:
         return Response({'error': f'Challenge with ID {challenge_id} not found'}, status=status.HTTP_404_NOT_FOUND)
@@ -188,6 +195,7 @@ def create_challenge(request):
         response_data = serializer.data.copy()
         response_data['attachments'] = [
             {
+                'id': att.id,
                 'name': att.name,
                 'file': att.file.url if att.file else None
             } for att in challenge.attachments.all()
@@ -215,12 +223,51 @@ def edit_challenge(request, challenge_id):
         if challenge.author != request.user and not request.user.role == "admin": # Assuming request.user is your 'user.User' model instance
             return Response({"error": "You do not have permission to edit this challenge."}, status=status.HTTP_403_FORBIDDEN)
 
+        # Handle file attachments
+        files = request.FILES.getlist('attachments')
+        
+        # Handle attachment removal
+        keep_attachments_data = request.data.get('keep_attachments')
+        if keep_attachments_data:
+            try:
+                keep_attachments = json.loads(keep_attachments_data)
+                # Remove attachments that are not in the keep list
+                existing_attachments = challenge.attachments.all()
+                for attachment in existing_attachments:
+                    if attachment.id not in keep_attachments:
+                        attachment.delete()
+            except json.JSONDecodeError:
+                pass  # If JSON is invalid, don't remove any attachments
+        
         # Use CreateChallengeSerializer for updates to allow all fields to be changed, or a specific UpdateChallengeSerializer.
         # partial=True allows for partial updates (PATCH behavior).
         serializer = CreateChallengeSerializer(challenge, data=request.data, partial=True, context={'request': request})
         if serializer.is_valid():
-            serializer.save()
-            return Response({"success": "Challenge successfully updated!", "challenge_data": serializer.data}, status=status.HTTP_200_OK)
+            updated_challenge = serializer.save()
+            
+            # Add new attachments
+            for file in files:
+                attachment_name = file.name
+                ChallengeAttachment.objects.create(
+                    challenge=updated_challenge,
+                    file=file,
+                    name=attachment_name
+                )
+            
+            # Return response with updated attachments
+            response_data = serializer.data.copy()
+            response_data['attachments'] = [
+                {
+                    'id': att.id,
+                    'name': att.name,
+                    'file': att.file.url if att.file else None
+                } for att in updated_challenge.attachments.all()
+            ]
+            
+            return Response({
+                "success": "Challenge successfully updated!", 
+                "challenge_data": response_data
+            }, status=status.HTTP_200_OK)
         return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
     except Challenge.DoesNotExist:
         return Response({"error": f"Challenge with ID {challenge_id} not found"}, status=status.HTTP_404_NOT_FOUND)
@@ -278,19 +325,16 @@ def submit_flag(request, challenge_id):
     
     is_correct = challenge.flag == user_submitted_flag
     status_value = 'correct' if is_correct else 'incorrect'
-    submission_data = {
-        "challenge": challenge.id,
-        "submitted_by": request.user.id,
-        "flag": user_submitted_flag,
-        "status": status_value,
-    }
     
-    serializer = SubmissionSerlializers(data=submission_data)
-    if serializer.is_valid():
-        serializer.save()
-    else:
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    # Create submission directly using the model
+    from log.models import Submission
+    submission = Submission.objects.create(
+        challenge=challenge,
+        submitted_by=request.user,
+        flag=user_submitted_flag,
+        status=status_value,
+    )
+    
     if challenge.flag != user_submitted_flag:
         return Response({"message": f"Wrong answer."}, status=status.HTTP_400_BAD_REQUEST)
     

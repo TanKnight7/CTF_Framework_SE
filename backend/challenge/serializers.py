@@ -30,7 +30,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class ChallengeAttachmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChallengeAttachment
-        fields = ['name', 'file']
+        fields = ['id', 'name', 'file']
 
 
 class ChallengeListSerializer(serializers.ModelSerializer):
@@ -68,7 +68,7 @@ class CreateChallengeSerializer(serializers.ModelSerializer):
     attachments = ChallengeAttachmentSerializer(many=True, required=False)
     class Meta:
         model = Challenge
-        exclude = ['rating', 'point', 'solved_by']
+        exclude = ['rating', 'solved_by']
         read_only_fields = ['author']
     
     def create(self, validated_data):
@@ -84,3 +84,11 @@ class CategoryDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Challenge
         fields = ['id', 'title', 'difficutly', 'point']
+
+class AdminChallengeDetailSerializer(serializers.ModelSerializer):
+    attachments = ChallengeAttachmentSerializer(many=True, read_only=True)
+    category_name = serializers.CharField(source='category.name', read_only=True)
+    
+    class Meta:
+        model = Challenge
+        fields = ['id', 'title', 'category', 'category_name', 'difficulty', 'point', 'description', 'flag', 'attachments']

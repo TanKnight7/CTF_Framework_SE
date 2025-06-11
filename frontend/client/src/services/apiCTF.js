@@ -27,6 +27,24 @@ export async function getProfile(data) {
   }
 }
 
+export async function getAllUsers(data) {
+  try {
+    const response = await api.get("/api/users/");
+    return response.data;
+  } catch (err) {
+    throw new Error(err);
+  }
+}
+
+export async function getAllSubmissions(data) {
+  try {
+    const response = await api.get("/api/logs/submissions/");
+    return response.data;
+  } catch (err) {
+    throw new Error(err);
+  }
+}
+
 export async function getChallengeSolvedByMe(data) {
   try {
     const response = await api.get("/api/challenges/solved/me/");
@@ -214,6 +232,46 @@ export async function createChallannge(data) {
   try {
     console.log(data);
     const response = await api.post("/api/challenges/create/", data);
+    return response.data;
+  } catch (err) {
+    return err.response?.data;
+  }
+}
+
+export async function getChallengeDetail(challengeId) {
+  try {
+    const response = await api.get(`/api/challenges/${challengeId}/`);
+    return response.data;
+  } catch (err) {
+    return err.response?.data;
+  }
+}
+
+export async function updateChallenge(challengeId, data) {
+  try {
+    console.log("Updating challenge:", challengeId, data);
+    const response = await api.put(
+      `/api/challenges/${challengeId}/edit/`,
+      data
+    );
+    return response.data;
+  } catch (err) {
+    return err.response?.data;
+  }
+}
+
+export async function deleteChallenge(challengeId) {
+  try {
+    const response = await api.delete(`/api/challenges/${challengeId}/delete/`);
+    return response.data;
+  } catch (err) {
+    return err.response?.data;
+  }
+}
+
+export async function deleteWriteup(writeupId) {
+  try {
+    const response = await api.delete(`/api/writeups/${writeupId}/`);
     return response.data;
   } catch (err) {
     return err.response?.data;

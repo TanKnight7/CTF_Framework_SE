@@ -2,6 +2,19 @@
 
 docker exec -it softeng_db psql -U myuser -d mydb
 
+## CREATE USER WITH ADMIN ROLE
+
+docker exec -it softeng_backend python3 manage.py shell
+
+from user.models import User
+user = User.objects.create_user(
+username='admin',
+email='admin@gmail.com',
+password='adminpassword123',
+role='admin'
+)
+user.save()
+
 ## RUN TEST CASES
 
 docker exec -it softeng_backend python3 manage.py test

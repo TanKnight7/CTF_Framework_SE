@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view
 ### ==== Models & Serializers
 from knox.models import AuthToken
 from .models import User
-from .serializers import UserRegistrationSerializer, UserListSerializer, UserDetailSerializer, UserUpdateSerializer
+from .serializers import UserRegistrationSerializer, UserListSerializer, UserDetailSerializer, UserUpdateSerializer, UserSerializer
 
 ### ==== Authentication & Authorization
 from rest_framework.decorators import authentication_classes, permission_classes
@@ -43,7 +43,10 @@ def register(request):
 @permission_classes([IsAuthenticated])
 def get_all_users(request):
     users = User.objects.all()
-    serializer = UserListSerializer(users, many=True)
+    if request.user.role == 'admin':
+        serializer = UserSerializer(users, many=True)
+    else:
+        serializer = UserListSerializer(users, many=True)
     return Response(serializer.data)
 
 @api_view(['GET', 'PUT', 'DELETE'])

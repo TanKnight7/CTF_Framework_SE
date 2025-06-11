@@ -44,27 +44,37 @@ const BottomNavigation = () => {
           <>
             <li className="nav-item">
               <NavLink
-                to="/admin/createCategory"
+                to="/admin/writeups"
                 className={({ isActive }) =>
                   isActive ? "nav-link active" : "nav-link"
                 }
               >
-                <span className="nav-icon">➕</span>
-                <span className="nav-text">Create Category</span>
+                <span className="nav-icon">📝</span>
+                <span className="nav-text">Writeups</span>
               </NavLink>
             </li>
             <li className="nav-item">
               <NavLink
-                to="/admin/createChallenge"
+                to="/admin/challenges"
                 className={({ isActive }) =>
                   isActive ? "nav-link active" : "nav-link"
                 }
               >
-                <span className="nav-icon">➕</span>
-                <span className="nav-text">Create Challenge</span>
+                <span className="nav-icon">🎯</span>
+                <span className="nav-text">Challenges</span>
               </NavLink>
             </li>
-
+            <li className="nav-item">
+              <NavLink
+                to="/admin/leaderboard"
+                className={({ isActive }) =>
+                  isActive ? "nav-link active" : "nav-link"
+                }
+              >
+                <span className="nav-icon">🏆</span>
+                <span className="nav-text">Leaderboard</span>
+              </NavLink>
+            </li>
             <li className="nav-item">
               <NavLink
                 to="/admin/submissions"
