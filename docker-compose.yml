@@ -11,6 +11,8 @@ services:
     container_name: softeng_backend
     # volumes:
     #   - ./backend:/app
+    ports:
+      - "9998:80"
     environment:
       - DB_HOST=db
       - DB_NAME=mydb

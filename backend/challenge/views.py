@@ -6,6 +6,7 @@ from rest_framework.response import Response
 # from django.shortcuts import get_object_or_404 # Useful alternative
 
 from .models import Category, Challenge, ChallengeSolve, ChallengeAttachment
+from log.serializers import SubmissionSerlializers
 from .serializers import ChallengeListSerializer, ChallengeSerializer, CategorySerializer, CategoryDetailSerializer, CreateChallengeSerializer, ChallengeSolveSerializer
 # It's good practice to import your User model if you need to interact with it directly,
 # e.g., from django.contrib.auth import get_user_model
@@ -275,7 +276,21 @@ def submit_flag(request, challenge_id):
     if ChallengeSolve.objects.filter(user__in=team_members, challenge=challenge).exists():
         return Response({"message": "Your team already solved this challenge."}, status=status.HTTP_400_BAD_REQUEST)
     
+    is_correct = challenge.flag == user_submitted_flag
+    status_value = 'correct' if is_correct else 'incorrect'
+    submission_data = {
+        "challenge": challenge.id,
+        "submitted_by": request.user.id,
+        "flag": user_submitted_flag,
+        "status": status_value,
+    }
     
+    serializer = SubmissionSerlializers(data=submission_data)
+    if serializer.is_valid():
+        serializer.save()
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     if challenge.flag != user_submitted_flag:
         return Response({"message": f"Wrong answer."}, status=status.HTTP_400_BAD_REQUEST)
     
