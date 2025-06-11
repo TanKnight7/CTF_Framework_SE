@@ -63,7 +63,7 @@ const CreateChallenge = () => {
 
       // Add attachments
       attachments.forEach((attachment, index) => {
-        formData.append(`attachment_${index}`, attachment.file);
+        formData.append(`attachments`, attachment.file);
       });
 
       return createChallannge(formData);

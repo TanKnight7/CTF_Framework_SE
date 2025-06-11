@@ -8,7 +8,7 @@ class CategorySerializer(serializers.ModelSerializer):
     total_solved_by_team = serializers.SerializerMethodField()
     class Meta:
         model = Category
-        fields = ['name', 'total_chall', 'total_solved_by_team']
+        fields = ['name', 'total_chall', 'total_solved_by_team', 'id']
     
     def get_total_solved_by_team(self, instance):
         # Count solves where the challenge belongs to this category
@@ -66,7 +66,6 @@ class ChallengeSerializer(serializers.ModelSerializer):
 
 class CreateChallengeSerializer(serializers.ModelSerializer):
     attachments = ChallengeAttachmentSerializer(many=True, required=False)
-
     class Meta:
         model = Challenge
         exclude = ['rating', 'point', 'solved_by']
