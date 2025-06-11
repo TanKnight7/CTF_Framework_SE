@@ -277,3 +277,102 @@ export async function deleteWriteup(writeupId) {
     return err.response?.data;
   }
 }
+
+// Ticket API functions
+export async function createTicket(data) {
+  try {
+    const response = await api.post("/api/tickets/create/", data);
+    return response.data;
+  } catch (err) {
+    return err.response?.data;
+  }
+}
+
+export async function getAllTickets() {
+  try {
+    const response = await api.get("/api/tickets/");
+    return response.data;
+  } catch (err) {
+    return err.response?.data;
+  }
+}
+
+export async function getTicket(ticketId) {
+  try {
+    const response = await api.get(`/api/tickets/${ticketId}/`);
+    return response.data;
+  } catch (err) {
+    return err.response?.data;
+  }
+}
+
+export async function updateTicket(ticketId, data) {
+  try {
+    const response = await api.put(`/api/tickets/${ticketId}/`, data);
+    return response.data;
+  } catch (err) {
+    return err.response?.data;
+  }
+}
+
+export async function closeTicket(ticketId) {
+  try {
+    const response = await api.put(`/api/tickets/${ticketId}/close/`);
+    return response.data;
+  } catch (err) {
+    return err.response?.data;
+  }
+}
+
+export async function deleteTicket(ticketId) {
+  try {
+    const response = await api.delete(`/api/tickets/${ticketId}/`);
+    return response.data;
+  } catch (err) {
+    return err.response?.data;
+  }
+}
+
+export async function createMessage(ticketId, data) {
+  try {
+    const response = await api.post(
+      `/api/tickets/${ticketId}/messages/create/`,
+      data
+    );
+    return response.data;
+  } catch (err) {
+    return err.response?.data;
+  }
+}
+
+export async function getAllMessages(ticketId) {
+  try {
+    const response = await api.get(`/api/tickets/${ticketId}/messages/`);
+    return response.data;
+  } catch (err) {
+    return err.response?.data;
+  }
+}
+
+export async function updateMessage(ticketId, messageId, data) {
+  try {
+    const response = await api.put(
+      `/api/tickets/${ticketId}/messages/${messageId}/`,
+      data
+    );
+    return response.data;
+  } catch (err) {
+    return err.response?.data;
+  }
+}
+
+export async function deleteMessage(ticketId, messageId) {
+  try {
+    const response = await api.delete(
+      `/api/tickets/${ticketId}/messages/${messageId}/`
+    );
+    return response.data;
+  } catch (err) {
+    return err.response?.data;
+  }
+}

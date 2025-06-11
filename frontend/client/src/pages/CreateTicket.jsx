@@ -1,61 +1,128 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { mockChallenges, mockTickets } from "../data/Data";
+import { getChallenges, createTicket } from "../services/apiCTF";
+import { toast } from "react-toastify";
 
 const CreateTicket = () => {
+  const [challenges, setChallenges] = useState([]);
   const [challengeSearchTerm, setChallengeSearchTerm] = useState("");
   const [selectedChallenge, setSelectedChallenge] = useState(null);
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [creating, setCreating] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchChallenges();
+  }, []);
+
+  const fetchChallenges = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await getChallenges();
+
+      if (response.error) {
+        setError(response.error);
+        toast.error(response.error);
+      } else {
+        setChallenges(response);
+      }
+    } catch (err) {
+      setError("Failed to fetch challenges");
+      toast.error("Failed to fetch challenges");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredChallenges = useMemo(() => {
     if (!challengeSearchTerm) return [];
-    return mockChallenges.filter((challenge) =>
-      challenge.name.toLowerCase().includes(challengeSearchTerm.toLowerCase())
+    return challenges.filter((challenge) =>
+      challenge.title.toLowerCase().includes(challengeSearchTerm.toLowerCase())
     );
-  }, [challengeSearchTerm]);
+  }, [challengeSearchTerm, challenges]);
 
   const handleChallengeSelect = (challenge) => {
     setSelectedChallenge(challenge);
     setChallengeSearchTerm("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!selectedChallenge || !subject || !message) {
-      alert("Please select a challenge and fill in both subject and message.");
+    if (!selectedChallenge || !subject || !message || creating) {
+      if (!selectedChallenge || !subject || !message) {
+        toast.error(
+          "Please select a challenge and fill in both subject and message."
+        );
+      }
       return;
     }
 
-    const newTicketId = `TKT-${String(mockTickets.length + 1).padStart(
-      3,
-      "0"
-    )}`;
-    const newTicket = {
-      ticketId: newTicketId,
-      status: "Open",
-      challengeId: selectedChallenge.id,
-      challengeName: selectedChallenge.name,
-      subject: subject,
-      user: "currentUser",
-      problemSetter: "admin",
-      lastUpdated: new Date().toISOString(),
-      messages: [
-        {
-          sender: "currentUser",
-          timestamp: new Date().toISOString(),
-          text: message,
-        },
-      ],
-    };
+    try {
+      setCreating(true);
+      const ticketData = {
+        challenge_id: selectedChallenge.id,
+        title: subject,
+        description: message,
+        initial_message: `${subject}\n\n${message}`,
+      };
 
-    console.log("Creating new ticket (mock):", newTicket);
+      const response = await createTicket(ticketData);
 
-    alert(`Ticket ${newTicketId} created successfully!`);
+      if (response.error) {
+        if (response.error.includes("already have an open ticket")) {
+          toast.error(
+            "You already have an open ticket for this challenge. Please use the existing ticket or close it first."
+          );
+        } else {
+          toast.error(response.error);
+        }
+        return;
+      }
 
-    navigate(`/tickets/${newTicketId}`);
+      toast.success(`Ticket ${response.ticket_id} created successfully!`);
+      navigate(`/tickets/${response.id}`);
+    } catch (err) {
+      toast.error("Failed to create ticket");
+    } finally {
+      setCreating(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="container relative overflow-hidden">
+        <div className="relative z-10">
+          <div className="flex justify-center items-center h-64">
+            <div className="terminal-text pulse">Loading challenges...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container relative overflow-hidden">
+        <div className="relative z-10">
+          <div className="flex justify-center items-center h-64">
+            <div className="text-center">
+              <div className="terminal-text text-red-500 mb-4">{error}</div>
+              <button
+                onClick={fetchChallenges}
+                className="filter-button active scale-on-hover"
+              >
+                Retry
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container relative overflow-hidden">
@@ -89,7 +156,7 @@ const CreateTicket = () => {
                     className="challenge-result-item"
                     onClick={() => handleChallengeSelect(challenge)}
                   >
-                    {challenge.name} ({challenge.category})
+                    {challenge.title} ({challenge.category})
                   </div>
                 ))}
               </div>
@@ -98,7 +165,7 @@ const CreateTicket = () => {
               <p className="mt-2 text-sm">
                 Selected Challenge:{" "}
                 <span className="selected-challenge">
-                  {selectedChallenge.name}
+                  {selectedChallenge.title}
                 </span>
               </p>
             )}
@@ -121,6 +188,7 @@ const CreateTicket = () => {
               onChange={(e) => setSubject(e.target.value)}
               className="w-full p-2 rounded-md bg-tertiary-bg border border-border-color focus:border-terminal-green focus:outline-none focus:ring-1 focus:ring-terminal-green text-text-primary text-terminal-white"
               required
+              disabled={creating}
             />
           </div>
 
@@ -136,16 +204,17 @@ const CreateTicket = () => {
               className="ticket-textarea focus:border-terminal-green focus:outline-none focus:ring-1 focus:ring-terminal-green text-terminal-green"
               rows="5"
               required
+              disabled={creating}
             ></textarea>
           </div>
 
           <div className="text-right">
             <button
               type="submit"
-              className="filter-button active create-ticket-button scale-on-hover"
-              disabled={!selectedChallenge}
+              className="filter-button active create-ticket-button scale-on-hover disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={!selectedChallenge || creating}
             >
-              Submit Ticket
+              {creating ? "Creating..." : "Submit Ticket"}
             </button>
           </div>
         </form>

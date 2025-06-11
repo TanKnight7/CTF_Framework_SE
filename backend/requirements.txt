@@ -2,3 +2,6 @@ Django
 psycopg2-binary
 djangorestframework
 django-rest-knox
+channels
+channels-redis
+daphne

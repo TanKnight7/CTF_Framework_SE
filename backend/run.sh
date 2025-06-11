@@ -2,4 +2,4 @@
 
 python3 manage.py makemigrations
 python3 manage.py migrate
-python3 manage.py runserver 0.0.0.0:80
+daphne -b 0.0.0.0 -p 80 backend.asgi:application
