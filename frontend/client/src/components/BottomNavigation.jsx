@@ -1,12 +1,24 @@
 import { useState, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import { getProfile } from "../services/apiCTF";
 
 const BottomNavigation = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("Token");
     setIsLoggedIn(!!token);
+
+    if (token) {
+      getProfile()
+        .then((profile) => {
+          setIsAdmin(profile.role === "admin");
+        })
+        .catch(() => {
+          setIsAdmin(false);
+        });
+    }
 
     const handleStorageChange = () => {
       const currentToken = localStorage.getItem("Token");
@@ -23,9 +35,7 @@ const BottomNavigation = () => {
 
   return (
     <nav className="bottom-navigation">
-      {" "}
       <ul className="nav-list">
-        {" "}
         <li className="nav-item">
           <NavLink
             to="/"
@@ -38,6 +48,7 @@ const BottomNavigation = () => {
             <span className="nav-text">Home</span>
           </NavLink>
         </li>
+
         <li className="nav-item">
           <NavLink
             to="/announcements"
@@ -49,7 +60,8 @@ const BottomNavigation = () => {
             <span className="nav-text">Announcements</span>
           </NavLink>
         </li>
-        {isLoggedIn && (
+
+        {isLoggedIn && !isAdmin && (
           <>
             <li className="nav-item">
               <NavLink
@@ -96,6 +108,57 @@ const BottomNavigation = () => {
               >
                 <span className="nav-icon">👤</span>
                 <span className="nav-text">Profile</span>
+              </NavLink>
+            </li>
+          </>
+        )}
+
+        {isLoggedIn && isAdmin && (
+          <>
+            <li className="nav-item">
+              <NavLink
+                to="/admin/createChallenge"
+                className={({ isActive }) =>
+                  isActive ? "nav-link active" : "nav-link"
+                }
+              >
+                <span className="nav-icon">➕</span>
+                <span className="nav-text">Create Challenge</span>
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink
+                to="/leaderboard"
+                className={({ isActive }) =>
+                  isActive ? "nav-link active" : "nav-link"
+                }
+              >
+                <span className="nav-icon">🏆</span>
+                <span className="nav-text">Leaderboard</span>
+              </NavLink>
+            </li>
+
+            <li className="nav-item">
+              <NavLink
+                to="/admin/submissions"
+                className={({ isActive }) =>
+                  isActive ? "nav-link active" : "nav-link"
+                }
+              >
+                <span className="nav-icon">📨</span>
+                <span className="nav-text">Submissions</span>
+              </NavLink>
+            </li>
+
+            <li className="nav-item">
+              <NavLink
+                to="/admin/users"
+                className={({ isActive }) =>
+                  isActive ? "nav-link active" : "nav-link"
+                }
+              >
+                <span className="nav-icon">🧑‍💻</span>
+                <span className="nav-text">Users</span>
               </NavLink>
             </li>
           </>

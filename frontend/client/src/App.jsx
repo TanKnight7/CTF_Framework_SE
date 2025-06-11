@@ -27,6 +27,8 @@ import CreateTeam from "./pages/CreateTeam";
 import Settings from "./pages/Settings";
 import CreateChallenge from "./pages/CreateChallenge";
 import CreateCategory from "./pages/CreateCategory";
+import AdminRoute from "./components/AdminRoutes";
+import Admin from "./pages/Admin";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -76,14 +78,6 @@ const App = () => {
             <Route element={<ProtectedRoute />}>
               <Route path="/leaderboard" element={<Leaderboard />} />
               <Route path="/challenges" element={<Challenges />} />
-              <Route
-                path="/admin/createchallenges"
-                element={<CreateChallenge />}
-              />
-              <Route
-                path="/admin/createcategory"
-                element={<CreateCategory />}
-              />
               <Route path="/team" element={<Team />} />
               <Route path="/createTeam" element={<CreateTeam />} />
               <Route path="/joinTeam" element={<JoinTeam />} />
@@ -93,6 +87,17 @@ const App = () => {
               <Route path="/Tickets" element={<Ticket />} />
               <Route path="/tickets/:ticketId" element={<TicketChat />} />
               <Route path="/Tickets/Createticket" element={<CreateTicket />} />
+            </Route>
+            <Route element={<AdminRoute />}>
+              <Route path="/admin" element={<Admin />} />
+              <Route
+                path="/admin/createchallenge"
+                element={<CreateChallenge />}
+              />
+              <Route
+                path="/admin/createcategory"
+                element={<CreateCategory />}
+              />
             </Route>
             <Route path="/" element={<Home />} />
             <Route path="/announcements" element={<Announcements />} />
