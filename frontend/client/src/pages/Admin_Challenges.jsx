@@ -42,7 +42,7 @@ const Admin_Challenges = () => {
   } = useQuery({
     queryKey: ["admin-challenges"],
     queryFn: getChallenges,
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    staleTime: 2 * 60 * 1000,
   });
 
   const {
@@ -54,7 +54,7 @@ const Admin_Challenges = () => {
   } = useQuery({
     queryKey: ["admin-categories"],
     queryFn: getCategories,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
   });
 
   // Create category mutation
@@ -414,7 +414,7 @@ const Admin_Challenges = () => {
       // Set form values - use category ID from the detail response
       editChallengeForm.reset({
         title: challengeDetail.title || "",
-        category: challengeDetail.category || "", // This is the category ID
+        category: challengeDetail.category || "",
         description: challengeDetail.description || "",
         difficulty: challengeDetail.difficulty?.toString() || "3",
         point: challengeDetail.point?.toString() || "",
@@ -424,7 +424,7 @@ const Admin_Challenges = () => {
       // Set attachments with actual database IDs
       setEditAttachments(
         challengeDetail.attachments?.map((att, index) => ({
-          id: att.id || `existing-${index}`, // Use actual ID if available, fallback to generated
+          id: att.id || `existing-${index}`,
           name: att.name,
           file: null,
           size: 0,

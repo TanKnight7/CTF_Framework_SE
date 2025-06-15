@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'ticket',
     'log',
     'writeup',
+    'announcement',
 ]
 
 MIDDLEWARE = [

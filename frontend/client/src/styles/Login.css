@@ -141,7 +141,6 @@ h1 {
   opacity: 0.8;
 }
 
-/* Form Styling */
 .login-form {
   display: flex;
   flex-direction: column;
@@ -267,7 +266,6 @@ h1 {
   align-items: center;
 }
 
-/* Style the password input field */
 .password-input-container input[type="password"],
 .password-input-container input[type="text"] {
   padding-right: 45px;

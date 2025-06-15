@@ -6,7 +6,7 @@ class WebSocketService {
     this.reconnectDelay = 1000;
     this.listeners = new Map();
     this.lastTypingTime = 0;
-    this.typingThrottle = 1000; // 1 second between typing indicators (reduced from 2)
+    this.typingThrottle = 1000;
     this.isConnecting = false;
     this.manualDisconnect = false;
   }
@@ -14,13 +14,11 @@ class WebSocketService {
   connect(ticketId, token) {
     return new Promise((resolve, reject) => {
       try {
-        // Prevent multiple simultaneous connection attempts
         if (this.isConnecting) {
           console.log("Connection already in progress");
           return;
         }
 
-        // If already connected, just resolve
         if (this.isConnected()) {
           console.log("Already connected");
           resolve();
@@ -124,7 +122,7 @@ class WebSocketService {
 
   handleDisconnect() {
     if (this.manualDisconnect) {
-      return; // Don't reconnect if manually disconnected
+      return;
     }
 
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
@@ -134,7 +132,6 @@ class WebSocketService {
       );
 
       setTimeout(() => {
-        // Try to reconnect if we have the ticket ID and token
         if (this.lastTicketId && this.lastToken && !this.manualDisconnect) {
           this.connect(this.lastTicketId, this.lastToken).catch((error) => {
             console.error("Reconnection failed:", error);
@@ -163,7 +160,6 @@ class WebSocketService {
     }
   }
 
-  // Store connection details for reconnection
   setConnectionDetails(ticketId, token) {
     this.lastTicketId = ticketId;
     this.lastToken = token;
@@ -174,6 +170,5 @@ class WebSocketService {
   }
 }
 
-// Create a singleton instance
 const websocketService = new WebSocketService();
 export default websocketService;

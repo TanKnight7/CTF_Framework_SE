@@ -376,3 +376,44 @@ export async function deleteMessage(ticketId, messageId) {
     return err.response?.data;
   }
 }
+
+export async function getAnnouncements() {
+  try {
+    const response = await api.get("/api/announcements/");
+    return response.data;
+  } catch (err) {
+    return err.response?.data;
+  }
+}
+
+export async function createAnnouncement(data) {
+  try {
+    const response = await api.post("/api/announcements/create/", data);
+    return response.data;
+  } catch (err) {
+    return err.response?.data;
+  }
+}
+
+export async function updateAnnouncement(announcementId, data) {
+  try {
+    const response = await api.put(
+      `/api/announcements/${announcementId}/edit/`,
+      data
+    );
+    return response.data;
+  } catch (err) {
+    return err.response?.data;
+  }
+}
+
+export async function deleteAnnouncement(announcementId) {
+  try {
+    const response = await api.delete(
+      `/api/announcements/${announcementId}/delete/`
+    );
+    return response.data;
+  } catch (err) {
+    return err.response?.data;
+  }
+}

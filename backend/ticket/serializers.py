@@ -26,7 +26,7 @@ class TicketSerializer(serializers.ModelSerializer):
         return f"TKT-{str(obj.id).zfill(3)}"
     
     def get_last_updated(self, obj):
-        # Get the latest message time or created time
+      
         latest_message = obj.messages.order_by('-sent_time').first()
         if latest_message:
             return latest_message.sent_time
@@ -58,7 +58,7 @@ class TicketDetailSerializer(serializers.ModelSerializer):
         return f"TKT-{str(obj.id).zfill(3)}"
     
     def get_last_updated(self, obj):
-        # Get the latest message time or created time
+        
         latest_message = obj.messages.order_by('-sent_time').first()
         if latest_message:
             return latest_message.sent_time

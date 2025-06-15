@@ -55,6 +55,17 @@ const BottomNavigation = () => {
             </li>
             <li className="nav-item">
               <NavLink
+                to="/admin/announcements"
+                className={({ isActive }) =>
+                  isActive ? "nav-link active" : "nav-link"
+                }
+              >
+                <span className="nav-icon">📢</span>
+                <span className="nav-text">Announcements</span>
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink
                 to="/admin/challenges"
                 className={({ isActive }) =>
                   isActive ? "nav-link active" : "nav-link"

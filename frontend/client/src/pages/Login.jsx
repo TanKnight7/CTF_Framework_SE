@@ -82,22 +82,20 @@ const Login = () => {
                 )}
               </div>
 
-              {/* Modified Password Group to match Register page structure */}
               <div className="form-group password-group">
                 <label htmlFor="password">{commandPrefix} Password:</label>
-                {/* Added container div to match Register page */}
+
                 <div className="password-input-container">
                   {" "}
-                  {/* Added this wrapper */}
                   <input
-                    type={showPassword ? "text" : "password"} // Toggle type
+                    type={showPassword ? "text" : "password"}
                     id="password"
                     {...register("password", {
                       required: "Password is Required",
                     })}
                   />
                   <button
-                    type="button" // Important: type="button" to prevent form submission
+                    type="button"
                     className="show-hide-password"
                     onClick={() => setShowPassword(!showPassword)}
                     disabled={isLoading}

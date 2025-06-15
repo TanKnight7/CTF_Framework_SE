@@ -1,18 +1,35 @@
 import { useState } from "react";
 import Terminal from "../components/Terminal";
-import { announcements } from "../data/mockData";
+import { getAnnouncements } from "../services/apiCTF";
+import { useQuery } from "@tanstack/react-query";
 
 const Announcements = () => {
   const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
 
+  const { data: announcements = [], isLoading } = useQuery({
+    queryKey: ["announcements"],
+    queryFn: getAnnouncements,
+  });
+
   const formatAnnouncementsForTerminal = () => {
+    if (isLoading) {
+      return [
+        "$ cat /announcements/all.log",
+        "Loading announcements database...",
+        "----------------------------",
+        "Fetching announcements...",
+        "----------------------------",
+        "$ _",
+      ];
+    }
+
     return [
       "$ cat /announcements/all.log",
       "Loading announcements database...",
       "----------------------------",
       ...announcements.map(
         (announcement) =>
-          `[${announcement.date} ${announcement.time}] ${announcement.title}`
+          `[${new Date(announcement.created_at).toLocaleDateString()} ${new Date(announcement.created_at).toLocaleTimeString()}] ${announcement.title}`
       ),
       "----------------------------",
       "$ _",
@@ -26,7 +43,7 @@ const Announcements = () => {
       `$ cat /announcements/${selectedAnnouncement.id}.txt`,
       `Loading announcement #${selectedAnnouncement.id}...`,
       "----------------------------",
-      `[${selectedAnnouncement.date} ${selectedAnnouncement.time}]`,
+      `[${new Date(selectedAnnouncement.created_at).toLocaleDateString()} ${new Date(selectedAnnouncement.created_at).toLocaleTimeString()}]`,
       `TITLE: ${selectedAnnouncement.title}`,
       "",
       selectedAnnouncement.content,
@@ -62,7 +79,7 @@ const Announcements = () => {
                   <div className="flex justify-between">
                     <span>{announcement.title}</span>
                     <span className="text-sm text-muted">
-                      {announcement.date}
+                      {new Date(announcement.created_at).toLocaleDateString()}
                     </span>
                   </div>
                 </li>

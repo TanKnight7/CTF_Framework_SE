@@ -22,7 +22,7 @@ def login(request):
     if user == None or not user.check_password(request.data.get('password')):
         return Response({"error":"Username not found or password is invalid."}, status=status.HTTP_404_NOT_FOUND)
     
-    # Deleting all existing tokens..
+    
     AuthToken.objects.filter(user=user).delete()
     token_instance, token = AuthToken.objects.create(user)
     

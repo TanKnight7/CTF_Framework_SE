@@ -20,7 +20,7 @@ const Admin_Users = () => {
   } = useQuery({
     queryKey: ["admin-users"],
     queryFn: getAllUsers,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
   });
 
   // Filter and sort users
@@ -63,7 +63,7 @@ const Admin_Users = () => {
     });
   };
 
-  // Get user status badge (placeholder - you can implement actual status logic)
+  // Get user status badge
   const getUserStatusBadge = () => (
     <span className="badge badge-blue">Active</span>
   );

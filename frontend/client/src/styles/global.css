@@ -1,32 +1,26 @@
 :root {
-  /* Color palette */
   --primary-bg: #0a0a0a;
   --secondary-bg: #121212;
   --tertiary-bg: #1a1a1a;
   --erik-bg: #ff0055;
   --border-color: #303030;
 
-  /* Terminal colors */
   --terminal-green: #00ff00;
   --terminal-black: #000000;
   --terminal-white: #ffffff;
 
-  /* Accent colors */
   --accent-blue: #0088ff;
   --accent-purple: #bb00ff;
   --accent-red: #ff0055;
 
-  /* Medal colors */
   --gold: #ffd700;
   --silver: #c0c0c0;
   --bronze: #cd7f32;
 
-  /* Text colors */
   --text-primary: #f0f0f0;
   --text-muted: #909090;
 }
 
-/* Global Reset */
 * {
   margin: 0;
   padding: 0;
@@ -54,19 +48,17 @@ link {
   text-decoration: none;
 }
 
-/* Page Container */
 .page-container {
   flex: 1;
-  padding-bottom: 80px; /* Space for bottom navigation */
+  padding-bottom: 80px;
   position: relative;
   z-index: 10;
 }
 
 .page-container.with-navbar {
-  padding-top: 80px; /* Space for top navbar */
+  padding-top: 80px;
 }
 
-/* Container */
 .container {
   width: 100%;
   max-width: 1200px;
@@ -74,7 +66,6 @@ link {
   padding: 1rem;
 }
 
-/* Card Styling */
 .card {
   background-color: var(--secondary-bg);
   border-radius: 8px;
@@ -83,7 +74,6 @@ link {
   margin-bottom: 1rem;
 }
 
-/* Typography */
 h1,
 h2,
 h3,
@@ -118,7 +108,6 @@ p {
   color: var(--bronze);
 }
 
-/* Utility Classes */
 .flex {
   display: flex;
 }
@@ -355,7 +344,6 @@ p {
   width: 24rem;
 }
 
-/* Grid Layout */
 .grid {
   display: grid;
 }
@@ -425,7 +413,6 @@ p {
     0 4px 6px -2px rgba(0, 0, 0, 0.1);
 }
 
-/* Responsive design */
 @media (min-width: 768px) {
   .md\\:grid-cols-2 {
     grid-template-columns: repeat(2, 1fr);
@@ -486,7 +473,6 @@ p {
   }
 }
 
-/* Animation */
 .pulse {
   animation: pulse 1.5s infinite;
 }
@@ -748,7 +734,6 @@ th {
   }
 }
 
-/* Interactive table rows */
 .interactive-row {
   position: relative;
   cursor: pointer;
@@ -766,7 +751,6 @@ th {
   box-shadow: -4px 0 0 var(--terminal-green);
 }
 
-/* Team details expansion */
 .team-details {
   max-height: 0;
   overflow: hidden;
@@ -947,7 +931,7 @@ th {
 
 .podium-block-1 {
   height: 220px;
-  width: 130px; /* Wider for 1st place */
+  width: 130px;
   z-index: 3;
   border-color: var(--gold);
 }
@@ -1241,7 +1225,6 @@ th {
   z-index: 2;
 }
 
-/* Enhanced message layout */
 .message-bubble {
   position: relative;
   transition: all 0.3s ease;
@@ -1298,7 +1281,6 @@ th {
   pointer-events: none;
 }
 
-/* Enhanced input area */
 .chat-input-area {
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   position: relative;
@@ -1405,7 +1387,6 @@ th {
   transform: none;
 }
 
-/* Enhanced user avatars */
 .user-avatar {
   width: 42px;
   height: 42px;
@@ -1444,7 +1425,6 @@ th {
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
 }
 
-/* Enhanced date separators */
 .date-separator {
   position: relative;
   text-align: center;
@@ -1480,7 +1460,6 @@ th {
   backdrop-filter: blur(10px);
 }
 
-/* Enhanced empty state */
 .empty-chat {
   display: flex;
   flex-direction: column;
@@ -1547,7 +1526,6 @@ th {
   max-width: 300px;
 }
 
-/* Enhanced responsive design */
 @media (max-width: 768px) {
   .chat-container {
     border-radius: 16px;
@@ -1627,7 +1605,6 @@ th {
   }
 }
 
-/* Enhanced animations */
 @keyframes messageSlideIn {
   from {
     opacity: 0;
@@ -1654,7 +1631,6 @@ th {
   animation: fadeInUp 0.6s ease-out;
 }
 
-/* Enhanced focus states */
 .message-textarea:focus {
   box-shadow: none;
   outline: none;
@@ -1665,7 +1641,6 @@ th {
   box-shadow: 0 0 0 4px rgba(0, 255, 0, 0.1);
 }
 
-/* Enhanced hover effects */
 .message-bubble:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
@@ -1679,7 +1654,6 @@ th {
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
 }
 
-/* Enhanced loading states */
 .loading-spinner {
   width: 24px;
   height: 24px;
@@ -1698,7 +1672,6 @@ th {
   }
 }
 
-/* Enhanced button states */
 .filter-button:active {
   transform: scale(0.96);
 }
@@ -1707,7 +1680,6 @@ th {
   transform: scale(1.03);
 }
 
-/* Enhanced card shadows */
 .card-enhanced {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
   transition: all 0.4s ease;
@@ -1718,14 +1690,12 @@ th {
   transform: translateY(-3px);
 }
 
-/* Enhanced grid layouts */
 .grid-enhanced {
   display: grid;
   gap: 20px;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
-/* Enhanced text gradients */
 .text-gradient {
   background: linear-gradient(135deg, var(--terminal-green) 0%, #00cc00 100%);
   -webkit-background-clip: text;
@@ -1733,14 +1703,12 @@ th {
   background-clip: text;
 }
 
-/* Enhanced borders */
 .border-gradient {
   border: 2px solid;
   border-image: linear-gradient(135deg, var(--terminal-green) 0%, #00cc00 100%)
     1;
 }
 
-/* Enhanced shadows */
 .shadow-glow {
   box-shadow: 0 0 30px rgba(0, 255, 0, 0.4);
 }
@@ -1749,9 +1717,7 @@ th {
   box-shadow: 0 0 40px rgba(0, 255, 0, 0.6);
 }
 
-/* New Chat UI Styles */
 .chat-messages {
-  /* Custom scrollbar for WebKit browsers */
   &::-webkit-scrollbar {
     width: 8px;
   }
@@ -1775,7 +1741,6 @@ th {
   animation: messageSlideIn 0.3s ease-out;
 }
 
-/* New Typing Indicator styles */
 .typing-indicator {
   display: flex;
   align-items: center;
@@ -1812,6 +1777,3 @@ th {
     transform: scale(1);
   }
 }
-
-/* Removed old chat styles */
-/* .chat-container, .messages-area, .message-bubble, .current-user-bubble, .other-user-bubble, .chat-input-area, .message-input-container, .send-button, .user-avatar, .date-separator, .empty-chat, .empty-chat-icon, .empty-chat h3, .empty-chat p, .message-textarea:focus, .message-input-container:focus-within, .message-bubble:hover, .current-user-bubble:hover, .other-user-bubble:hover are handled by direct Tailwind classes now or removed. */

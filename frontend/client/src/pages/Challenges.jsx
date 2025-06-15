@@ -298,7 +298,7 @@ const Challenges = () => {
                                     <i className="fas fa-file-download mr-2"></i>
                                     <strong>{attachment.name}</strong>:{" "}
                                     <a
-                                      href={attachment.file} // Use download_url if available, else fallback
+                                      href={attachment.file}
                                       download
                                       target="_blank"
                                       rel="noopener noreferrer"

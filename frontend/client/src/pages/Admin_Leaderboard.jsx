@@ -20,7 +20,7 @@ const Admin_Leaderboard = () => {
   } = useQuery({
     queryKey: ["admin-leaderboard"],
     queryFn: getLeaderboard,
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    staleTime: 2 * 60 * 1000,
   });
 
   // Filter and sort leaderboard
@@ -130,7 +130,6 @@ const Admin_Leaderboard = () => {
     }
   };
 
-  // Get score badge with color coding
   const getScoreBadge = (score) => {
     if (score >= 1000) {
       return (

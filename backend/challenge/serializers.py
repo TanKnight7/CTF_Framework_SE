@@ -2,7 +2,6 @@ from rest_framework import serializers
 from .models import Category, Challenge, ChallengeSolve, ChallengeAttachment
 from user.serializers import UserListSerializer
 
-# Basic Category Serializer - for simple category listings
 class CategorySerializer(serializers.ModelSerializer):
     total_chall = serializers.SerializerMethodField()
     total_solved_by_team = serializers.SerializerMethodField()
@@ -11,7 +10,6 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ['name', 'total_chall', 'total_solved_by_team', 'id']
     
     def get_total_solved_by_team(self, instance):
-        # Count solves where the challenge belongs to this category
         request = self.context.get('request')
         if not request or not hasattr(request.user, 'team'):
             return 0
@@ -77,7 +75,6 @@ class CreateChallengeSerializer(serializers.ModelSerializer):
         challenge = Challenge.objects.create(**validated_data)
         return challenge
 
-# Detailed Category Serializer - includes challenges related to this category
 class CategoryDetailSerializer(serializers.ModelSerializer):
     challenges = ChallengeSerializer(source='challenge', many=True, read_only=True)
     

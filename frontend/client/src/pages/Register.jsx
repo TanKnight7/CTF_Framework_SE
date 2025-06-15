@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/Login.css"; // Ensure this file contains the new CSS
+import "../styles/Login.css";
 import { registerUser } from "../services/apiCTF";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";

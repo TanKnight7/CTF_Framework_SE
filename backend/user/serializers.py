@@ -58,10 +58,10 @@ class UserDetailSerializer(serializers.ModelSerializer):
         if request:
             user = request.user
             if user != instance and not user.role != 'admin':
-                # Hide email if viewer is NOT owner or staff
+                
                 data.pop('email', None)
         else:
-            # No request context, be safe and remove email
+            
             data.pop('email', None)
 
         return data
@@ -88,19 +88,19 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
 
-        # Update other fields normally
+       
         try:
             for attr, value in validated_data.items():
                 setattr(instance, attr, value)
-            instance.full_clean()  # Run model validation (e.g., unique constraints)
+            instance.full_clean()  
         except IntegrityError as e:
-            # Handle database integrity errors (like duplicate fields)
+            
             raise serializers.ValidationError({"error": "Duplicate value error, email or username might already be taken."})
         except Exception as e:
-            # Other validation errors
+            
             raise serializers.ValidationError({"error": str(e)})
 
-        # Update password if provided
+        
         if password:
             try:
                 instance.set_password(password)

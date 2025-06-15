@@ -7,7 +7,7 @@ const WebSocketTest = ({ ticketId }) => {
   const [testMessages, setTestMessages] = useState([]);
   const [testMessage, setTestMessage] = useState("");
   const lastTypingTimeRef = useRef(0);
-  const typingThrottle = 3000; // 3 seconds between typing tests
+  const typingThrottle = 3000;
 
   useEffect(() => {
     if (ticketId) {

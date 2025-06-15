@@ -48,14 +48,14 @@ const SubmitPage = () => {
   });
 
   function onSubmit(data) {
-    const fileList = data.attachment; // this is a FileList
+    const fileList = data.attachment;
     if (!fileList || fileList.length === 0) {
       toast.error("Please select a file");
       return;
     }
 
     const formData = new FormData();
-    formData.append("attachment", fileList[0]); // grab the actual File object
+    formData.append("attachment", fileList[0]);
 
     mutation.mutate(formData);
   }
@@ -87,7 +87,7 @@ const SubmitPage = () => {
                       onChange: (e) => {
                         const selectedFile = e.target.files?.[0];
                         if (selectedFile) {
-                          setFile(selectedFile); // ✅ update state to show filename
+                          setFile(selectedFile);
                         }
                       },
                     })}

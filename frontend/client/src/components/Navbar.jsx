@@ -1,13 +1,24 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { getProfile } from "../services/apiCTF";
 
 const Navbar = () => {
   const [hasToken, setHasToken] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("Token");
     setHasToken(!!token);
+    if (token) {
+      getProfile()
+        .then((profile) => {
+          setIsAdmin(profile.role === "admin");
+        })
+        .catch(() => {
+          setIsAdmin(false);
+        });
+    }
 
     const handleStorageChange = () => {
       const currentToken = localStorage.getItem("Token");
@@ -37,6 +48,14 @@ const Navbar = () => {
 
         {hasToken ? (
           <div className="flex items-center space-x-2 gap-4">
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className="bg-tertiary-bg hover:bg-secondary-bg transition-colors duration-300 text-terminal-green border border-terminal-green rounded-md px-3 py-1 text-sm no-underline"
+              >
+                Admin Panel
+              </Link>
+            )}
             <Link
               to="/writeups"
               className="bg-tertiary-bg hover:bg-secondary-bg transition-colors duration-300 text-terminal-green border border-terminal-green rounded-md px-3 py-1 text-sm no-underline"

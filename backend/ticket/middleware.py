@@ -9,7 +9,7 @@ User = get_user_model()
 
 class TokenAuthMiddleware(BaseMiddleware):
     async def __call__(self, scope, receive, send):
-        # Get the token from query parameters
+        
         query_string = scope.get('query_string', b'').decode()
         query_params = dict(x.split('=') for x in query_string.split('&') if x)
         token = query_params.get('token', None)
@@ -24,7 +24,7 @@ class TokenAuthMiddleware(BaseMiddleware):
     @database_sync_to_async
     def get_user(self, token):
         try:
-            # Validate the token
+            
             auth = TokenAuthentication()
             user, auth_token = auth.authenticate_credentials(token.encode())
             return user

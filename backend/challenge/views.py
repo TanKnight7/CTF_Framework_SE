@@ -1,17 +1,14 @@
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.permissions import IsAuthenticated, IsAdminUser # Consider IsAdminUser for admin-specific actions
+from rest_framework.permissions import IsAuthenticated, IsAdminUser 
 from knox.auth import TokenAuthentication
 from rest_framework.response import Response
-# from django.shortcuts import get_object_or_404 # Useful alternative
+# from django.shortcuts import get_object_or_404 
 import json
 
 from .models import Category, Challenge, ChallengeSolve, ChallengeAttachment
 from log.serializers import SubmissionSerlializers
 from .serializers import ChallengeListSerializer, ChallengeSerializer, CategorySerializer, CategoryDetailSerializer, CreateChallengeSerializer, ChallengeSolveSerializer, AdminChallengeDetailSerializer
-# It's good practice to import your User model if you need to interact with it directly,
-# e.g., from django.contrib.auth import get_user_model
-# User = get_user_model()
 
 # =================================================
 # CRUD Category
@@ -33,13 +30,13 @@ def get_categories(request):
 
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated]) # Consider [IsAdminUser] or custom permission
+@permission_classes([IsAuthenticated]) 
 def create_category(request):
     """
     Create a new category.
     Requires admin privileges (conceptual - actual permission class not enforced here yet).
     """
-    # Example admin check (if not using IsAdminUser permission class):
+   
     # if not request.user.is_staff:
     #     return Response({"error": "You do not have permission to perform this action."}, status=status.HTTP_403_FORBIDDEN)
     
@@ -51,7 +48,7 @@ def create_category(request):
 
 @api_view(['PUT'])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated]) # Consider [IsAdminUser] or custom permission
+@permission_classes([IsAuthenticated])
 def edit_categories(request, category_name):
     """
     Edit an existing category by its name.
@@ -60,8 +57,7 @@ def edit_categories(request, category_name):
     # if not request.user.is_staff:
     #     return Response({"error": "You do not have permission to perform this action."}, status=status.HTTP_403_FORBIDDEN)
     try:
-        category = Category.objects.get(name__iexact=category_name) # Case-insensitive lookup
-        # For PUT, typically all fields are required. Use partial=True for PATCH-like behavior.
+        category = Category.objects.get(name__iexact=category_name) 
         serializer = CategorySerializer(category, data=request.data, partial=True, context={'request':request}) 
         if serializer.is_valid():
             serializer.save()
@@ -75,7 +71,7 @@ def edit_categories(request, category_name):
 
 @api_view(['DELETE'])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated]) # Consider [IsAdminUser] or custom permission
+@permission_classes([IsAuthenticated]) 
 def delete_categories(request, category_name):
     """
     Delete a category by its name.
@@ -85,9 +81,9 @@ def delete_categories(request, category_name):
     #     return Response({"error": "You do not have permission to perform this action."}, status=status.HTTP_403_FORBIDDEN)
     try:
         category = Category.objects.get(name__iexact=category_name)
-        category_name_deleted = category.name # Store for message
+        category_name_deleted = category.name 
         category.delete()
-        # HTTP 200 OK with a message body, or HTTP 204 No Content if no body is preferred.
+    
         return Response({"success": f"Category '{category_name_deleted}' deleted successfully"}, status=status.HTTP_200_OK)
     except Category.DoesNotExist:
         return Response({"error": f"Category '{category_name}' not found"}, status=status.HTTP_404_NOT_FOUND)
@@ -113,19 +109,17 @@ def get_challenges_by_categories(request, category_name):
         return Response({'error': f'Category "{category_name}" not found.'}, status=status.HTTP_404_NOT_FOUND)
     
     try:
-        # Assuming 'challenge' is the related_name from Category to Challenge in your Challenge model's ForeignKey
-        # If Challenge.category = ForeignKey(Category, related_name="challenge"), then category.challenge.all() works.
-        # Or, more explicitly:
+      
+        
         challenges = Challenge.objects.filter(category=category)
         
         if not challenges.exists():
-            return Response({'message': f'No challenges found in the category: {category.name}'}, status=status.HTTP_200_OK) # Or 404 if preferred
+            return Response({'message': f'No challenges found in the category: {category.name}'}, status=status.HTTP_200_OK)
             
-        # Your CategoryDetailSerializer is defined with Meta.model = Challenge
-        # and fields = ['title', 'difficutly', 'point']. This will serialize the list of Challenge objects.
+  
         serializer = CategoryDetailSerializer(challenges, many=True)
         return Response({"category": category.name, "challenges": serializer.data}, status=status.HTTP_200_OK)
-    except Exception as e: # Catch other potential errors during challenge fetching or serialization
+    except Exception as e: 
         return Response({"error": f"An error occurred while fetching challenges: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 # =================================================
@@ -158,7 +152,7 @@ def get_challenge_detail(request, challenge_id):
     try:
         challenge = Challenge.objects.get(pk=challenge_id)
         
-        # Use AdminChallengeDetailSerializer for admin users to include flag and attachments
+      
         if request.user.role == "admin":
             serializer = AdminChallengeDetailSerializer(challenge)
         else:
@@ -172,7 +166,7 @@ def get_challenge_detail(request, challenge_id):
 
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated]) # Or IsAdminUser / custom permission for who can create challenges
+@permission_classes([IsAuthenticated]) 
 def create_challenge(request):
     """
     Create a new challenge.
@@ -219,33 +213,32 @@ def edit_challenge(request, challenge_id):
     try:
         challenge = Challenge.objects.get(pk=challenge_id)
 
-        # Permission check: Only author or admin (e.g., request.user.is_staff)
-        if challenge.author != request.user and not request.user.role == "admin": # Assuming request.user is your 'user.User' model instance
+       
+        if challenge.author != request.user and not request.user.role == "admin": 
             return Response({"error": "You do not have permission to edit this challenge."}, status=status.HTTP_403_FORBIDDEN)
 
-        # Handle file attachments
+
         files = request.FILES.getlist('attachments')
         
-        # Handle attachment removal
+    
         keep_attachments_data = request.data.get('keep_attachments')
         if keep_attachments_data:
             try:
                 keep_attachments = json.loads(keep_attachments_data)
-                # Remove attachments that are not in the keep list
+               
                 existing_attachments = challenge.attachments.all()
                 for attachment in existing_attachments:
                     if attachment.id not in keep_attachments:
                         attachment.delete()
             except json.JSONDecodeError:
-                pass  # If JSON is invalid, don't remove any attachments
+                pass  
         
-        # Use CreateChallengeSerializer for updates to allow all fields to be changed, or a specific UpdateChallengeSerializer.
-        # partial=True allows for partial updates (PATCH behavior).
+  
         serializer = CreateChallengeSerializer(challenge, data=request.data, partial=True, context={'request': request})
         if serializer.is_valid():
             updated_challenge = serializer.save()
             
-            # Add new attachments
+          
             for file in files:
                 attachment_name = file.name
                 ChallengeAttachment.objects.create(
@@ -254,7 +247,7 @@ def edit_challenge(request, challenge_id):
                     name=attachment_name
                 )
             
-            # Return response with updated attachments
+         
             response_data = serializer.data.copy()
             response_data['attachments'] = [
                 {
@@ -326,7 +319,6 @@ def submit_flag(request, challenge_id):
     is_correct = challenge.flag == user_submitted_flag
     status_value = 'correct' if is_correct else 'incorrect'
     
-    # Create submission directly using the model
     from log.models import Submission
     submission = Submission.objects.create(
         challenge=challenge,

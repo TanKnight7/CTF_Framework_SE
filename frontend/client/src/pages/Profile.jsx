@@ -146,10 +146,10 @@ const ProfileEnhanced = () => {
                         style={{ transition: "background-color 0.3s ease" }}
                         onMouseEnter={(e) =>
                           (e.currentTarget.style.backgroundColor = "#004d00")
-                        } // dark green
+                        }
                         onMouseLeave={(e) =>
                           (e.currentTarget.style.backgroundColor = "")
-                        } // reset
+                        }
                       >
                         <td className="py-3 px-4">
                           {challenge.challenge.title}

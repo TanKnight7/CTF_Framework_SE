@@ -57,7 +57,7 @@ class TeamListSerializer(serializers.ModelSerializer):
     def get_rank(self, instance):
         from django.db.models import Sum
 
-        # Build a list of (team_id, total_point) pairs
+      
         team_points = []
         for team in Team.objects.all():
             total_point = (
@@ -67,10 +67,10 @@ class TeamListSerializer(serializers.ModelSerializer):
             )
             team_points.append((team.id, total_point))
 
-        # Sort the list by total_point descending
+      
         team_points.sort(key=lambda x: x[1], reverse=True)
 
-        # Extract the ordered team IDs
+     
         sorted_team_ids = [team_id for team_id, _ in team_points]
 
         try:

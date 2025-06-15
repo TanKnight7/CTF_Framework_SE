@@ -30,7 +30,7 @@ def create_challenge(token):
         "Authorization": f"Token {token}"
     }
 
-    # Form fields to send
+   
     data = {
         "title": "Buffer Overflow 101",
         "description": "Exploit the provided binary.",
@@ -39,7 +39,7 @@ def create_challenge(token):
         "category": "1",
     }
 
-    # File upload — assumes `sample.txt` exists in same folder
+  
     files = [
         ("attachments", ("sample.txt", open("sample.txt", "rb"), "text/plain")),
     ]

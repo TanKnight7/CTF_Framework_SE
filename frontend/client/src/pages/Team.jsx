@@ -68,6 +68,14 @@ const Team = () => {
               <div>
                 <h2 className="text-2xl mb-2">{TeamDetails.name}</h2>
                 <p className="text-muted">Rank: #{TeamDetails.rank}</p>
+                {TeamDetails.token && (
+                  <div className="mt-2">
+                    <p className="text-muted">Team Token:</p>
+                    <p className="terminal-text font-mono">
+                      {TeamDetails.token}
+                    </p>
+                  </div>
+                )}
               </div>
               <div className="text-right mt-4 md:mt-0">
                 <div className="terminal-text text-3xl mb-1">

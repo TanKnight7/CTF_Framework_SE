@@ -32,6 +32,7 @@ import Admin_Submissions from "./pages/Admin_Submissions";
 import Admin_Challenges from "./pages/Admin_Challenges";
 import Admin_Writeups from "./pages/Admin_Writeups";
 import Admin_Leaderboard from "./pages/Admin_Leaderboard";
+import Admin_Announcements from "./pages/Admin_Announcement";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -95,6 +96,7 @@ const App = () => {
               <Route path="/admin" element={<Admin />} />
               <Route path="/admin/challenges" element={<Admin_Challenges />} />
               <Route path="/admin/users" element={<Admin_Users />} />
+              <Route path="/admin/announcements" element={<Admin_Announcements />} />
               <Route
                 path="/admin/submissions"
                 element={<Admin_Submissions />}

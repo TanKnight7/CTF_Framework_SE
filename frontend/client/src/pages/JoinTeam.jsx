@@ -48,8 +48,9 @@ const JoinTeam = () => {
   return (
     <div className="terminal">
       <div className="terminal-header">
-        <span className="terminal-button"></span>
-        <span className="terminal-button"></span>
+        <span className="terminal-button terminal-button-close"></span>
+        <span className="terminal-button terminal-button-minimize"></span>
+        <span className="terminal-button terminal-button-maximize"></span>
         <span className="terminal-title">join_team.sh</span>
       </div>
       <div className="terminal-content">
