@@ -23,6 +23,17 @@ const Announcements = () => {
       ];
     }
 
+    if (announcements.length === 0) {
+      return [
+        "$ cat /announcements/all.log",
+        "Loading announcements database...",
+        "----------------------------",
+        "No announcements yet!",
+        "----------------------------",
+        "$ _",
+      ];
+    }
+
     return [
       "$ cat /announcements/all.log",
       "Loading announcements database...",
