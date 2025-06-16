@@ -1,4 +1,5 @@
 Django
+requests
 pyyaml
 psycopg2-binary
 djangorestframework

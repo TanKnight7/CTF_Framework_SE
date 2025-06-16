@@ -75,7 +75,7 @@ class JoinTeamTest(TestSetUp):
         
         id, token = res1.json()['id'], res1.json()['token']
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user2_token)
-        self.join_team_url = reverse('join_team', kwargs={'pk': id, 'token': token})
+        self.join_team_url = reverse('join_team', kwargs={'token': token})
         res2 = self.client.post(self.join_team_url, format="json")
         self.assertEqual(res2.status_code, 200)
         
@@ -105,8 +105,8 @@ class LeaveTeamTest(TestSetUp):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user1_token)
         res = self.client.post(self.leave_team_url, format="json")
         self.assertEqual(res.status_code, 400)
-        self.assertIn("error", res.json())
-        self.assertIn("You haven't joined a team", res.json()['error'])
+        self.assertIn("message", res.json())
+        self.assertIn("You haven't joined a team", res.json()['message'])
     
     def test_leader_can_leave_team_if_they_are_the_only_member(self):
         # Make sure to delete the team object
@@ -132,7 +132,7 @@ class LeaveTeamTest(TestSetUp):
         
         id, token = res1.json()['id'], res1.json()['token']
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user2_token)
-        self.join_team_url = reverse('join_team', kwargs={'pk': id, 'token': token})
+        self.join_team_url = reverse('join_team', kwargs={'token': token})
         res2 = self.client.post(self.join_team_url, format="json")
         self.assertEqual(res2.status_code, 200)
 
@@ -161,7 +161,7 @@ class AccessControlTest(TestSetUp):
         res = self.client.post(self.create_team_url)
         self.assertEqual(res.status_code, 401)
         
-        self.join_team_url = reverse('join_team', kwargs={'pk': 1, 'token':'123'})
+        self.join_team_url = reverse('join_team', kwargs={ 'token':'123'})
         
         res = self.client.post(self.join_team_url)
         self.assertEqual(res.status_code, 401)
@@ -176,7 +176,7 @@ class AccessControlTest(TestSetUp):
         
         id, token = res1.json()['id'], res1.json()['token']
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user2_token)
-        self.join_team_url = reverse('join_team', kwargs={'pk': id, 'token': '123'}) # invalid token
+        self.join_team_url = reverse('join_team', kwargs={'token': '123'}) # invalid token
         res2 = self.client.post(self.join_team_url, format="json")
         self.assertEqual(res2.status_code, 404)
         self.assertIn("error", res2.json())
