@@ -1,6 +1,7 @@
 Django
 requests
 pyyaml
+pytz
 psycopg2-binary
 djangorestframework
 django-rest-knox

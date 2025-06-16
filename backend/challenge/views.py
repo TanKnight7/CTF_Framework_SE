@@ -1,6 +1,8 @@
 from rest_framework import status
 from rest_framework.response import Response
 import json
+from utils import check_if_ctf_is_finished, check_if_ctf_is_started
+
 
 from .models import Category, Challenge, ChallengeSolve, ChallengeAttachment
 from log.serializers import SubmissionSerlializers
@@ -15,6 +17,8 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 # CRUD Category
 # =================================================
 
+
+
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -22,7 +26,10 @@ def get_categories(request):
     """
     Retrieve all categories.
     """
+    if not check_if_ctf_is_started() and request.user.role != "admin":
+        return Response({"error": "CTF NOT STARTED YET."}, status=status.HTTP_200_OK)
     try:
+            
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True, context={"request":request})
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -101,6 +108,9 @@ def get_challenges_by_categories(request, category_name):
     Uses CategoryDetailSerializer (as defined in your serializers.py, which serializes Challenge objects
     with specific fields: title, difficutly, point).
     """
+    if not check_if_ctf_is_started() and request.user.role != "admin":
+        return Response({"error": "CTF NOT STARTED YET."}, status=status.HTTP_200_OK)
+    
     try:
         category = Category.objects.get(name__iexact=category_name)
     except Category.DoesNotExist:
@@ -132,6 +142,10 @@ def get_all_challenges(request):
     Retrieve a list of all challenges.
     Uses ChallengeSerializer which excludes the flag.
     """
+    
+    if not check_if_ctf_is_started() and request.user.role != "admin":
+        return Response({"error": "CTF NOT STARTED YET."}, status=status.HTTP_200_OK)
+    
     try:
         challenges = Challenge.objects.all()
         serializer = ChallengeListSerializer(challenges, many=True)
@@ -147,6 +161,10 @@ def get_challenge_detail(request, challenge_id):
     Retrieve details of a specific challenge by its ID.
     Uses ChallengeSerializer which excludes the flag.
     """
+    
+    if not check_if_ctf_is_started() and request.user.role != "admin":
+        return Response({"error": "CTF NOT STARTED YET."}, status=status.HTTP_200_OK)
+    
     try:
         challenge = Challenge.objects.get(pk=challenge_id)
         
@@ -295,6 +313,10 @@ def submit_flag(request, challenge_id):
     """
     SUBMIT FLEG
     """
+    if not check_if_ctf_is_started() and request.user.role != "admin":
+        return Response({"error": "CTF NOT STARTED YET."}, status=status.HTTP_200_OK)
+    
+        
     if not request.user.team:
         return Response({"message": f"You must join a team to submit a flag!"}, status=status.HTTP_400_BAD_REQUEST)
     
@@ -313,6 +335,10 @@ def submit_flag(request, challenge_id):
     team_members = request.user.team.members.all()
     if ChallengeSolve.objects.filter(user__in=team_members, challenge=challenge).exists():
         return Response({"message": "Your team already solved this challenge."}, status=status.HTTP_400_BAD_REQUEST)
+    
+    if check_if_ctf_is_finished():
+        return Response({"error": "CTF FINISHED."}, status=status.HTTP_200_OK)
+    
     
     is_correct = challenge.flag == user_submitted_flag
     status_value = 'correct' if is_correct else 'incorrect'

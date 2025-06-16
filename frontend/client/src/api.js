@@ -23,32 +23,35 @@ api.interceptors.request.use(
   }
 );
 
+const ignore = [
+  "You have not solved any challenges yet.",
+  "You haven't joined a team",
+  "Your team haven't solved any challenges",
+  "CTF NOT STARTED YET.",
+];
+
+const toastResponse = (response) => {
+  for (const msg of ignore) {
+    if (JSON.stringify(response?.data).includes(msg)) return;
+  }
+
+  if (response?.data?.error) {
+    toast.error(JSON.stringify(response.data.error));
+  }
+
+  if (response?.data?.message) {
+    toast.info(JSON.stringify(response.data.message));
+  }
+
+  if (response?.data?.success) {
+    toast.success(JSON.stringify(response.data.success));
+  }
+};
+
 api.interceptors.response.use(
   (response) => {
     console.log("Response received:", response);
-    if (response?.data?.error) {
-      try {
-        toast.error(JSON.stringify(response.data.error));
-      } catch (e) {
-        toast.error(response.data.error);
-      }
-    }
-
-    if (response?.data?.message) {
-      try {
-        toast.info(JSON.stringify(response.data.message));
-      } catch (e) {
-        toast.info(response.data.message);
-      }
-    }
-
-    if (response?.data?.success) {
-      try {
-        toast.success(JSON.stringify(response.data.success));
-      } catch (e) {
-        toast.success(response.data.success);
-      }
-    }
+    toastResponse(response);
     return response;
   },
   (error) => {
@@ -60,21 +63,7 @@ api.interceptors.response.use(
         window.location.href = "/login";
       }
 
-      if (response?.data?.error) {
-        try {
-          toast.error(JSON.stringify(response.data.error));
-        } catch (e) {
-          toast.error(response.data.error);
-        }
-      }
-
-      if (response?.data?.message) {
-        try {
-          toast.info(JSON.stringify(response.data.message));
-        } catch (e) {
-          toast.info(response.data.message);
-        }
-      }
+      toastResponse(response);
     } else {
       console.error("Network or unknown error:", error);
       toast.error("Something went wrong. Please try again.");

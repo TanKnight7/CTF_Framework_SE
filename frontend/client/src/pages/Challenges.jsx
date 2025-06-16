@@ -32,8 +32,10 @@ const Challenges = () => {
     queryFn: getSolved,
   });
 
-  const solvedChallenges = solved || [];
-
+  let solvedChallenges = [];
+  if (!solved?.message) {
+    solvedChallenges = solved;
+  }
   const isChallengeSolved = (challengeId) => {
     if (typeof solvedChallenges === "object") {
       console.log(solvedChallenges);
@@ -107,22 +109,25 @@ const Challenges = () => {
     return "Data loading..";
   }
 
-  const filteredChallenges = challenges
-    ? challenges.filter((challenge) => {
-        const category = challenge.category.toLowerCase();
-        if (
-          selectedCategory !== "all" &&
-          !category.includes(selectedCategory.toLowerCase())
-        )
-          return false;
-        if (
-          selectedDifficulty !== "all" &&
-          challenge.difficulty !== selectedDifficulty
-        )
-          return false;
-        return true;
-      })
-    : [];
+  let filteredChallenges = [];
+  if (challenges.error !== "CTF NOT STARTED YET.") {
+    filteredChallenges = challenges
+      ? challenges.filter((challenge) => {
+          const category = challenge.category.toLowerCase();
+          if (
+            selectedCategory !== "all" &&
+            !category.includes(selectedCategory.toLowerCase())
+          )
+            return false;
+          if (
+            selectedDifficulty !== "all" &&
+            challenge.difficulty !== selectedDifficulty
+          )
+            return false;
+          return true;
+        })
+      : [];
+  }
 
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {
@@ -341,13 +346,20 @@ const Challenges = () => {
                 </div>
               ))}
 
-            {filteredChallenges && filteredChallenges.length === 0 && (
+            {challenges && challenges?.error && (
               <div className="col-span-2 text-center p-8">
-                <p className="terminal-text">
-                  No challenges match your filters
-                </p>
+                <p className="terminal-text">{challenges.error}</p>
               </div>
             )}
+            {!challenges?.error &&
+              filteredChallenges &&
+              filteredChallenges.length === 0 && (
+                <div className="col-span-2 text-center p-8">
+                  <p className="terminal-text">
+                    No challenges match your filters
+                  </p>
+                </div>
+              )}
           </div>
         </div>
       </div>

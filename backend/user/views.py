@@ -36,7 +36,7 @@ def register(request):
     
     user = serializer.save()
     
-    return Response({"message": "User successfully registered.", "user": UserRegistrationSerializer(user).data}, status=status.HTTP_201_CREATED)
+    return Response({"success": "User successfully registered.", "user": UserRegistrationSerializer(user).data}, status=status.HTTP_201_CREATED)
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
