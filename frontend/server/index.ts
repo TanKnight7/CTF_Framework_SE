@@ -1,10 +1,46 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { DateTime } from "luxon";
+import fs from "fs";
+import yaml from "js-yaml";
+
+const config = () => {
+  try {
+    const file = fs.readFileSync("/app/config.yml", "utf8");
+    const config = yaml.load(file);
+
+    const baseZone = config.ctf.time_zone || "UTC";
+    const targetZone = config.ctf.convert_to_time_zone || "UTC";
+
+    const parseTime = (value: string) =>
+      DateTime.fromFormat(value, "dd-mm-yyyy HH:mm", {
+        zone: baseZone,
+        setZone: true,
+      });
+
+    config.ctf.start_time = parseTime(config.ctf.start_time)
+      .setZone(targetZone)
+      .toFormat("dd LLL yyyy HH:mm");
+
+    config.ctf.end_time = parseTime(config.ctf.end_time)
+      .setZone(targetZone)
+      .toFormat("dd LLL yyyy HH:mm");
+
+    return config;
+  } catch (e) {
+    console.error("Error while reading /app/config.yml");
+    throw e;
+  }
+};
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+app.get("/config/ctf", (req, res) => {
+  res.json(config().ctf);
+});
 
 app.use((req, res, next) => {
   const start = Date.now();

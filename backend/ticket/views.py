@@ -14,16 +14,6 @@ User = get_user_model()
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def test_websocket(request):
-    """Test endpoint to verify WebSocket connection"""
-    return Response({
-        'message': 'WebSocket test endpoint is working',
-        'timestamp': timezone.now().isoformat(),
-        'user': request.user.username
-    })
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def get_tickets(request):
     """Get all tickets for the current user"""
     try:
@@ -115,7 +105,7 @@ def create_ticket(request):
             )
         
         serializer = TicketDetailSerializer(ticket)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response({"success": f"Ticket Created.", "data": serializer.data}, status=status.HTTP_201_CREATED)
         
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -139,7 +129,7 @@ def close_ticket(request, ticket_id):
         ticket.save()
         
         serializer = TicketDetailSerializer(ticket)
-        return Response(serializer.data)
+        return Response({"success":"Ticket closed", "data": serializer.data})
         
     except Ticket.DoesNotExist:
         return Response({'error': 'Ticket not found'}, status=status.HTTP_404_NOT_FOUND)

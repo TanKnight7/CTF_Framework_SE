@@ -4,7 +4,6 @@ import "../styles/Login.css";
 import { createTeam } from "../services/apiCTF";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "react-toastify";
 
 const CreateTeam = () => {
   const [errorMessage, setErrorMessage] = useState("");
@@ -28,14 +27,12 @@ const CreateTeam = () => {
     onSuccess: (responseData) => {
       console.log(responseData);
       if (responseData?.error) {
-        return toast.error(JSON.stringify(responseData?.error));
+        return;
       }
-      toast.success(JSON.stringify(responseData));
       navigate("/");
     },
     onError: (error) => {
       console.log(error);
-      toast.error("Error occured");
     },
   });
 

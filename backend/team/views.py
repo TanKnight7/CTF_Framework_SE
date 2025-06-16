@@ -72,7 +72,7 @@ def get_update_team(request, pk):
 @permission_classes([IsAuthenticated])
 def me(request):
     if request.user.team is None:
-        return Response({"error":"You haven't joined a team."}, status=status.HTTP_200_OK)
+        return Response({"message":"You haven't joined a team."}, status=status.HTTP_200_OK)
         
     return Response(TeamDetailSerializer(request.user.team, context={'request':request}).data, status=status.HTTP_200_OK)
     
@@ -104,7 +104,7 @@ def join_team(request, token):
 @permission_classes([IsAuthenticated])
 def leave_team(request):
     if request.user.team is None:
-        return Response({"error": "You haven't joined a team"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": "You haven't joined a team"}, status=status.HTTP_400_BAD_REQUEST)
     
     team = request.user.team
     if team.leader == request.user:

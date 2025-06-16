@@ -6,7 +6,6 @@ import {
   updateAnnouncement,
   deleteAnnouncement,
 } from "../services/apiCTF";
-import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import "../styles/global.css";
 
@@ -39,16 +38,13 @@ const Admin_Announcement = () => {
     mutationFn: (data) => createAnnouncement(data),
     onSuccess: (responseData) => {
       if (responseData.error) {
-        toast.error(JSON.stringify(responseData.error));
         return;
       }
-      toast.success("Announcement created successfully!");
       setShowCreateAnnouncement(false);
       queryClient.invalidateQueries(["admin-announcements"]);
       refetchAnnouncements();
     },
     onError: (error) => {
-      toast.error("Failed to create announcement");
       console.error("Failed to create announcement", error);
     },
   });
@@ -59,17 +55,14 @@ const Admin_Announcement = () => {
       updateAnnouncement(announcementId, data),
     onSuccess: (responseData) => {
       if (responseData.error) {
-        toast.error(JSON.stringify(responseData.error));
         return;
       }
-      toast.success("Announcement updated successfully!");
       setShowEditAnnouncement(false);
       setSelectedAnnouncement(null);
       queryClient.invalidateQueries(["admin-announcements"]);
       refetchAnnouncements();
     },
     onError: (error) => {
-      toast.error("Failed to update announcement");
       console.error("Failed to update announcement", error);
     },
   });
@@ -79,17 +72,14 @@ const Admin_Announcement = () => {
     mutationFn: (announcementId) => deleteAnnouncement(announcementId),
     onSuccess: (responseData) => {
       if (responseData.error) {
-        toast.error(JSON.stringify(responseData.error));
         return;
       }
-      toast.success("Announcement deleted successfully!");
       setShowDeleteConfirm(false);
       setSelectedAnnouncement(null);
       queryClient.invalidateQueries(["admin-announcements"]);
       refetchAnnouncements();
     },
     onError: (error) => {
-      toast.error("Failed to delete announcement");
       console.error("Failed to delete announcement", error);
     },
   });

@@ -152,7 +152,6 @@ const TicketChat = () => {
       const ticketResponse = await getTicket(ticketId);
       if (ticketResponse.error) {
         setError(ticketResponse.error);
-        toast.error(ticketResponse.error);
         return;
       }
       setTicket(ticketResponse);
@@ -160,13 +159,11 @@ const TicketChat = () => {
       const messagesResponse = await getAllMessages(ticketId);
       if (messagesResponse.error) {
         setError(messagesResponse.error);
-        toast.error(messagesResponse.error);
         return;
       }
       setMessages(messagesResponse.reverse());
     } catch (err) {
       setError("Failed to fetch ticket data");
-      toast.error("Failed to fetch ticket data");
     } finally {
       setLoading(false);
     }
@@ -198,7 +195,6 @@ const TicketChat = () => {
       });
 
       if (response.error) {
-        toast.error(response.error);
         return;
       }
 
@@ -235,7 +231,7 @@ const TicketChat = () => {
         return;
       }
 
-      toast.success("Ticket closed successfully");
+      // toast.success("Ticket closed successfully");
       setTicket(response);
     } catch (err) {
       toast.error("Failed to close ticket");

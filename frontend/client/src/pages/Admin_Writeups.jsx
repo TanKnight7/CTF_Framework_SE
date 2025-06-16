@@ -32,12 +32,10 @@ const Admin_Writeups = () => {
       return await deleteWriteup(writeupId);
     },
     onSuccess: () => {
-      toast.success("Writeup deleted successfully!");
       queryClient.invalidateQueries(["admin-writeups"]);
       setDeleteConfirm(null);
     },
     onError: (error) => {
-      toast.error("Failed to delete writeup: " + error.message);
       setDeleteConfirm(null);
     },
   });

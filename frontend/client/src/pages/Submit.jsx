@@ -35,15 +35,13 @@ const SubmitPage = () => {
     onSuccess: (responseData) => {
       console.log(responseData);
       if (responseData?.error) {
-        return toast.error(JSON.stringify(responseData?.error));
+        return;
       }
-      toast.success(JSON.stringify(responseData));
       setFile(null);
       reset();
     },
     onError: (error) => {
       console.log(error);
-      toast.error("Error occured");
     },
   });
 

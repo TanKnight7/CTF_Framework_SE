@@ -8,8 +8,6 @@ from .models import Announcement
 
 
 @api_view(['GET'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
 def get_announcements(request):
     try:
         announcements = Announcement.objects.all().order_by('-created_at')
@@ -29,7 +27,7 @@ def create_announcement(request):
     if serializer.is_valid():
         serializer.save()
         return Response({"success": "Successfully created announcement", "data": serializer.data}, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT'])
 @authentication_classes([TokenAuthentication])
@@ -47,7 +45,7 @@ def edit_announcement(request, announcement_id):
     if serializer.is_valid():
         serializer.save()
         return Response({"success": "Successfully updated announcement", "data": serializer.data}, status=status.HTTP_200_OK)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE'])
 @authentication_classes([TokenAuthentication])

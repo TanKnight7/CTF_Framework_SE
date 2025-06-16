@@ -66,14 +66,12 @@ const Settings = () => {
     onSuccess: (responseData) => {
       console.log(responseData);
       if (responseData?.error) {
-        return toast.error(JSON.stringify(responseData?.error));
+        return;
       }
-      toast.success(JSON.stringify(responseData));
       navigate("/profile");
     },
     onError: (error) => {
       console.log(error);
-      toast.error("Error occured");
     },
   });
   const onSubmit = async (data) => {

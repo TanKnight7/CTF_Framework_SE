@@ -2,7 +2,7 @@
 ### list all users
 GET http://127.0.0.1:9999/api/users/
 Content-Type: application/json
-Authorization: Token 0d0631cd1214f928bc455833296eaae4dcce0872455b63d34962e767187ce72a
+Authorization: Token d2701e6f220e2d234f1724b6606c3f7239c139ea15ba206e118f7550603a24ce
 
 
 ### Get current user data

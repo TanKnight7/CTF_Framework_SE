@@ -26,13 +26,11 @@ const CreateTicket = () => {
 
       if (response.error) {
         setError(response.error);
-        toast.error(response.error);
       } else {
         setChallenges(response);
       }
     } catch (err) {
       setError("Failed to fetch challenges");
-      toast.error("Failed to fetch challenges");
     } finally {
       setLoading(false);
     }
@@ -73,20 +71,22 @@ const CreateTicket = () => {
       const response = await createTicket(ticketData);
 
       if (response.error) {
-        if (response.error.includes("already have an open ticket")) {
-          toast.error(
-            "You already have an open ticket for this challenge. Please use the existing ticket or close it first."
-          );
-        } else {
-          toast.error(response.error);
-        }
         return;
       }
+      //   if (response.error.includes("already have an open ticket")) {
+      //     toast.error(
+      //       "You already have an open ticket for this challenge. Please use the existing ticket or close it first."
+      //     );
+      //   } else {
+      //     toast.error(response.error);
+      //   }
+      //   return;
+      // }
 
-      toast.success(`Ticket ${response.ticket_id} created successfully!`);
+      // toast.success(`Ticket ${response.ticket_id} created successfully!`);
       navigate(`/tickets/${response.id}`);
     } catch (err) {
-      toast.error("Failed to create ticket");
+      // toast.error("Failed to create ticket");
     } finally {
       setCreating(false);
     }

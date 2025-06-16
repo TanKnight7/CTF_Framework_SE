@@ -154,24 +154,26 @@ const WebSocketTest = ({ ticketId }) => {
             <p className="text-muted text-sm">No test messages yet</p>
           ) : (
             <div className="space-y-1">
-              {testMessages.map((msg, index) => (
-                <div key={index} className="text-xs">
-                  <span className="text-muted">[{msg.timestamp}]</span>
-                  <span
-                    className={`ml-2 ${
-                      msg.type === "sent"
-                        ? "text-blue-400"
-                        : msg.type === "typing"
-                        ? "text-yellow-400"
-                        : msg.type === "info"
-                        ? "text-gray-400"
-                        : "text-green-400"
-                    }`}
-                  >
-                    {msg.content}
-                  </span>
-                </div>
-              ))}
+              {testMessages &&
+                Array.isArray(testMessages) &&
+                testMessages.map((msg, index) => (
+                  <div key={index} className="text-xs">
+                    <span className="text-muted">[{msg.timestamp}]</span>
+                    <span
+                      className={`ml-2 ${
+                        msg.type === "sent"
+                          ? "text-blue-400"
+                          : msg.type === "typing"
+                          ? "text-yellow-400"
+                          : msg.type === "info"
+                          ? "text-gray-400"
+                          : "text-green-400"
+                      }`}
+                    >
+                      {msg.content}
+                    </span>
+                  </div>
+                ))}
             </div>
           )}
         </div>

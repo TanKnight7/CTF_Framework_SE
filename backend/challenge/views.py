@@ -43,8 +43,8 @@ def create_category(request):
     serializer = CategorySerializer(data=request.data, context={'request':request})
     if serializer.is_valid():
         serializer.save()
-        return Response({"success": "Successfully created category", "data": serializer.data}, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"success": "Successfully created category"}, status=status.HTTP_201_CREATED)
+    return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT'])
 @authentication_classes([TokenAuthentication])
@@ -61,7 +61,7 @@ def edit_categories(request, category_name):
         serializer = CategorySerializer(category, data=request.data, partial=True, context={'request':request}) 
         if serializer.is_valid():
             serializer.save()
-            return Response({"success": "Category successfully updated!", "data": serializer.data}, status=status.HTTP_200_OK)
+            return Response({"success": "Category successfully updated!"}, status=status.HTTP_200_OK)
         return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
     except Category.DoesNotExist:
         return Response({"error": f"Category '{category_name}' not found"}, status=status.HTTP_404_NOT_FOUND)
@@ -332,7 +332,7 @@ def submit_flag(request, challenge_id):
     
     ChallengeSolve.objects.create(user=request.user, challenge=challenge)
     
-    return Response({"message":"Correct."}, status=status.HTTP_200_OK)
+    return Response({"success":"Correct."}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
@@ -363,4 +363,4 @@ def solved_by_team(request):
     if not solves.exists():
         return Response({"message": f"Your team haven't solved any challenges"}, status=status.HTTP_404_NOT_FOUND)
 
-    return Response({"message": ChallengeSolveSerializer(solves, many=True).data}, status=status.HTTP_200_OK)
+    return Response(ChallengeSolveSerializer(solves, many=True).data, status=status.HTTP_200_OK)

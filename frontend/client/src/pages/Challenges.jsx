@@ -32,7 +32,7 @@ const Challenges = () => {
     queryFn: getSolved,
   });
 
-  const solvedChallenges = solved?.message || [];
+  const solvedChallenges = solved || [];
 
   const isChallengeSolved = (challengeId) => {
     if (typeof solvedChallenges === "object") {
@@ -55,26 +55,26 @@ const Challenges = () => {
       console.log("Flag submission response:", responseData);
 
       if (responseData.error) {
-        return toast.error(`❌ ${responseData.error}`);
+        return;
       }
 
       const message = responseData.message?.toLowerCase();
 
       if (message === "wrong answer.") {
-        toast.error("❌ Wrong answer.");
+        // toast.error("❌ Wrong answer.");
       } else if (message === "correct.") {
-        toast.success("✅ Correct flag!");
+        // toast.success("✅ Correct flag!");
         setTimeout(() => {
           window.location.reload();
         }, 10000);
       } else {
-        toast.info(message || "⚠️ Unexpected response.");
+        // toast.info(message || "⚠️ Unexpected response.");
       }
 
       reset();
     },
     onError: (error) => {
-      toast.error("🚨 Submission failed.");
+      // toast.error("🚨 Submission failed.");
       console.error("Flag submission error:", error);
     },
   });
@@ -336,15 +336,6 @@ const Challenges = () => {
                           </div>
                         </div>
                       </form>
-
-                      {/* {selectedChallenge.solved && (
-                      <div className="p-3 bg-tertiary-bg rounded-md">
-                        <div className="flex items-center text-terminal-green">
-                          <i className="fas fa-check-circle mr-2"></i>
-                          <span>Challenge Solved!</span>
-                        </div>
-                      </div>
-                    )} */}
                     </div>
                   )}
                 </div>

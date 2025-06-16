@@ -9,7 +9,6 @@ import {
   updateChallenge,
   deleteChallenge,
 } from "../services/apiCTF";
-import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import "../styles/global.css";
 
@@ -62,16 +61,13 @@ const Admin_Challenges = () => {
     mutationFn: (data) => createCategory(data),
     onSuccess: (responseData) => {
       if (responseData.error) {
-        toast.error(JSON.stringify(responseData.error));
         return;
       }
-      toast.success("Category created successfully!");
       setShowCreateCategory(false);
       queryClient.invalidateQueries(["admin-categories"]);
       refetchCategories();
     },
     onError: (error) => {
-      toast.error("Failed to create category");
       console.error("Failed to create category", error);
     },
   });
@@ -81,16 +77,13 @@ const Admin_Challenges = () => {
     mutationFn: (data) => createChallannge(data),
     onSuccess: (responseData) => {
       if (responseData.error) {
-        toast.error(JSON.stringify(responseData.error));
         return;
       }
-      toast.success("Challenge created successfully!");
       setShowCreateChallenge(false);
       queryClient.invalidateQueries(["admin-challenges"]);
       refetchChallenges();
     },
     onError: (error) => {
-      toast.error("Failed to create challenge");
       console.error("Failed to create challenge", error);
     },
   });
@@ -100,17 +93,14 @@ const Admin_Challenges = () => {
     mutationFn: ({ challengeId, data }) => updateChallenge(challengeId, data),
     onSuccess: (responseData) => {
       if (responseData.error) {
-        toast.error(JSON.stringify(responseData.error));
         return;
       }
-      toast.success("Challenge updated successfully!");
       setShowEditChallenge(false);
       setSelectedChallenge(null);
       queryClient.invalidateQueries(["admin-challenges"]);
       refetchChallenges();
     },
     onError: (error) => {
-      toast.error("Failed to update challenge");
       console.error("Failed to update challenge", error);
     },
   });
@@ -120,17 +110,14 @@ const Admin_Challenges = () => {
     mutationFn: (challengeId) => deleteChallenge(challengeId),
     onSuccess: (responseData) => {
       if (responseData.error) {
-        toast.error(JSON.stringify(responseData.error));
         return;
       }
-      toast.success("Challenge deleted successfully!");
       setShowDeleteConfirm(false);
       setSelectedChallenge(null);
       queryClient.invalidateQueries(["admin-challenges"]);
       refetchChallenges();
     },
     onError: (error) => {
-      toast.error("Failed to delete challenge");
       console.error("Failed to delete challenge", error);
     },
   });
@@ -407,7 +394,6 @@ const Admin_Challenges = () => {
     try {
       const challengeDetail = await getChallengeDetail(challenge.id);
       if (challengeDetail.error) {
-        toast.error("Failed to load challenge details");
         return;
       }
 
@@ -435,7 +421,6 @@ const Admin_Challenges = () => {
 
       setShowEditChallenge(true);
     } catch (error) {
-      toast.error("Failed to load challenge details");
       console.error("Error loading challenge details:", error);
     }
   };

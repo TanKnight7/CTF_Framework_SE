@@ -1,4 +1,5 @@
 Django
+pyyaml
 psycopg2-binary
 djangorestframework
 django-rest-knox

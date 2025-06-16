@@ -4,13 +4,15 @@ services:
   frontend:
     build:
       context: ./frontend
+    volumes:
+      - ./config.yml:/app/config.yml
     container_name: softeng_frontend
 
   backend:
     build: ./backend
     container_name: softeng_backend
-    # volumes:
-    #   - ./backend:/app
+    volumes:
+      - ./config.yml:/app/config.yml
     ports:
       - "9998:80"
     environment:

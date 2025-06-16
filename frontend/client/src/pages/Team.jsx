@@ -2,11 +2,7 @@ import Terminal from "../components/Terminal";
 import CreateTeam from "./CreateTeam";
 import JoinTeam from "./JoinTeam";
 import { useQuery } from "@tanstack/react-query";
-import {
-  isJoinedTeam,
-  getTeamDetails,
-  getCategories,
-} from "../services/apiCTF";
+import { getTeamDetails, getCategories } from "../services/apiCTF";
 
 const Team = () => {
   const {
@@ -20,16 +16,6 @@ const Team = () => {
   });
 
   const {
-    isPending: isJoinedTeamPending,
-    isError: isJoinedTeamError,
-    error: JoinedTeamError,
-    data: isJoinedTeamStatus,
-  } = useQuery({
-    queryKey: ["isJoinedTeam"],
-    queryFn: isJoinedTeam,
-  });
-
-  const {
     isPending: isCategoriesPending,
     isError: isCategoriesError,
     error: CategoriesError,
@@ -39,7 +25,7 @@ const Team = () => {
     queryFn: getCategories,
   });
 
-  if (isJoinedTeamPending || isTeamDetailsPending || isCategoriesPending) {
+  if (isTeamDetailsPending || isCategoriesPending) {
     return "Data loading..";
   }
 
@@ -49,7 +35,7 @@ const Team = () => {
 
   return (
     <div className="container">
-      {!isJoinedTeamStatus && (
+      {!!TeamDetails?.message && (
         <div className="flex justify-center">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 w-full max-w-5xl mx-auto px-4">
             <CreateTeam />
@@ -59,7 +45,7 @@ const Team = () => {
           </div>
         </div>
       )}
-      {isJoinedTeamStatus && (
+      {!TeamDetails?.message && (
         <>
           <h1 className="terminal-text text-2xl mb-6">Team</h1>
 
@@ -121,6 +107,7 @@ const Team = () => {
           <h2 className="terminal-text text-xl mb-4">Team Members</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {TeamDetails &&
+              Array.isArray(TeamDetails) &&
               TeamDetails.members.map((member) => (
                 <div key={member.id} className="card">
                   <div className="flex flex-col items-center text-center">

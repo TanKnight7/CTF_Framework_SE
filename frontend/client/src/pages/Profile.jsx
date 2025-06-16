@@ -1,5 +1,4 @@
 import Terminal from "../components/Terminal";
-import { userProfile } from "../data/mockData";
 import { useQuery } from "@tanstack/react-query";
 import { getProfile, getChallengeSolvedByMe } from "../services/apiCTF";
 
@@ -32,7 +31,7 @@ const ProfileEnhanced = () => {
     "$ tail -10 /var/log/user/CaptainCyber_activity.log",
     "Loading user activity...",
     "----------------------------",
-    ...(solved_challenges
+    ...(solved_challenges && Array.isArray(solved_challenges)
       ? solved_challenges.map(({ challenge, solved_at }) => {
           const date = new Date(solved_at).toLocaleString();
           return `[${date}] Solved '${challenge.title}' for ${challenge.point} points`;
@@ -136,6 +135,7 @@ const ProfileEnhanced = () => {
                 )}
                 <tbody>
                   {solved_challenges &&
+                    Array.isArray(solved_challenges) &&
                     solved_challenges.map((challenge) => (
                       <tr
                         key={challenge.challenge.id}

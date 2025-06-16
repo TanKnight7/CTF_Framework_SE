@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getAllSubmissions } from "../services/apiCTF";
-import { toast } from "react-toastify";
 import "../styles/global.css";
 
 const Admin_Submissions = () => {

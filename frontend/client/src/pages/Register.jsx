@@ -4,7 +4,6 @@ import "../styles/Login.css";
 import { registerUser } from "../services/apiCTF";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "react-toastify";
 const Register = () => {
   const {
     register,
@@ -28,15 +27,12 @@ const Register = () => {
     onSuccess: (responseData) => {
       console.log("Registrasi berhasil:", responseData);
       if (responseData.error) {
-        return toast.error(JSON.stringify(responseData.error));
+        return;
       }
-
-      toast.success(JSON.stringify(responseData));
       navigate("/login");
       setSuccessMessage("Registrasi berhasil!");
     },
     onError: (error) => {
-      toast.error(JSON.stringify(error));
       console.error("Registrasi gagal:", error);
     },
   });

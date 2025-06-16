@@ -50,7 +50,8 @@ export async function getChallengeSolvedByMe(data) {
     const response = await api.get("/api/challenges/solved/me/");
     return response.data;
   } catch (err) {
-    throw new Error(err);
+    return err.response?.data;
+    // throw new Error(err);
   }
 }
 
@@ -58,15 +59,6 @@ export async function getLeaderboard(data) {
   try {
     const response = await api.get("/api/leaderboard/");
     return response.data;
-  } catch (err) {
-    throw new Error(err);
-  }
-}
-
-export async function isJoinedTeam(data) {
-  try {
-    const response = await api.get("/api/teams/me/");
-    return !response.data?.error;
   } catch (err) {
     throw new Error(err);
   }
@@ -282,7 +274,7 @@ export async function deleteWriteup(writeupId) {
 export async function createTicket(data) {
   try {
     const response = await api.post("/api/tickets/create/", data);
-    return response.data;
+    return response.data?.data;
   } catch (err) {
     return err.response?.data;
   }
@@ -379,8 +371,8 @@ export async function deleteMessage(ticketId, messageId) {
 
 export async function getAnnouncements() {
   try {
-    const response = await api.get("/api/announcements/");
-    return response.data;
+    const response = await fetch("/api/announcements/");
+    return await response.json();
   } catch (err) {
     return err.response?.data;
   }

@@ -25,16 +25,15 @@ def get_user_team(user):
 def submit_writeup(request):
     serializer = WriteupSerializer(data=request.data)
     if not serializer.is_valid():
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+        return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     serializer.save(user=request.user)
     team = get_user_team(request.user)
     if team:
         serializer.save(team=team)
-    
 
-    return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response({"success": "Thanks! Your writeup has been submitted."}, status=status.HTTP_201_CREATED)
+
 
 # 2. Get all writeups
 @api_view(['GET'])
@@ -58,12 +57,17 @@ def get_update_delete_writeup(request, pk):
         return Response(serializer.data)
 
     elif request.method == 'PUT':
+        if request.user != writeup.user:
+            return Response({"error": "You are not authorized to edit this writeup."}, status=status.HTTP_403_FORBIDDEN)
         serializer = WriteupSerializer(writeup, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"success":"Writeup updated!", "data": serializer.data})
+        return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
+    if request.user.role != "admin":
+        return Response({"error": "You are not an admin."}, status=status.HTTP_403_FORBIDDEN)
+        
     elif request.method == 'DELETE':
         writeup.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({"success": "Writeup Deleted!"}, status=status.HTTP_200_OK)

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getAllTickets } from "../services/apiCTF";
-import { toast } from "react-toastify";
 
 const Ticket = () => {
   const [tickets, setTickets] = useState([]);
@@ -21,13 +20,11 @@ const Ticket = () => {
 
       if (response.error) {
         setError(response.error);
-        toast.error(response.error);
       } else {
         setTickets(response);
       }
     } catch (err) {
       setError("Failed to fetch tickets");
-      toast.error("Failed to fetch tickets");
     } finally {
       setLoading(false);
     }
