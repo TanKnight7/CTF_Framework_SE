@@ -18,7 +18,7 @@ def get_announcements(request):
 
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def create_announcement(request):
     # if not request.user.is_staff:
     #     return Response({"error": "Only staff members can create announcements"}, status=status.HTTP_403_FORBIDDEN)
@@ -31,7 +31,7 @@ def create_announcement(request):
 
 @api_view(['PUT'])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def edit_announcement(request, announcement_id):
     # if not request.user.is_staff:
     #     return Response({"error": "Only staff members can edit announcements"}, status=status.HTTP_403_FORBIDDEN)
@@ -49,7 +49,7 @@ def edit_announcement(request, announcement_id):
 
 @api_view(['DELETE'])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def delete_announcement(request, announcement_id):
     # if not request.user.is_staff:
     #     return Response({"error": "Only staff members can delete announcements"}, status=status.HTTP_403_FORBIDDEN)
