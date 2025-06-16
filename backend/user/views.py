@@ -62,11 +62,11 @@ def get_update_delete_user(request, pk):
         serializer = UserDetailSerializer(user, context={'request':request})
         return Response(serializer.data)
     
-    if user != request.user and request.user.role != 'admin':
-        return Response({"error": "You do not have permission to modify or delete this user's profile."}, 
-                        status=status.HTTP_403_FORBIDDEN)
     
     if request.method == 'PUT':
+        if user != request.user:
+            return Response({"error": "You do not have permission to modify this user's profile."}, 
+                            status=status.HTTP_403_FORBIDDEN)
         old_password = request.data.get('old_password', None)
         new_password = request.data.get('password', None)
         
@@ -86,6 +86,10 @@ def get_update_delete_user(request, pk):
         serializer.save()
         return Response({"success": "Profile updated.", "data": UserDetailSerializer(user, context={'request':request}).data}, status=status.HTTP_200_OK)
 
+    if request.user.role != 'admin':
+        return Response({"error": "Delete user feature only available for admin users."}, 
+                        status=status.HTTP_403_FORBIDDEN)
+        
     if request.method == 'DELETE':
         user.delete()
         return Response({"success": "User deleted."},status=status.HTTP_204_NO_CONTENT)

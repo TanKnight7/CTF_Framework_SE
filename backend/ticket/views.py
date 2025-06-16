@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from .models import Ticket, Message
@@ -10,9 +9,15 @@ from django.db.models import Q
 from django.utils import timezone
 from datetime import timedelta
 
+### ==== Authentication & Authorization
+from rest_framework.decorators import authentication_classes, permission_classes
+from knox.auth import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+
 User = get_user_model()
 
 @api_view(['GET'])
+@authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def get_tickets(request):
     """Get all tickets for the current user"""
@@ -32,12 +37,12 @@ def get_tickets(request):
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['GET'])
+@authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def get_ticket(request, ticket_id):
     """Get a specific ticket by ID"""
     try:
         ticket = Ticket.objects.get(id=ticket_id)
-        
        
         if request.user.role != 'admin' and ticket.created_by != request.user and ticket.assigned_to != request.user:
             return Response({'error': 'Access denied'}, status=status.HTTP_403_FORBIDDEN)
@@ -50,6 +55,7 @@ def get_ticket(request, ticket_id):
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['POST'])
+@authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def create_ticket(request):
     """Create a new ticket"""
@@ -111,16 +117,15 @@ def create_ticket(request):
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['PUT'])
+@authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def close_ticket(request, ticket_id):
     """Close a ticket"""
     try:
         ticket = Ticket.objects.get(id=ticket_id)
         
-        
         if request.user.role == 'admin':
             pass  
-       
         elif ticket.created_by != request.user and ticket.assigned_to != request.user:
             return Response({'error': 'Access denied'}, status=status.HTTP_403_FORBIDDEN)
         
@@ -137,6 +142,7 @@ def close_ticket(request, ticket_id):
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['GET'])
+@authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def get_messages(request, ticket_id):
     """Get all messages for a ticket"""
@@ -157,12 +163,12 @@ def get_messages(request, ticket_id):
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['POST'])
+@authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def create_message(request, ticket_id):
     """Create a new message for a ticket"""
     try:
         ticket = Ticket.objects.get(id=ticket_id)
-        
         
         if request.user.role != 'admin' and ticket.created_by != request.user and ticket.assigned_to != request.user:
             return Response({'error': 'Access denied'}, status=status.HTTP_403_FORBIDDEN)

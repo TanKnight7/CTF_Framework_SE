@@ -37,8 +37,8 @@ def submit_writeup(request):
 
 # 2. Get all writeups
 @api_view(['GET'])
-# @authentication_classes([TokenAuthentication])
-# @permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def get_all_writeups(request):
     writeups = Writeup.objects.all()
     serializer = WriteupSerializer(writeups, many=True)
@@ -47,8 +47,8 @@ def get_all_writeups(request):
 
 # 3. Get, update, or delete a writeup by ID
 @api_view(['GET', 'PUT', 'DELETE'])
-# @authentication_classes([TokenAuthentication])
-# @permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def get_update_delete_writeup(request, pk):
     writeup = get_object_or_404(Writeup, pk=pk)
 
@@ -66,7 +66,7 @@ def get_update_delete_writeup(request, pk):
         return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     if request.user.role != "admin":
-        return Response({"error": "You are not an admin."}, status=status.HTTP_403_FORBIDDEN)
+        return Response({"error": "Delete writeup feature only available for admin users"}, status=status.HTTP_403_FORBIDDEN)
         
     elif request.method == 'DELETE':
         writeup.delete()

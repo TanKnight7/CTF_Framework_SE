@@ -30,6 +30,8 @@ def create_team(request):
 # ====== TEAM LIST =======
 # ========================
 @api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def get_all_teams(request):
     try:
         team = Team.objects.all()
@@ -53,7 +55,7 @@ def get_update_team(request, pk):
     if request.method == 'GET':
         return Response(TeamDetailSerializer(team, context={'request':request}).data)
     
-    if team.leader != request.user:
+    if request.user.role != "admin" and team.leader != request.user:
         return Response({"error": "You do not have permission to modify this team's profile."}, status=status.HTTP_403_FORBIDDEN)
     
     if request.method == 'PUT':
@@ -114,15 +116,8 @@ def leave_team(request):
         else:
             team.leader = new_leader
             team.save()
-        
+
     request.user.team = None
     request.user.save()
     return Response({"message": "You have successfully left the team."}, status=status.HTTP_200_OK)
-        
-    
-    
-    
-    
-    
-    
     

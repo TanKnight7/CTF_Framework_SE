@@ -1,7 +1,4 @@
 from rest_framework import status
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.permissions import IsAuthenticated, IsAdminUser 
-from knox.auth import TokenAuthentication
 from rest_framework.response import Response
 # from django.shortcuts import get_object_or_404 
 import json
@@ -9,6 +6,11 @@ import json
 from .models import Category, Challenge, ChallengeSolve, ChallengeAttachment
 from log.serializers import SubmissionSerlializers
 from .serializers import ChallengeListSerializer, ChallengeSerializer, CategorySerializer, CategoryDetailSerializer, CreateChallengeSerializer, ChallengeSolveSerializer, AdminChallengeDetailSerializer
+
+
+from knox.auth import TokenAuthentication
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated, IsAdminUser 
 
 # =================================================
 # CRUD Category
@@ -30,7 +32,7 @@ def get_categories(request):
 
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated]) 
+@permission_classes([IsAuthenticated, IsAdminUser]) 
 def create_category(request):
     """
     Create a new category.
@@ -48,7 +50,7 @@ def create_category(request):
 
 @api_view(['PUT'])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def edit_categories(request, category_name):
     """
     Edit an existing category by its name.
@@ -71,7 +73,7 @@ def edit_categories(request, category_name):
 
 @api_view(['DELETE'])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated]) 
+@permission_classes([IsAuthenticated, IsAdminUser]) 
 def delete_categories(request, category_name):
     """
     Delete a category by its name.
@@ -166,7 +168,7 @@ def get_challenge_detail(request, challenge_id):
 
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated]) 
+@permission_classes([IsAuthenticated, IsAdminUser]) 
 def create_challenge(request):
     """
     Create a new challenge.
@@ -204,7 +206,7 @@ def create_challenge(request):
 
 @api_view(['PUT'])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def edit_challenge(request, challenge_id):
     """
     Edit an existing challenge by its ID.
@@ -269,7 +271,7 @@ def edit_challenge(request, challenge_id):
 
 @api_view(['DELETE'])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def delete_challenge(request, challenge_id):
     """
     Delete a challenge by its ID.
