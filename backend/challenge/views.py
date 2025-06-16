@@ -336,9 +336,8 @@ def submit_flag(request, challenge_id):
     if ChallengeSolve.objects.filter(user__in=team_members, challenge=challenge).exists():
         return Response({"message": "Your team already solved this challenge."}, status=status.HTTP_400_BAD_REQUEST)
     
-    if check_if_ctf_is_finished():
+    if check_if_ctf_is_finished() and request.user.role != "admin":
         return Response({"error": "CTF FINISHED."}, status=status.HTTP_200_OK)
-    
     
     is_correct = challenge.flag == user_submitted_flag
     status_value = 'correct' if is_correct else 'incorrect'
