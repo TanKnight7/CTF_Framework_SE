@@ -6,7 +6,7 @@ ctf:
     Solve challenges, find flags, and compete with teams from around the world.
     The event features challenges in web exploitation, cryptography, reverse engineering, forensics, and more.
   location: "Online"
-  start_time: "01-07-2025 12:00"
+  start_time: "01-07-2025 12:00" # Format: dd-mm-yyyy hh:mm
   end_time: "03-07-2025 15:00"
   # (look for your timezone at https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
   time_zone: "Asia/Jakarta" # Base timezone
