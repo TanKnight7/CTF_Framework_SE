@@ -48,12 +48,10 @@ def create_challenge(token):
 
     print("Status Code:", response.status_code)
     print(response.content)
-    # print("Response:", response.json())
+
 
 # ==== MAIN ====
 if __name__ == "__main__":
-    # token = get_token()
-    # if token:
     token = "46ef675a7ae29a59ff2ecff40e31a0cb29b8d56429cb98f31295e66f59a4598a"
     create_category(token)
     create_challenge(token)

@@ -20,9 +20,7 @@ def get_announcements(request):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated, IsAdminUser])
 def create_announcement(request):
-    # if not request.user.is_staff:
-    #     return Response({"error": "Only staff members can create announcements"}, status=status.HTTP_403_FORBIDDEN)
-    
+
     serializer = AnnouncementSerializer(data=request.data, context={'request':request})
     if serializer.is_valid():
         serializer.save()
@@ -33,8 +31,6 @@ def create_announcement(request):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated, IsAdminUser])
 def edit_announcement(request, announcement_id):
-    # if not request.user.is_staff:
-    #     return Response({"error": "Only staff members can edit announcements"}, status=status.HTTP_403_FORBIDDEN)
     
     try:
         announcement = Announcement.objects.get(id=announcement_id)
@@ -51,9 +47,7 @@ def edit_announcement(request, announcement_id):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated, IsAdminUser])
 def delete_announcement(request, announcement_id):
-    # if not request.user.is_staff:
-    #     return Response({"error": "Only staff members can delete announcements"}, status=status.HTTP_403_FORBIDDEN)
-    
+
     try:
         announcement = Announcement.objects.get(id=announcement_id)
     except Announcement.DoesNotExist:

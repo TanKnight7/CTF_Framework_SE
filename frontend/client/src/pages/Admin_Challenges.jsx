@@ -675,7 +675,7 @@ const Admin_Challenges = () => {
                           className="px-3 py-1 bg-terminal-green text-black rounded text-sm font-medium hover:bg-green-400 transition-colors duration-200"
                           title="Edit Challenge"
                         >
-                          ✏️ Edit
+                          Edit
                         </button>
                         <button
                           onClick={(e) => {
@@ -685,7 +685,7 @@ const Admin_Challenges = () => {
                           className="px-3 py-1 bg-red-600 text-white rounded text-sm font-medium hover:bg-red-700 transition-colors duration-200"
                           title="Delete Challenge"
                         >
-                          🗑️ Delete
+                          Delete
                         </button>
                       </div>
                     </td>
