@@ -94,7 +94,7 @@ class JoinTeamTest(TestSetUp):
         self.assertIn('id', res2.json())
         
         id, token = res2.json()['id'], res2.json()['token']
-        self.join_team_url = reverse('join_team', kwargs={'pk': id, 'token': token})
+        self.join_team_url = reverse('join_team', kwargs={'token': token})
         res3 = self.client.post(self.join_team_url, format="json")
         self.assertEqual(res3.status_code, 400)
         self.assertIn("error", res3.json())
@@ -180,6 +180,6 @@ class AccessControlTest(TestSetUp):
         res2 = self.client.post(self.join_team_url, format="json")
         self.assertEqual(res2.status_code, 404)
         self.assertIn("error", res2.json())
-        self.assertIn("Team with this id or invalid token does not exist.", res2.json()['error'])
+        self.assertIn("Invalid token.", res2.json()['error'])
         
         
