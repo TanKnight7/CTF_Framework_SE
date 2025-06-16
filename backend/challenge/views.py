@@ -1,6 +1,5 @@
 from rest_framework import status
 from rest_framework.response import Response
-# from django.shortcuts import get_object_or_404 
 import json
 
 from .models import Category, Challenge, ChallengeSolve, ChallengeAttachment
@@ -39,8 +38,7 @@ def create_category(request):
     Requires admin privileges (conceptual - actual permission class not enforced here yet).
     """
    
-    # if not request.user.is_staff:
-    #     return Response({"error": "You do not have permission to perform this action."}, status=status.HTTP_403_FORBIDDEN)
+   
     
     serializer = CategorySerializer(data=request.data, context={'request':request})
     if serializer.is_valid():
@@ -56,8 +54,7 @@ def edit_categories(request, category_name):
     Edit an existing category by its name.
     Requires admin privileges (conceptual).
     """
-    # if not request.user.is_staff:
-    #     return Response({"error": "You do not have permission to perform this action."}, status=status.HTTP_403_FORBIDDEN)
+
     try:
         category = Category.objects.get(name__iexact=category_name) 
         serializer = CategorySerializer(category, data=request.data, partial=True, context={'request':request}) 
@@ -79,8 +76,7 @@ def delete_categories(request, category_name):
     Delete a category by its name.
     Requires admin privileges (conceptual).
     """
-    # if not request.user.is_staff:
-    #     return Response({"error": "You do not have permission to perform this action."}, status=status.HTTP_403_FORBIDDEN)
+  
     try:
         category = Category.objects.get(name__iexact=category_name)
         category_name_deleted = category.name 

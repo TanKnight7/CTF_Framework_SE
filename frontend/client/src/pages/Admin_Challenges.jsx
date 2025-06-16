@@ -672,7 +672,7 @@ const Admin_Challenges = () => {
                             e.stopPropagation();
                             handleChallengeClick(challenge);
                           }}
-                          className="px-3 py-1 bg-terminal-green text-black rounded text-sm font-medium hover:bg-green-400 transition-colors duration-200"
+                          className="filter-button"
                           title="Edit Challenge"
                         >
                           Edit
@@ -682,7 +682,7 @@ const Admin_Challenges = () => {
                             e.stopPropagation();
                             handleDeleteChallenge(challenge);
                           }}
-                          className="px-3 py-1 bg-red-600 text-white rounded text-sm font-medium hover:bg-red-700 transition-colors duration-200"
+                          className="filter-button bg-red-500 hover:bg-red-600"
                           title="Delete Challenge"
                         >
                           Delete
