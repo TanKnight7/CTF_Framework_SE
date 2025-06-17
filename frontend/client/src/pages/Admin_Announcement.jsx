@@ -314,6 +314,16 @@ const Admin_Announcement = () => {
                 ))}
               </tbody>
             </table>
+            {sortedAnnouncements.length === 0 && (
+              <div className="text-center py-12">
+                <div className="text-muted text-lg mt-2">
+                  No announcement found
+                </div>
+                <div className="text-sm text-muted mt-2">
+                  Try adjusting your search or filter criteria
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

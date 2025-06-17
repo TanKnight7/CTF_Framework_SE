@@ -2,6 +2,22 @@ import { useState, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { getProfile } from "../services/apiCTF";
 
+const ButtonLink = ({ path, logo, title }) => {
+  return (
+    <li className="nav-item">
+      <NavLink
+        to={path}
+        className={({ isActive }) =>
+          isActive ? "nav-link active" : "nav-link"
+        }
+      >
+        <span className="nav-icon">{logo}</span>
+        <span className="nav-text">{title}</span>
+      </NavLink>
+    </li>
+  );
+};
+
 const BottomNavigation = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -42,146 +58,36 @@ const BottomNavigation = () => {
         {/* Admin navigation only on /admin route */}
         {isLoggedIn && isAdmin && isAdminRoute ? (
           <>
-            <li className="nav-item">
-              <NavLink
-                to="/admin/writeups"
-                className={({ isActive }) =>
-                  isActive ? "nav-link active" : "nav-link"
-                }
-              >
-                <span className="nav-icon">📝</span>
-                <span className="nav-text">Writeups</span>
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink
-                to="/admin/announcements"
-                className={({ isActive }) =>
-                  isActive ? "nav-link active" : "nav-link"
-                }
-              >
-                <span className="nav-icon">📢</span>
-                <span className="nav-text">Announcements</span>
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink
-                to="/admin/challenges"
-                className={({ isActive }) =>
-                  isActive ? "nav-link active" : "nav-link"
-                }
-              >
-                <span className="nav-icon">🎯</span>
-                <span className="nav-text">Challenges</span>
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink
-                to="/admin/leaderboard"
-                className={({ isActive }) =>
-                  isActive ? "nav-link active" : "nav-link"
-                }
-              >
-                <span className="nav-icon">🏆</span>
-                <span className="nav-text">Leaderboard</span>
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink
-                to="/admin/submissions"
-                className={({ isActive }) =>
-                  isActive ? "nav-link active" : "nav-link"
-                }
-              >
-                <span className="nav-icon">📨</span>
-                <span className="nav-text">Submissions</span>
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink
-                to="/admin/users"
-                className={({ isActive }) =>
-                  isActive ? "nav-link active" : "nav-link"
-                }
-              >
-                <span className="nav-icon">🧑‍💻</span>
-                <span className="nav-text">Users</span>
-              </NavLink>
-            </li>
+            <ButtonLink
+              path="/admin/announcements"
+              logo="📢"
+              title="Announcements"
+            />
+            <ButtonLink path="/admin/challenges" logo="🎯" title="Challenges" />
+            <ButtonLink
+              path="/admin/submissions"
+              logo="📨"
+              title="Submissions"
+            />
+            <ButtonLink
+              path="/admin/leaderboard"
+              logo="🏆"
+              title="Leaderboard"
+            />
+            <ButtonLink path="/admin/users" logo="🧑‍💻" title="Users" />
+            <ButtonLink path="/admin/writeups" logo="📝" title="Writeups" />
           </>
         ) : (
           <>
-            <li className="nav-item">
-              <NavLink
-                to="/"
-                className={({ isActive }) =>
-                  isActive ? "nav-link active" : "nav-link"
-                }
-                end
-              >
-                <span className="nav-icon">🏠</span>
-                <span className="nav-text">Home</span>
-              </NavLink>
-            </li>
-
-            <li className="nav-item">
-              <NavLink
-                to="/announcements"
-                className={({ isActive }) =>
-                  isActive ? "nav-link active" : "nav-link"
-                }
-              >
-                <span className="nav-icon">📢</span>
-                <span className="nav-text">Announcements</span>
-              </NavLink>
-            </li>
+            <ButtonLink path="/" logo="🏠" title="Home" />
+            <ButtonLink path="/announcements" logo="📢" title="Announcements" />
 
             {isLoggedIn && (
               <>
-                <li className="nav-item">
-                  <NavLink
-                    to="/leaderboard"
-                    className={({ isActive }) =>
-                      isActive ? "nav-link active" : "nav-link"
-                    }
-                  >
-                    <span className="nav-icon">🏆</span>
-                    <span className="nav-text">Leaderboard</span>
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink
-                    to="/challenges"
-                    className={({ isActive }) =>
-                      isActive ? "nav-link active" : "nav-link"
-                    }
-                  >
-                    <span className="nav-icon">🎯</span>
-                    <span className="nav-text">Challenges</span>
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink
-                    to="/team"
-                    className={({ isActive }) =>
-                      isActive ? "nav-link active" : "nav-link"
-                    }
-                  >
-                    <span className="nav-icon">👥</span>
-                    <span className="nav-text">Team</span>
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink
-                    to="/profile"
-                    className={({ isActive }) =>
-                      isActive ? "nav-link active" : "nav-link"
-                    }
-                  >
-                    <span className="nav-icon">👤</span>
-                    <span className="nav-text">Profile</span>
-                  </NavLink>
-                </li>
+                <ButtonLink path="/leaderboard" logo="🏆" title="Leaderboard" />
+                <ButtonLink path="/challenges" logo="🎯" title="Challenges" />
+                <ButtonLink path="/team" logo="👥" title="Team" />
+                <ButtonLink path="/profile" logo="👤" title="Profile" />
               </>
             )}
           </>

@@ -475,7 +475,7 @@ const Admin_Leaderboard = () => {
 
           {sortedLeaderboard.length === 0 && (
             <div className="text-center py-12">
-              <div className="text-muted text-lg">No teams found</div>
+              <div className="text-muted text-lg mt-2">No teams found</div>
               <div className="text-sm text-muted mt-2">
                 Try adjusting your search or filter criteria
               </div>

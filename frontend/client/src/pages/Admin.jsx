@@ -1,7 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Admin = () => {
-  return <div>Admin</div>;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate("/admin/challenges");
+  }, [navigate]);
+
+  return null; // or a loading indicator
 };
 
 export default Admin;

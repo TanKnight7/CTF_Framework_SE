@@ -1,6 +1,7 @@
 import Terminal from "../components/Terminal";
 import { useQuery } from "@tanstack/react-query";
 import { getProfile, getChallengeSolvedByMe } from "../services/apiCTF";
+import { Link } from "react-router-dom";
 
 const ProfileEnhanced = () => {
   const {
@@ -58,6 +59,12 @@ const ProfileEnhanced = () => {
                 {profile.total_point}
               </div>
               <p className="text-sm text-muted">Total Points</p>
+              <Link
+                to="/settings"
+                className="bg-tertiary-bg hover:bg-secondary-bg transition-colors duration-300 text-terminal-green border border-terminal-green rounded-md px-3 py-1 text-sm no-underline"
+              >
+                Settings
+              </Link>
             </div>
 
             <div className="border-t border-border-color pt-4 mb-4">

@@ -12,7 +12,7 @@ class User(AbstractUser):
     country = models.CharField(max_length=50, null=True, blank=True)
     
     # One-to-many: one team, many users
-    team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, related_name='members')
+    team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, blank=True, related_name='members')
     
     # USERNAME_FIELD = 'email' # if we want to login with email and password, use username_field = 'email'
     

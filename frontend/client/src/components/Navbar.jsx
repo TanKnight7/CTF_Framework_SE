@@ -38,6 +38,8 @@ const Navbar = () => {
     window.location.href = "/";
   };
 
+  const isAdminRoute = location.pathname.startsWith("/admin");
+
   return (
     <header className="fixed top-0 left-0 w-full z-100 border-b border-terminal-green shadow-lg bg-primary-bg">
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between">
@@ -48,7 +50,7 @@ const Navbar = () => {
 
         {hasToken ? (
           <div className="flex items-center space-x-2 gap-4">
-            {isAdmin && (
+            {isAdmin && !isAdminRoute && (
               <Link
                 to="/admin"
                 className="bg-tertiary-bg hover:bg-secondary-bg transition-colors duration-300 text-terminal-green border border-terminal-green rounded-md px-3 py-1 text-sm no-underline"
@@ -56,19 +58,15 @@ const Navbar = () => {
                 Admin Panel
               </Link>
             )}
-            <Link
-              to="/writeups"
-              className="bg-tertiary-bg hover:bg-secondary-bg transition-colors duration-300 text-terminal-green border border-terminal-green rounded-md px-3 py-1 text-sm no-underline"
-            >
-              WriteUps
-            </Link>
 
-            <Link
-              to="/settings"
-              className="bg-tertiary-bg hover:bg-secondary-bg transition-colors duration-300 text-terminal-green border border-terminal-green rounded-md px-3 py-1 text-sm no-underline"
-            >
-              Settings
-            </Link>
+            {!isAdminRoute && (
+              <Link
+                to="/writeups"
+                className="bg-tertiary-bg hover:bg-secondary-bg transition-colors duration-300 text-terminal-green border border-terminal-green rounded-md px-3 py-1 text-sm no-underline"
+              >
+                WriteUps
+              </Link>
+            )}
 
             <Link
               to="/tickets"

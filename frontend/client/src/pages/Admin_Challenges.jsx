@@ -696,8 +696,8 @@ const Admin_Challenges = () => {
           </div>
 
           {sortedChallenges.length === 0 && (
-            <div className="text-center py-12">
-              <div className="text-muted text-lg">No challenges found</div>
+            <div className="text-center py-12 ">
+              <div className="text-muted text-lg mt-2">No challenges found</div>
               <div className="text-sm text-muted mt-2">
                 Try adjusting your search or filter criteria
               </div>
@@ -727,20 +727,6 @@ const Admin_Challenges = () => {
               ) || 0}
             </div>
             <div className="text-muted">Total Points</div>
-          </div>
-          <div className="card text-center hover:bg-secondary-bg transition-colors duration-200">
-            <div className="text-3xl font-bold text-accent-red mb-2">
-              {challenges?.filter((c) => c.difficulty >= 4).length || 0}
-            </div>
-            <div className="text-muted">Expert+ Challenges</div>
-          </div>
-        </div>
-
-        {/* Debug Info */}
-        <div className="card mt-4">
-          <div className="text-sm text-muted">
-            Debug Info: showCreateCategory = {showCreateCategory.toString()},
-            showCreateChallenge = {showCreateChallenge.toString()}
           </div>
         </div>
 
