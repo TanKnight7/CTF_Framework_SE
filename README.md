@@ -57,6 +57,7 @@ credentials:
 ### 3. Build and Start the Application
 
 ```bash
+export CTF_PORT=9999 # Specify the port for the application
 bash .script/build_docker.sh
 ```
 
