@@ -25,15 +25,12 @@ const CreateTeam = () => {
   const mutation = useMutation({
     mutationFn: (userData) => createTeam(userData),
     onSuccess: (responseData) => {
-      console.log(responseData);
       if (responseData?.error) {
         return;
       }
       navigate("/");
     },
-    onError: (error) => {
-      console.log(error);
-    },
+    onError: (error) => {},
   });
 
   function onSubmit(data) {

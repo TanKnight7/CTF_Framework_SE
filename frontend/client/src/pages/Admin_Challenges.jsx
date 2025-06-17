@@ -241,14 +241,6 @@ const Admin_Challenges = () => {
       );
     }
 
-    // Debug logging
-    console.log("Edit challenge data:", {
-      challengeId: selectedChallenge.id,
-      formData: Object.fromEntries(formData.entries()),
-      editAttachments,
-      existingAttachmentsToKeep,
-    });
-
     updateChallengeMutation.mutate({
       challengeId: selectedChallenge.id,
       data: formData,
@@ -362,15 +354,6 @@ const Admin_Challenges = () => {
     }, 500);
     return () => clearInterval(commandInterval);
   }, []);
-
-  // Debug state changes
-  useEffect(() => {
-    console.log("showCreateCategory changed:", showCreateCategory);
-  }, [showCreateCategory]);
-
-  useEffect(() => {
-    console.log("showCreateChallenge changed:", showCreateChallenge);
-  }, [showCreateChallenge]);
 
   // Clear attachments when modal is closed
   useEffect(() => {
@@ -495,7 +478,6 @@ const Admin_Challenges = () => {
             <div className="flex gap-3">
               <button
                 onClick={() => {
-                  console.log("Create Category button clicked");
                   setShowCreateCategory(true);
                 }}
                 className="filter-button"
@@ -504,7 +486,6 @@ const Admin_Challenges = () => {
               </button>
               <button
                 onClick={() => {
-                  console.log("Create Challenge button clicked");
                   setShowCreateChallenge(true);
                 }}
                 className="filter-button"
@@ -775,7 +756,6 @@ const Admin_Challenges = () => {
                 </h2>
                 <button
                   onClick={() => {
-                    console.log("Closing category modal");
                     setShowCreateCategory(false);
                   }}
                   style={{
@@ -853,7 +833,6 @@ const Admin_Challenges = () => {
                   <button
                     type="button"
                     onClick={() => {
-                      console.log("Cancel category modal");
                       setShowCreateCategory(false);
                     }}
                     style={{
@@ -927,7 +906,6 @@ const Admin_Challenges = () => {
                 </h2>
                 <button
                   onClick={() => {
-                    console.log("Closing challenge modal");
                     setShowCreateChallenge(false);
                   }}
                   style={{
@@ -1586,7 +1564,6 @@ const Admin_Challenges = () => {
                     <button
                       type="button"
                       onClick={() => {
-                        console.log("Cancel challenge modal");
                         setShowCreateChallenge(false);
                       }}
                       style={{

@@ -33,16 +33,13 @@ const SubmitPage = () => {
   const mutation = useMutation({
     mutationFn: (userData) => submitWriteup(userData),
     onSuccess: (responseData) => {
-      console.log(responseData);
       if (responseData?.error) {
         return;
       }
       setFile(null);
       reset();
     },
-    onError: (error) => {
-      console.log(error);
-    },
+    onError: (error) => {},
   });
 
   function onSubmit(data) {

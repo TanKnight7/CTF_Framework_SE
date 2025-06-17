@@ -50,13 +50,12 @@ const toastResponse = (response) => {
 
 api.interceptors.response.use(
   (response) => {
-    console.log("Response received:", response);
+    // console.log("Response received:", response);
     toastResponse(response);
     return response;
   },
   (error) => {
     const response = error.response;
-    console.log("omg nih", response);
     if (response) {
       if (response.status === 401) {
         localStorage.removeItem("Token");

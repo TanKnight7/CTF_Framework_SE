@@ -178,7 +178,6 @@ export async function getSolved() {
 
 export async function submitWriteup(data) {
   try {
-    console.log(data);
     const response = await api.post("/api/writeups/submit/", data);
     return response.data;
   } catch (err) {
@@ -203,7 +202,6 @@ export async function getWriteups() {
 
 export async function updateProfile(data) {
   try {
-    console.log(data);
     const response = await api.put(`/api/users/${data.id}/`, data);
     return response.data;
   } catch (err) {
@@ -213,7 +211,6 @@ export async function updateProfile(data) {
 
 export async function createCategory(data) {
   try {
-    console.log(data);
     const response = await api.post("/api/challenges/categories/create/", data);
     return response.data;
   } catch (err) {
@@ -223,7 +220,6 @@ export async function createCategory(data) {
 
 export async function createChallannge(data) {
   try {
-    console.log(data);
     const response = await api.post("/api/challenges/create/", data);
     return response.data;
   } catch (err) {
@@ -242,7 +238,6 @@ export async function getChallengeDetail(challengeId) {
 
 export async function updateChallenge(challengeId, data) {
   try {
-    console.log("Updating challenge:", challengeId, data);
     const response = await api.put(
       `/api/challenges/${challengeId}/edit/`,
       data

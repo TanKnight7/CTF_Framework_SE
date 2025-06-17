@@ -27,15 +27,12 @@ const JoinTeam = () => {
   const mutation = useMutation({
     mutationFn: (userData) => joinTeam(userData),
     onSuccess: (responseData) => {
-      console.log(responseData);
       if (responseData?.error) {
         return;
       }
       navigate("/");
     },
-    onError: (error) => {
-      console.log(error);
-    },
+    onError: (error) => {},
   });
 
   function onSubmit(data) {

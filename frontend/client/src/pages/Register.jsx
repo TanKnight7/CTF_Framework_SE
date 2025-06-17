@@ -25,7 +25,6 @@ const Register = () => {
   const mutation = useMutation({
     mutationFn: (userData) => registerUser(userData),
     onSuccess: (responseData) => {
-      console.log("Registrasi berhasil:", responseData);
       if (responseData.error) {
         return;
       }

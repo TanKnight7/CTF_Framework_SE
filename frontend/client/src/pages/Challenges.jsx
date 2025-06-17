@@ -80,8 +80,6 @@ const Challenges = () => {
   };
 
   const hasUserReviewed = (challenge) => {
-    console.log("===== loh ========");
-    console.log(profile);
     if (!profile) return false;
 
     // Check if reviewed in current session
@@ -89,7 +87,7 @@ const Challenges = () => {
     if (reviewedInSession) return true;
 
     // Check if reviewed in API data
-    console.log(challenge.reviews, profile.username);
+
     if (challenge.reviews) {
       return challenge.reviews.some(
         (review) => review.user === profile.username
@@ -258,7 +256,6 @@ const Challenges = () => {
   let solvedChallenges = [];
   if (!solved?.message) {
     solvedChallenges = solved;
-    console.log(solvedChallenges);
   }
 
   let filteredChallenges = [];

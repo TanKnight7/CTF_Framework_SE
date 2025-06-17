@@ -17,7 +17,6 @@ const Login = () => {
   const mutation = useMutation({
     mutationFn: (userData) => login(userData),
     onSuccess: (responseData) => {
-      console.log("Login berhasil:", responseData);
       if (responseData.error) {
         return;
       }

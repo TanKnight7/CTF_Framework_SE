@@ -64,15 +64,12 @@ const Settings = () => {
   const mutation = useMutation({
     mutationFn: (userData) => updateProfile(userData),
     onSuccess: (responseData) => {
-      console.log(responseData);
       if (responseData?.error) {
         return;
       }
       navigate("/profile");
     },
-    onError: (error) => {
-      console.log(error);
-    },
+    onError: (error) => {},
   });
   const onSubmit = async (data) => {
     setErrorMessage("");
