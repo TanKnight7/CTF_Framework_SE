@@ -1,7 +1,7 @@
 ctf:
-  name: "PETIR CTF 2025"
+  name: "HENGKER CTF 2025"
   description: |
-    Welcome to the PETIR CTF 2025!
+    Welcome to the HENGKER CTF 2025!
     This Capture The Flag competition is designed to test your cybersecurity skills across various domains.
     Solve challenges, find flags, and compete with teams from around the world.
     The event features challenges in web exploitation, cryptography, reverse engineering, forensics, and more.
@@ -14,5 +14,5 @@ ctf:
 
 credentials:
   admin_username: admin
-  admin_email: petir@petir.com
-  admin_password: abcdefgabcedfgABCEDFGABCEDFG12309321@#!@#
+  admin_email: admin@yourctf.com
+  admin_password: your_secure_password
