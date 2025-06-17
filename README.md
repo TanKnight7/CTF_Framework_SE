@@ -28,7 +28,7 @@ Before you begin, ensure you have the following installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/TanKnight7/CTF_Framework_SE
 cd CTF_Framework_SE
 ```
 
@@ -57,7 +57,7 @@ credentials:
 ### 3. Build and Start the Application
 
 ```bash
-bash ./.script/build_docker.sh
+bash .script/build_docker.sh
 ```
 
 ### 4. Access the Application
@@ -69,7 +69,7 @@ bash ./.script/build_docker.sh
 ### Optional: Delete the application (including database)
 
 ```bash
-bash ./.script/delete_docker.sh
+bash .script/delete_docker.sh
 ```
 
 ## 📝 API Documentation
