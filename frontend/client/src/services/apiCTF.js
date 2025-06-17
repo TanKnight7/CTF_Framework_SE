@@ -409,3 +409,12 @@ export async function deleteAnnouncement(announcementId) {
     return err.response?.data;
   }
 }
+
+export async function submitChallengeReview(challengeId, reviewData) {
+    try {
+        const response = await api.post(`/challenges/${challengeId}/review/`, reviewData);
+        return response.data;
+    } catch (err) {
+        return err.response?.data
+    }
+}

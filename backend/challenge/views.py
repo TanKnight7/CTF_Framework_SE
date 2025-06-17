@@ -6,7 +6,7 @@ from utils import check_if_ctf_is_finished, check_if_ctf_is_started
 
 from .models import Category, Challenge, ChallengeSolve, ChallengeAttachment
 from log.serializers import SubmissionSerlializers
-from .serializers import ChallengeListSerializer, ChallengeSerializer, CategorySerializer, CategoryDetailSerializer, CreateChallengeSerializer, ChallengeSolveSerializer, AdminChallengeDetailSerializer
+from .serializers import ChallengeListSerializer, ChallengeSerializer, CategorySerializer, CategoryDetailSerializer, CreateChallengeSerializer, ChallengeSolveSerializer, AdminChallengeDetailSerializer, ChallengeReviewSerializer
 
 
 from knox.auth import TokenAuthentication
@@ -387,3 +387,30 @@ def solved_by_team(request):
         return Response({"message": f"Your team haven't solved any challenges"}, status=status.HTTP_404_NOT_FOUND)
 
     return Response(ChallengeSolveSerializer(solves, many=True).data, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def create_challenge_review(request, challenge_id):
+    """
+    Create a new rating and feedback for a challenge.
+    A user must have solved the challenge to be able to review it.
+    """
+    try:
+        challenge = Challenge.objects.get(pk=challenge_id)
+    except Challenge.DoesNotExist:
+        return Response({"error": "Challenge not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    if not ChallengeSolve.objects.filter(user=request.user, challenge=challenge).exists():
+        return Response({"error": "You must solve the challenge before you can review it."}, status=status.HTTP_403_FORBIDDEN)
+
+    if ChallengeReview.objects.filter(user=request.user, challenge=challenge).exists():
+        return Response({"error": "You have already reviewed this challenge."}, status=status.HTTP_400_BAD_REQUEST)
+
+    serializer = ChallengeReviewSerializer(data=request.data)
+    if serializer.is_valid():
+        review = serializer.save(user=request.user, challenge=challenge)
+        challenge.update_average_rating()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

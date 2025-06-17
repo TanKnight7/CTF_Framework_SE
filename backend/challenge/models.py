@@ -20,7 +20,8 @@ class Challenge(models.Model):
     rating = models.FloatField(default=0.0)
 
     def update_average_rating(self):
-        self.rating = (self.review.aggregate(avg_rating=models.Avg('rating'))['avg_rating'])
+        avg = self.reviews.aggregate(avg_rating=models.Avg('rating'))['avg_rating']
+        self.rating = avg if avg is not None else 0.0
         self.save()
     
     def solve_count(self):
@@ -29,14 +30,27 @@ class Challenge(models.Model):
     def __str__(self):
         return self.title
 
+class ChallengeReview(models.Model):
+    challenge = models.ForeignKey(Challenge, on_delete=models.CASCADE, related_name="reviews")
+    user = models.ForeignKey('user.User', on_delete=models.CASCADE, related_name="reviews")
+    rating = models.IntegerField()
+    feedback = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'challenge')
+
+    def __str__(self):
+        return f"Review by {self.user.username} for {self.challenge.title}"
+
 class ChallengeSolve(models.Model):
     user = models.ForeignKey('user.User', on_delete=models.CASCADE)
     challenge = models.ForeignKey('Challenge', on_delete=models.CASCADE)
     solved_at = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        unique_together = ('user', 'challenge')  # Prevent duplicate solves
-
+        unique_together = ('user', 'challenge')
+    
     def __str__(self):
         return f"{self.user.username} solved {self.challenge.title} at {self.solved_at}"
 

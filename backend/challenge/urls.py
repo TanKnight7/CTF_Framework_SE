@@ -36,6 +36,9 @@ urlpatterns = [
     
     # SUBMIT FLAG
     path('<int:challenge_id>/submit/', views.submit_flag, name='submit_flag'),
+
+    # REVIEW
+    path('<int:challenge_id>/review/', views.create_challenge_review, name='create_challenge_review'),
     
     # SOLVED CHALLENGES
     path('solved/me/', views.solved_by_me, name='solved_by_me'),
