@@ -2,15 +2,6 @@ import { useEffect, useState } from "react";
 import Terminal from "../components/Terminal";
 
 const Home = () => {
-  const [config, setConfig] = useState(null);
-
-  useEffect(() => {
-    fetch("/config/ctf")
-      .then((res) => res.json())
-      .then((data) => setConfig(data));
-  }, []);
-
-  if (!config) return <div>Loading config...</div>;
   const formatEventInfoForTerminal = () => {
     return [
       "$ cat /etc/ctf/event_info.txt",
@@ -25,6 +16,15 @@ const Home = () => {
     ];
   };
 
+  const [config, setConfig] = useState(null);
+
+  useEffect(() => {
+    fetch("/config/ctf")
+      .then((res) => res.json())
+      .then((data) => setConfig(data));
+  }, []);
+
+  if (!config) return <div>Loading config...</div>;
   return (
     <div className="container">
       <div className="py-6">

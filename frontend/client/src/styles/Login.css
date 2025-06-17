@@ -133,7 +133,6 @@ h1 {
   font-family: "Roboto Mono", monospace;
   font-size: 16px;
   color: var(--terminal-green);
-  min-height: 300px;
 }
 
 .command-line {

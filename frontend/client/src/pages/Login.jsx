@@ -1,4 +1,5 @@
 import React, { useState, FormEvent } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Login.css";
 import { useForm } from "react-hook-form";
@@ -42,12 +43,20 @@ const Login = () => {
     return () => clearInterval(commandInterval);
   }, []);
 
+  const [config, setConfig] = useState(null);
+
+  useEffect(() => {
+    fetch("/config/ctf")
+      .then((res) => res.json())
+      .then((data) => setConfig(data));
+  }, []);
+
+  if (!config) return <div>Loading config...</div>;
   return (
     <div className="login-page">
       <div className="content">
         <div className="header">
-          <div className="logo">TANCTF</div>
-          <h1>CyberSec CTF Challenge 2025</h1>
+          <div className="logo">{config.name}</div>
         </div>
 
         <div className="terminal">

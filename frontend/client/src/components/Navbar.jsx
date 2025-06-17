@@ -40,12 +40,21 @@ const Navbar = () => {
 
   const isAdminRoute = location.pathname.startsWith("/admin");
 
+  const [config, setConfig] = useState(null);
+
+  useEffect(() => {
+    fetch("/config/ctf")
+      .then((res) => res.json())
+      .then((data) => setConfig(data));
+  }, []);
+
+  if (!config) return <div>Loading config...</div>;
   return (
     <header className="fixed top-0 left-0 w-full z-100 border-b border-terminal-green shadow-lg bg-primary-bg">
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between">
         <Link to="/" className="flex items-center no-underline">
           <span className="text-2xl mr-2">🛡️</span>
-          <span className="text-xl terminal-text font-bold">TANCTF</span>
+          <span className="text-xl terminal-text font-bold">{config.name}</span>
         </Link>
 
         {hasToken ? (
