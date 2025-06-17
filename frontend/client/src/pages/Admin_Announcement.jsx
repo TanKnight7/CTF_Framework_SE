@@ -17,8 +17,11 @@ const Admin_Announcement = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("created_at");
   const [sortOrder, setSortOrder] = useState("desc");
+  const [commandPrefix, setCommandPrefix] = useState("$");
 
   const queryClient = useQueryClient();
+
+
 
   // Fetch announcements
   const {
@@ -130,6 +133,14 @@ const Admin_Announcement = () => {
       return aValue < bValue ? 1 : -1;
     }
   });
+
+    // Terminal animation
+    useEffect(() => {
+      const commandInterval = setInterval(() => {
+        setCommandPrefix((prev) => (prev === "$" ? "$ _" : "$"));
+      }, 500);
+      return () => clearInterval(commandInterval);
+    }, []);
 
   // Handle form submissions
   const handleAnnouncementSubmit = (data) => {
@@ -417,7 +428,7 @@ const Admin_Announcement = () => {
                       textShadow: "0 0 5px rgba(0, 255, 0, 0.2)",
                     }}
                   >
-                    Title
+                    {commandPrefix} announcement_title:
                   </label>
                   <input
                     {...announcementForm.register("title", {
@@ -461,7 +472,7 @@ const Admin_Announcement = () => {
                       textShadow: "0 0 5px rgba(0, 255, 0, 0.2)",
                     }}
                   >
-                    Content
+                    {commandPrefix} announcement_content:
                   </label>
                   <textarea
                     {...announcementForm.register("content", {
@@ -635,7 +646,7 @@ const Admin_Announcement = () => {
                       textShadow: "0 0 5px rgba(0, 255, 0, 0.2)",
                     }}
                   >
-                    Title
+                    {commandPrefix} announcement_title:
                   </label>
                   <input
                     {...editAnnouncementForm.register("title", {
@@ -679,7 +690,7 @@ const Admin_Announcement = () => {
                       textShadow: "0 0 5px rgba(0, 255, 0, 0.2)",
                     }}
                   >
-                    Content
+                    {commandPrefix} announcement_content:
                   </label>
                   <textarea
                     {...editAnnouncementForm.register("content", {
