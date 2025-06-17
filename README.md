@@ -1,5 +1,6 @@
 # Hengker CTF Framework
 
+![image](./assets/image.png)
 A modern, full-stack platform for hosting Capture The Flag (CTF) competitions. It features a powerful Django REST Framework backend and a React frontend, all served through an Nginx reverse proxy for production readiness. Designed with both security and usability in mind, it provides a complete and scalable solution for running CTF events.
 
 ## Why Choose **Hengker CTF Framework**?
