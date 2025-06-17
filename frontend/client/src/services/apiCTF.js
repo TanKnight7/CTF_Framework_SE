@@ -23,7 +23,8 @@ export async function getProfile(data) {
     const response = await api.get("/api/users/me/");
     return response.data;
   } catch (err) {
-    throw new Error(err);
+    return err.response?.data;
+    // throw new Error(err);
   }
 }
 
@@ -411,10 +412,13 @@ export async function deleteAnnouncement(announcementId) {
 }
 
 export async function submitChallengeReview(challengeId, reviewData) {
-    try {
-        const response = await api.post(`/challenges/${challengeId}/review/`, reviewData);
-        return response.data;
-    } catch (err) {
-        return err.response?.data
-    }
+  try {
+    const response = await api.post(
+      `/api/challenges/${challengeId}/review/`,
+      reviewData
+    );
+    return response.data;
+  } catch (err) {
+    return err.response?.data;
+  }
 }

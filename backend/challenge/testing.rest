@@ -2,20 +2,20 @@
 POST /api/challenges/categories/create/ HTTP/1.1
 Host: localhost:9999
 Content-Type: application/json
-Authorization: Token d3391169d3cf1d8157e957e88cf3c17d52b9d16b575e8ac3b8689d6f296d4c53
+Authorization: Token 76c22cb015cd76d1d096ec18f6ce1288f97e04e46a99cd8a8bf23846675c2b75
 
 {"name":"Software Enginner"}
 
 ### view categories
 GET /api/challenges/categories/ HTTP/1.1
 Host: localhost:9999
-Authorization: Token 3b413edda4afb05d71d117a8bcde03193514ede01db86d3974fb5af6af43c6ed
+Authorization: Token 76c22cb015cd76d1d096ec18f6ce1288f97e04e46a99cd8a8bf23846675c2b75
 
 
 ### Create Challenge
 POST /api/challenges/create/ HTTP/1.1
 Host: localhost:9999
-Authorization: Token 3b413edda4afb05d71d117a8bcde03193514ede01db86d3974fb5af6af43c6ed
+Authorization: Token 76c22cb015cd76d1d096ec18f6ce1288f97e04e46a99cd8a8bf23846675c2b75
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
@@ -54,24 +54,31 @@ ini file2
 ### View Challenges
 GET /api/challenges/ HTTP/1.1
 Host: localhost:9999
-Authorization: Token d3391169d3cf1d8157e957e88cf3c17d52b9d16b575e8ac3b8689d6f296d4c53
+Authorization: Token 864059f1f22c1e962850a4240d8541ed128553e4943fbc08d4ddaec4670a8c66
 
 ### Submit Flag
 POST /api/challenges/5/submit/ HTTP/1.1
 Host: localhost:9999
 Content-Type: application/json
-Authorization: Token f1c58e2f15cf84bd2d894a2b536bb0f1447e64bf5541de971bc930b308b41a56
+Authorization: Token 76c22cb015cd76d1d096ec18f6ce1288f97e04e46a99cd8a8bf23846675c2b75
 
 {"flag":"HTB{fake_flag}"}
 
+### Review Challenge
+POST /api/challenges/2/review/ HTTP/1.1
+Host: localhost:9999
+Content-Type: application/json
+Authorization: Token 864059f1f22c1e962850a4240d8541ed128553e4943fbc08d4ddaec4670a8c66
+
+{"rating":66, "feedback":"ini challnya gacor banget"}
 
 ### Challenge solved by me
 GET /api/challenges/solved/me/ HTTP/1.1
 Host: localhost:9999
-Authorization: Token f1c58e2f15cf84bd2d894a2b536bb0f1447e64bf5541de971bc930b308b41a56
+Authorization: Token 76c22cb015cd76d1d096ec18f6ce1288f97e04e46a99cd8a8bf23846675c2b75
 
 
 ### Challenge solved by team
 GET /api/challenges/solved/team/ HTTP/1.1
 Host: localhost:9999
-Authorization: Token 8626833d817efca0e127cf67587dc628dd4eb20c373a9b8854e3d2aed09c2343
+Authorization: Token 76c22cb015cd76d1d096ec18f6ce1288f97e04e46a99cd8a8bf23846675c2b75

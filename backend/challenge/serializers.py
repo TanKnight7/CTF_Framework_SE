@@ -50,9 +50,10 @@ class ChallengeListSerializer(serializers.ModelSerializer):
     category = serializers.StringRelatedField()
     solved_by = UserListSerializer(many=True)
     attachments = ChallengeAttachmentSerializer(many=True, read_only=True)
+    reviews = ChallengeReviewSerializer(many=True, read_only=True)
     class Meta:
         model = Challenge
-        fields = ['id', 'title', 'category', 'difficulty', 'point', 'rating', 'solved_by', 'description', 'attachments']
+        fields = ['id', 'title', 'category', 'difficulty', 'point', 'rating', 'solved_by', 'description', 'attachments', 'reviews']
 
 
 class ChallengeSolveSerializer(serializers.ModelSerializer):
@@ -72,6 +73,7 @@ class ChallengeSolveSerializer(serializers.ModelSerializer):
 
 class ChallengeSerializer(serializers.ModelSerializer):
     solved_by = UserListSerializer(many=True, read_only=True)
+    reviews = ChallengeReviewSerializer(many=True, read_only=True)
     class Meta:
         model = Challenge
         exclude = ['flag']

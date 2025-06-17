@@ -4,7 +4,7 @@ import json
 from utils import check_if_ctf_is_finished, check_if_ctf_is_started
 
 
-from .models import Category, Challenge, ChallengeSolve, ChallengeAttachment
+from .models import Category, Challenge, ChallengeSolve, ChallengeAttachment, ChallengeReview
 from log.serializers import SubmissionSerlializers
 from .serializers import ChallengeListSerializer, ChallengeSerializer, CategorySerializer, CategoryDetailSerializer, CreateChallengeSerializer, ChallengeSolveSerializer, AdminChallengeDetailSerializer, ChallengeReviewSerializer
 
@@ -413,4 +413,4 @@ def create_challenge_review(request, challenge_id):
         challenge.update_average_rating()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
