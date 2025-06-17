@@ -107,7 +107,7 @@ const Team = () => {
           <h2 className="terminal-text text-xl mb-4">Team Members</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {TeamDetails &&
-              Array.isArray(TeamDetails) &&
+              Array.isArray(TeamDetails.members) &&
               TeamDetails.members.map((member) => (
                 <div key={member.id} className="card">
                   <div className="flex flex-col items-center text-center">
@@ -125,7 +125,7 @@ const Team = () => {
           <Terminal
             title="team_activity.log"
             lines={[
-              "$ tail -10 /var/log/team_activity.log",
+              `$ tail -10 /var/log/${TeamDetails.name}.log`,
               "Loading activity log...",
               "----------------------------",
               ...(TeamDetails.solves && TeamDetails.solves.length > 0

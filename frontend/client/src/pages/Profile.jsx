@@ -29,7 +29,7 @@ const ProfileEnhanced = () => {
   }
 
   const activityLog = [
-    "$ tail -10 /var/log/user/CaptainCyber_activity.log",
+    `$ tail -10 /var/log/user/${profile.username}.log`,
     "Loading user activity...",
     "----------------------------",
     ...(solved_challenges && Array.isArray(solved_challenges)
@@ -133,15 +133,10 @@ const ProfileEnhanced = () => {
                     </tr>
                   </thead>
                 )}
-                {!solved_challenges && (
-                  <div className="flex justify-between mb-1">
-                    <span className="capitalize">
-                      You haven't solved any challenge yet.
-                    </span>
-                  </div>
-                )}
+
                 <tbody>
                   {solved_challenges &&
+                    !solved_challenges?.message &&
                     Array.isArray(solved_challenges) &&
                     solved_challenges.map((challenge) => (
                       <tr
@@ -173,6 +168,13 @@ const ProfileEnhanced = () => {
                     ))}
                 </tbody>
               </table>
+              {solved_challenges?.message && (
+                <div className="text-center py-12 mt-2">
+                  <div className="text-muted text-lg mt-2">
+                    {solved_challenges.message}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
